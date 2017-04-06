@@ -10,7 +10,7 @@
 ## Setup
 ```sh
 mkdir -p target/data/main
-wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.3/fbsgen-ds-fatjar-1.0.3.jar
+wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.4/fbsgen-ds-fatjar-1.0.4.jar
 ./modules/codegen.sh
 mvn install
 
