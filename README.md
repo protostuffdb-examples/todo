@@ -2,20 +2,25 @@
 
 The app is live at [https://dyuproject.com/todo/](https://dyuproject.com/todo/) and [google play](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter)
 
-## Requirements
-- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and put it in ```target/``` and ```/opt/protostuffdb/bin/```)
-  - When packaging for windows and linux, both **protostuffdb** and **protostuffdb.exe** needs to be in ```target/``` dir
-- [node](https://nodejs.org/en/download/) 6.9.0 or higher
-- yarn (npm install -g yarn)
-- jdk7 (at /usr/lib/jvm/java-7-oracle)
-- [maven](https://maven.apache.org/download.cgi)
-
 ## Server runtime dependencies
 - jdk7
 
 ## Desktop runtime dependencies
 - jdk7
 - [nwjs](https://nwjs.io/) [0.19.5](https://dl.nwjs.io/v0.19.5/) or higher
+
+### Running the desktop app without building
+- download either **todo-linux-x64.tar.gz** or **todo-win-x64.zip** from [here](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo)
+- extract it and cd into the directory
+- finally, exec: ```nw todo-ts```
+
+## Build requirements
+- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and put it in ```target/``` and ```/opt/protostuffdb/bin/```)
+  - When packaging for windows and linux, both **protostuffdb** and **protostuffdb.exe** needs to be in ```target/``` dir
+- [node](https://nodejs.org/en/download/) 6.9.0 or higher
+- yarn (npm install -g yarn)
+- jdk7 (at /usr/lib/jvm/java-7-oracle)
+- [maven](https://maven.apache.org/download.cgi)
 
 ## Setup
 ```sh
