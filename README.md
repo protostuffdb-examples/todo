@@ -3,8 +3,8 @@
 The app is live at [https://dyuproject.com/todo/](https://dyuproject.com/todo/) and [google play](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter)
 
 ## Requirements
-- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and move it to /opt/protostuffdb/bin/protostuffdb)
-  - When packaging for windows and linux, download **protostuffdb** and **protostuffdb.exe** from the link above and put it in ```target/``` dir
+- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and put it in ```target/``` and ```/opt/protostuffdb/bin/```)
+  - When packaging for windows and linux, both **protostuffdb** and **protostuffdb.exe** needs to be in ```target/``` dir
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
 - yarn (npm install -g yarn)
 - jdk7 (at /usr/lib/jvm/java-7-oracle)
