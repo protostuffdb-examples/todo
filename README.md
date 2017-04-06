@@ -1,6 +1,8 @@
 # full-stack todo app
 
-The app is live at [https://dyuproject.com/todo/](https://dyuproject.com/todo/) and [google play](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter)
+It can be seen live [here](https://dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and [desktop](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) (nwjs) apps.
+
+They all have the same semantics.  Swipe horizontally to nagivate the pages (paginate).
 
 ## Server runtime dependencies
 - jdk7
