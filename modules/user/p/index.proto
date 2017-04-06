@@ -89,3 +89,29 @@ message Todo {
   message PList { repeated Todo p = 1; }
 }
 
+// ==================================================
+// rpc bench
+
+	
+message EchoInt {
+  
+  optional int32 p = 1 [ default = 0 ];
+}
+
+message EchoStr {
+  @NotEmpty
+  required string p = 1;
+}
+
+service ForUser {
+
+  @ReadOnly
+  rpc echoInt(EchoInt) returns (EchoInt);
+
+  @ReadOnly
+  rpc echoStr(EchoStr) returns (EchoStr);
+  
+  @ReadOnly
+  rpc echoKey(ParamKey) returns (ParamKey);
+}
+

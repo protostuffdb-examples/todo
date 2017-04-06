@@ -2,12 +2,17 @@
 
 package todo.user;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import com.dyuproject.protostuff.Pipe;
+import com.dyuproject.protostuff.RpcHeader;
 import com.dyuproject.protostuff.RpcLogin;
+import com.dyuproject.protostuff.RpcResponse;
 import com.dyuproject.protostuff.RpcService;
 import com.dyuproject.protostuff.RpcServiceProvider;
+import com.dyuproject.protostuff.ds.ParamKey;
 import com.dyuproject.protostuffdb.Datastore;
 import com.dyuproject.protostuffdb.DatastoreManager;
 import com.dyuproject.protostuffdb.WriteContext;
@@ -33,6 +38,31 @@ public class UserProvider extends RpcServiceProvider
         return null;
     }
 
-    public static final UserServices.ForUser FOR_USER = new UserServices.ForUser(){};
+    public static final UserServices.ForUser FOR_USER = new UserServices.ForUser()
+    {
+        @Override
+        public boolean echoInt(EchoInt req, Datastore store, RpcResponse res,
+                Pipe.Schema<EchoInt> resPipeSchema, RpcHeader header) throws IOException
+        {
+            EchoInt.getSchema().writeTo(res.output, req);
+            return true;
+        }
+        
+        @Override
+        public boolean echoStr(EchoStr req, Datastore store, RpcResponse res,
+                Pipe.Schema<EchoStr> resPipeSchema, RpcHeader header) throws IOException
+        {
+            EchoStr.getSchema().writeTo(res.output, req);
+            return true;
+        }
+        
+        @Override
+        public boolean echoKey(ParamKey req, Datastore store, RpcResponse res,
+                Pipe.Schema<ParamKey> resPipeSchema, RpcHeader header) throws IOException
+        {
+            ParamKey.getSchema().writeTo(res.output, req);
+            return true;
+        }
+    };
 }
 

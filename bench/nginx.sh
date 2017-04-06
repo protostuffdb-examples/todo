@@ -15,7 +15,9 @@ cd $SCRIPT_DIR
 
 [ ! -n "$WORKERS" ] && WORKERS=1
 
+[ ! -n "$CONF" ] && CONF=nginx.conf
+
 mkdir -p target/nginx/logs
 
-/opt/nginx/sbin/nginx -p target/nginx -c $SCRIPT_DIR/nginx/nginx.conf -g "pid nginx.pid; error_log nginx.error.log; worker_processes $WORKERS;" $@
+/opt/nginx/sbin/nginx -p target/nginx -c $SCRIPT_DIR/nginx/$CONF -g "pid nginx.pid; error_log nginx.error.log; worker_processes $WORKERS;" $@
 
