@@ -16,7 +16,7 @@ They all have the same semantics.  Swipe horizontally to nagivate the pages (pag
 - extract it and cd into the directory
 - finally, exec: ```nw todo-ts```
 
-## Build requirements
+## Requirements
 - [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and put it in ```target/``` and ```/opt/protostuffdb/bin/```)
   - When packaging for windows and linux, both **protostuffdb** and **protostuffdb.exe** needs to be in ```target/``` dir
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
