@@ -1,3 +1,7 @@
+# full-stack todo app
+
+The app is live at [https://dyuproject.com/todo/](https://dyuproject.com/todo/) and [google play](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter)
+
 ## Requirements
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
 - yarn (npm install -g yarn)
@@ -39,7 +43,7 @@ yarn run build
 nw .
 ```
 
-## Deployment
+## Packaging for desktop (nwjs)
 Make sure these files are in the ```target/``` dir:
 - protostuffdb (linux binary)
 - protostuffdb.exe (windows binary)
