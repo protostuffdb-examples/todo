@@ -1,0 +1,16 @@
+[Unit]
+Description=todo daemon
+After=local-fs.target
+
+[Service]
+User={{target_user}}
+Group=webstack
+UMask=0002
+WorkingDirectory=/home/deploy/projects/todo/current
+Restart=on-failure
+#RestartSec=3
+ExecStart=/opt/protostuffdb/bin/protostuffdb 5000 todo-ts/g/user/UserServices.json -Xms128m -Xmx128m -XX:NewRatio=1 -Djava.class.path=todo-all/target/todo-all-jarjar.jar todo.all.Main
+
+[Install]
+WantedBy=multi-user.target
+

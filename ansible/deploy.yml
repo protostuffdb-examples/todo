@@ -1,0 +1,171 @@
+
+---
+# deploy
+
+- name: deploy
+  hosts: deploy
+  gather_facts: no
+  tasks:
+    - name: default user
+      user: name=todo
+            system=yes
+            createhome=no
+            groups=webstack
+      sudo: true
+      when: target_user == 'todo'
+    
+    - name: custom user
+      user: name={{target_user}}
+      sudo: true
+      when: target_user != 'todo'
+    
+    - name: project dirs
+      file: path={{item}} owner={{target_user}} group=webstack state=directory mode=0775
+      with_items:
+        - /data/deploy/todo/main
+        - /data/deploy/todo/prev
+        - /data/deploy/todo/next
+        - /home/deploy/backups/todo
+        - /home/deploy/projects/todo
+        - /home/deploy/projects/todo/target
+        - /home/deploy/projects/todo/target/data
+        - /home/deploy/projects/todo/{{deploy_rev_prefix}}
+      sudo: true
+    
+    - name: link data main
+      file: src=/data/deploy/todo/main
+            dest=/home/deploy/projects/todo/target/data/main
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      sudo: true
+    
+    - name: sync files to host
+      sudo: false
+      local_action: >
+        command /usr/bin/rsync -az
+          --rsync-path="sudo -n rsync"
+          -e "ssh -p {{ ansible_port | default(ansible_ssh_port) }}"
+          --include='/run.properties'
+          --include='/ngx-upstream/todo/upstream.conf'
+          --include='/todo-all/target/*jarjar.jar'
+          --include='/todo-ts/g/user/UserServices.json'
+          --include='/todo-ts/dist/**'
+          --include='/todo-ts/*.html'
+          --include='/todo-ts/favicon.ico'
+          {% if nw %}
+          --include='/todo-ts/package.json'
+          --include='/todo-ts/nw/*.js'
+          --include='/todo-ts/nw/*.png'
+          --include='/todo-ts/nw/*.desktop'
+          {% endif %}
+          --filter='-! */'
+          --prune-empty-dirs
+          --chown={{target_user}}:webstack
+          --chmod=u=rwX,g=rwX,o=rX
+          {{project_dir}}/
+          deploy@{{inventory_hostname}}:/home/deploy/projects/todo/{{deploy_rev}}
+      register: rsync
+      changed_when: "'Number of files transferred: 0' not in rsync.stdout"
+    
+    - name: nginx domain
+      lineinfile: dest=/home/deploy/projects/todo/{{deploy_rev}}/ngx-upstream/todo/upstream.conf
+                  regexp="^  server_name todo.local;$"
+                  line="  server_name {{ngx_domain}};{% if ngx_certs_dir %} listen 443 ssl http2; ssl_certificate {{ngx_certs_dir}}/cert_chain.crt; ssl_certificate_key {{ngx_certs_dir}}/private.key;{% endif %}"
+      sudo: true
+    
+    - name: link nginx www dir
+      file: src=/home/deploy/projects/todo/{{deploy_rev}}/todo-ts
+            dest=/home/deploy/projects/todo/{{deploy_rev}}/ngx-upstream/todo/www
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      sudo: true
+    
+    - name: link target dir
+      file: src=/home/deploy/projects/todo/target
+            dest=/home/deploy/projects/todo/{{deploy_rev}}/target 
+            owner={{target_user}}
+            group=webstack 
+            state=link 
+            mode=0775
+      sudo: true
+    
+    - name: link current rev
+      file: src=/home/deploy/projects/todo/{{deploy_rev}}
+            dest=/home/deploy/projects/todo/current
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      sudo: true
+    
+    - name: link upstream dir
+      file: src=/home/deploy/projects/todo/current/ngx-upstream/todo
+            dest=/home/deploy/nginx/ngx-upstream/todo
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      sudo: true
+    
+    - name: link /opt/todo
+      file: src=/home/deploy/projects/todo/current
+            dest=/opt/todo
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      sudo: true
+      when: nw and target_user != 'todo' and (nw_autostart or nw_desktop)
+    
+    - name: link desktop autostart
+      file: src=/opt/todo/todo-ts/nw/todo-as.desktop
+            dest={{item}}/todo-as.desktop
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      with_items:
+        - /home/{{target_user}}/.config/autostart
+        - /home/{{target_user}}/.local/share/applications
+        - /home/{{target_user}}/Desktop
+      sudo: true
+      when: nw and target_user != 'todo' and nw_desktop and nw_autostart
+    
+    - name: link desktop regular
+      file: src=/opt/todo/todo-ts/nw/{{item}}.desktop
+            dest=/home/{{target_user}}/Desktop/{{item}}.desktop
+            owner={{target_user}}
+            group=webstack
+            state=link
+            mode=0775
+      with_items:
+        - todo
+      sudo: true
+      when: nw and target_user != 'todo' and nw_desktop and not nw_autostart
+    
+    - name: systemd template
+      template: src=systemd/todo.service dest=/etc/systemd/system/todo.service owner=deploy group=deploy
+      sudo: true
+    
+    - name: stop nginx
+      command: systemctl stop nginx
+      ignore_errors: true
+      sudo: true
+      when: deploy_type != '0'
+    
+    - name: restart todo
+      command: systemctl restart todo
+      ignore_errors: true
+      sudo: true
+      when: deploy_type != '0'
+    
+    - name: start nginx
+      command: systemctl start nginx
+      ignore_errors: true
+      sudo: true
+      when: deploy_type != '0'
+
