@@ -7,7 +7,9 @@
   <version>0.5.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>todo</name>
-  <description>protostuff + leveldb(or ssdb with hyperleveldb)</description>
+  <description>
+    a full-stack todomvc app with a leveldb + uws backend, dart + flutter mobile frontend, typescript + vue web frontend and nwjs for desktop
+  </description>
   <url>https://github.com/protostuffdb-examples/todo/</url>
   <inceptionYear>2017</inceptionYear>
 
