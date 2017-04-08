@@ -2,7 +2,9 @@
 
 It can be seen live [here](https://dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and [desktop](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) (nwjs) apps.
 
-They all have the same semantics.  Swipe horizontally to nagivate the pages (paginate).
+They all have the same semantics.
+Swipe horizontally to nagivate the pages (paginate).
+Long-press the item to update.
 
 ## Server runtime dependencies
 - jdk7
@@ -16,9 +18,9 @@ They all have the same semantics.  Swipe horizontally to nagivate the pages (pag
 - extract it and cd into the directory
 - finally, exec: ```nw todo-ts```
 
-## Requirements
-- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and put it in ```target/``` and ```/opt/protostuffdb/bin/```)
-  - When packaging for windows and linux, both **protostuffdb** and **protostuffdb.exe** needs to be in ```target/``` dir
+## Dev requirements
+- [protostuffdb](https://gitlab.com/dyu/protostuffdb)
+  * download the [binaries](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) (protostuffdb and protostuffdb.exe) into the ```target/``` dir
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
 - yarn (npm install -g yarn)
 - jdk7 (at /usr/lib/jvm/java-7-oracle)
@@ -27,6 +29,7 @@ They all have the same semantics.  Swipe horizontally to nagivate the pages (pag
 ## Setup
 ```sh
 mkdir -p target/data/main
+echo "Your data lives in user/ dir.  Feel free to back it up." > target/data/main/README.txt
 wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.4/fbsgen-ds-fatjar-1.0.4.jar
 ./modules/codegen.sh
 mvn install
@@ -57,10 +60,7 @@ nw .
 ```
 
 ## Packaging for desktop (nwjs)
-Make sure these files are in the ```target/``` dir:
-- protostuffdb (linux binary)
-- protostuffdb.exe (windows binary)
-
+Exec
 ```sh
 ./scripts/archive.sh
 ```
