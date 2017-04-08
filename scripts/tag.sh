@@ -22,9 +22,8 @@ sed -i "s/=\"0.$1.0\"/=\"0.$2.0\"/g" todo-dart/android/app/src/main/AndroidManif
 }
 
 setVersion $TAG && \
-git add -u . && git commit -m "$TAG" && git tag $TAG && \
-git push origin master && git push origin tag $TAG && \
+git add -u . && git commit -m $TAG && git tag $TAG && \
 setVersion $SNAPSHOT && setAndroidVersion $CWV $NWV && \
 git add -u . && git commit -m $SNAPSHOT && \
-git push origin master
+git push origin tag $TAG && git push origin master
 
