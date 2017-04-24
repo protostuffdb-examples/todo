@@ -3780,17 +3780,17 @@ vue@2.1.10:
   version "2.1.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.1.10.tgz#c9235ca48c7925137be5807832ac4e3ac180427b"
 
-vueds-ui@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/vueds-ui/-/vueds-ui-0.7.0.tgz#d3968ce17ec18eb1facaca2d14eb763d48cbd0ec"
+vueds-ui@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/vueds-ui/-/vueds-ui-0.7.1.tgz#a18d500ed1ab608d9f653cfab179711b62d107e3"
   dependencies:
     "@types/hammerjs" "^2.0.32"
     hammerjs "^2.0.8"
     vuets "^0.10.0"
 
-vueds@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/vueds/-/vueds-0.7.0.tgz#5071384c72289156592472cf2fe86d8ec0a8fdb3"
+vueds@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/vueds/-/vueds-0.8.1.tgz#a6c0fd7af0c43baea1eba38cbe54d540f029581d"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.3"

@@ -21,10 +21,7 @@ import { qd, QForm } from '../../g/user/TodoQForm'
 import * as qform from 'vueds-ui/lib/tpl/legacy/qform'
 
 const PAGE_SIZE = 10,
-    MULTIPLIER = 3,
-    FETCH_TOTAL = PAGE_SIZE * MULTIPLIER, 
-    INITIAL_FETCH_EXTRA = (PAGE_SIZE * (MULTIPLIER - 1)) + 1,
-    INITIAL_FETCH_TOTAL = PAGE_SIZE + INITIAL_FETCH_EXTRA
+    MULTIPLIER = 3
 
 // dummy
 const HT: HasToken = {
@@ -63,6 +60,7 @@ export class TodoView {
         self.pager = defp(self, 'pstore', new PojoStore([], {
             desc: true,
             pageSize: PAGE_SIZE,
+            multiplier: MULTIPLIER,
             descriptor: $.$descriptor,
             createObservable(so: ItemSO, idx: number) {
                 return $.$createObservable()
@@ -101,9 +99,6 @@ export class TodoView {
                 return 0
             },
             fetch(prk: ds.ParamRangeKey, pager: Pager) {
-                if (self.qform.num && !(self.pager.state & PagerState.RELOAD))
-                    prk.limit = FETCH_TOTAL
-                
                 self.qform.send(prk)
             }
         })).pager
@@ -116,12 +111,9 @@ export class TodoView {
             cbFailed: self.fetch$$F,
             hasToken: HT,
             list(prk: ds.ParamRangeKey, hasToken: HasToken): PromiseLike<any> {
-                if (!(self.pager.state & PagerState.RELOAD))
-                    prk.limit = FETCH_TOTAL
-                
                 return $.ForUser.list(prk)
             }
-        }, INITIAL_FETCH_EXTRA)
+        })
         // TODO fetched fields init
 
         self.pnew$$S = TodoView.pnew$$S.bind(self)
@@ -141,24 +133,14 @@ export class TodoView {
         if (self.initialized || (self.pager.state & PagerState.LOADING))
             return
 
-        let pager = self.pager
-        if (pager.msg)
-            pager.msg = ''
-        pager.state |= PagerState.LOADING
-        $.ForUser.list(ds.ParamRangeKey.$create(true, INITIAL_FETCH_TOTAL))
-            .then(self.fetch$$S).then(undefined, self.fetch$$F)
+        self.pstore.requestNewer()
     }
 
     static fetch$$S(this: TodoView, data: any): boolean {
-        if (this.initialized) {
-            this.pstore.cbFetchSuccess(data['1'])
-        } else {
+        if (!this.initialized)
             this.initialized = true
-            this.pager.msg = ''
-            this.pager.state ^= PagerState.LOADING
-            this.pstore.addNewer(data['1'])
-        }
-
+        
+        this.pstore.cbFetchSuccess(data['1'])
         return true
     }
 
