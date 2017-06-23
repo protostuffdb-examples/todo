@@ -1,6 +1,6 @@
 # full-stack todo app
 
-It can be seen live [here](https://dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and [desktop](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) (nwjs) apps.
+It can be seen live [here](https://apps.dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and desktop (nwjs) apps.
 
 They all have the same semantics.
 Swipe horizontally to nagivate the pages (paginate).
@@ -31,9 +31,9 @@ mkdir -p target/data/main
 echo "Your data lives in user/ dir.  Feel free to back it up." > target/data/main/README.txt
 
 # download protostuffdb
-yarn add protostuffdb@0.10.2 && mv node_modules/protostuffdb/dist/* target/ && rm -f package.json yarn.lock && rm -r node_modules
+yarn add protostuffdb@0.12.3 && mv node_modules/protostuffdb/dist/* target/ && rm -f package.json yarn.lock && rm -r node_modules
 
-wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.5/fbsgen-ds-fatjar-1.0.5.jar
+wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.8/fbsgen-ds-fatjar-1.0.8.jar
 ./modules/codegen.sh
 mvn install
 
