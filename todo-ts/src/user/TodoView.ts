@@ -210,7 +210,6 @@ export default component({
     created(this: TodoView) { TodoView.created(this) },
     template: /**/`
 <div class="col-pp-100 col-pl-50 col-tl-33" v-pager="pager">
-<template v-if="initialized">
   <ul class="ui right floated horizontal list">
     <li class="item" title="sort">
       <a v-disable="2 > pager.size || (pager.state & ${PagerState.LOADING})"
@@ -277,6 +276,13 @@ export default component({
   <div class="ui tab">
     ${qform.main({ qd })}
   </div>
+  <div v-show="pager.msg && (pager.state & ${PagerState.MASK_STATUS})">
+    <div class="ui message" v-pclass:status-="(pager.state & ${PagerState.MASK_STATUS})">
+      <i class="close icon" @click.prevent="pager.msg = null"></i>
+      <span v-text="pager.msg"></span>
+    </div>
+  </div>
+  <template v-if="initialized">
   ${list.main({ pager: 'pager' }, `
     <div class="content right floated">
       ${icons.toggle({
@@ -310,6 +316,6 @@ export default component({
       })}
     </div>
   </div>
-</template>
+  </template>
 </div>`/**/
 }, TodoView)
