@@ -22,9 +22,6 @@ function passThrough(data) {
 }
 
 function isLocal(host: string) {
-    let colon = host.lastIndexOf(':')
-    if (colon !== -1)
-        host = host.substring(0, colon)
     return host === '127.0.0.1' || host === 'localhost'
 }
 
@@ -52,7 +49,7 @@ let override = {
     }
 }
 window['rpc_config'] = override
-if (!rpc_host && isLocal(window.location.host))
+if (!rpc_host && isLocal(window.location.hostname))
     window['rpc_host'] = 'http://127.0.0.1:5000'
 
 // ==================================================
