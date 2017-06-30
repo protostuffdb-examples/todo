@@ -28,8 +28,7 @@ const HT: HasToken = {
     token: ''
 }
 
-const $ = user.Todo,
-    $$ = $.$
+const $ = user.Todo
 
 export class TodoView {
     // provided
@@ -287,10 +286,10 @@ export default component({
     <div class="content right floated">
       ${icons.toggle({
         pojo: 'pojo',
-        field: $$.completed,
+        field: $.$.completed,
         bit: 32,
         fn: 'toggle$$',
-        title_expr: `pojo.${$$.completed} ? 'Completed' : 'Mark Completed?'`
+        title_expr: `pojo.${$.$.completed} ? 'Completed' : 'Mark Completed?'`
       })}
     </div>
     <div class="content">
@@ -298,8 +297,8 @@ export default component({
         ${icons.timeago({ pojo: 'pojo', skip_rev: true })}
       </small>
     </div>
-    <div class="content dd" v-sclass:completed="pojo.${$$.completed}">
-      {{ pojo.${$$.title} }}
+    <div class="content dd" v-sclass:completed="pojo.${$.$.completed}">
+      {{ pojo.${$.$.title} }}
     </div>
     <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:todo-detail="pojo._.state & ${PojoState.UPDATE}"></div>
   `

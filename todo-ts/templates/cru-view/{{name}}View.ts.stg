@@ -35,8 +35,7 @@ const HT: HasToken = {
     token: ''
 }
 
-const $ = «module_name».«name»,
-    $$ = $.$
+const $ = «module_name».«name»
 
 export class «name»View {
     // provided
@@ -287,7 +286,7 @@ export default component({
       </small>
     </div>
     <div class="content dd">
-      <!-- TODO {{ pojo.${$$.title} }} -->
+      <!-- TODO {{ pojo.${$.$.title} }} -->
     </div>
     <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:«nameKC»-detail="pojo._.state & ${PojoState.UPDATE}"></div>
   `
