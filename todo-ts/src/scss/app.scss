@@ -1,19 +1,19 @@
 
 // Mixins & variables first
-@import "~pavilion/scss/pavilion-parts/functions";
-@import "~pavilion/scss/pavilion-parts/mixins";
+@import "../../node_modules/pavilion/scss/pavilion-parts/functions";
+@import "../../node_modules/pavilion/scss/pavilion-parts/mixins";
 @import "./_variables.scss";
 
 // Core pavilion-parts
-@import "~pavilion/scss/pavilion-parts/normalize";
-@import "~pavilion/scss/pavilion-parts/base";
-@import "~pavilion/scss/pavilion-parts/grid";
-@import "~pavilion/scss/pavilion-parts/typography";
-@import "~pavilion/scss/pavilion-parts/buttons";
-@import "~pavilion/scss/pavilion-parts/lists";
-@import "~pavilion/scss/pavilion-parts/forms";
-@import "~pavilion/scss/pavilion-parts/tables";
-@import "~pavilion/scss/pavilion-parts/utilities";
+@import "../../node_modules/pavilion/scss/pavilion-parts/normalize";
+@import "../../node_modules/pavilion/scss/pavilion-parts/base";
+@import "../../node_modules/pavilion/scss/pavilion-parts/grid";
+@import "../../node_modules/pavilion/scss/pavilion-parts/typography";
+@import "../../node_modules/pavilion/scss/pavilion-parts/buttons";
+@import "../../node_modules/pavilion/scss/pavilion-parts/lists";
+@import "../../node_modules/pavilion/scss/pavilion-parts/forms";
+@import "../../node_modules/pavilion/scss/pavilion-parts/tables";
+@import "../../node_modules/pavilion/scss/pavilion-parts/utilities";
 
 
 @import "./fa.scss";

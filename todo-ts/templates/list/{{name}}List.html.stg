@@ -1,0 +1,119 @@
+import "fbsgen/base"
+import "fbsgen/dict"
+
+p_block(p, module) ::= <<
+«p_main_block(p, module, module.w.v.(p.("name")).val, p.("dir_name"), module.w.vfmt.("UC"), module.w.vfmt.("UC&&_==-"))»
+>>
+
+p_main_block(p, module, name, module_name, nameUC, nameKC) ::= <<
+<div>
+<ul class="ui skimped tiny horizontal list">
+  <li class="item">
+    <div class="ui tiny icon buttons">
+      <button class="ui button" disabled="{{ loading || 2 > size }}" on:click="toggleDesc(store)">
+        <i class="{{ desc ? 'icon desc-yes' : 'icon desc-no' }}"></i>
+      </button>
+      <button class="ui button" disabled="{{ loading || 0 === size }}" on:click="fetchUpdate(store)">
+        <i class="icon cw"></i>
+      </button>
+      <button class="ui button" disabled="{{ loading || 0 === page }}" on:click="goto(0, store)">
+        <i class="icon angle-double-left"></i>
+      </button>
+      <button class="ui button" disabled="{{ loading }}" on:click="prevOrLoad(store)">
+        <i class="icon angle-left"></i>
+      </button>
+      <button class="ui button" disabled="{{ loading || 0 === size }}" on:click="nextOrLoad(store)">
+        <i class="icon angle-right"></i>
+      </button>
+      <button class="ui button" disabled="{{ loading || page_count === page }}" on:click="goto(page_count, store)">
+        <i class="icon angle-double-right"></i>
+      </button>
+      <span>&nbsp;&nbsp;{{ page_info }}</span>
+    </div>
+  </li>
+</ul>
+<div class="{{ !errmsg ? 'hide' : 'ui msg error' }}">
+  <i class="icon close" on:click="set({ errmsg: '' })"></i>
+  {{ errmsg }}
+</div>
+<ul class="ui small divided selection list">
+  {{#each items as item}}
+  <«name»Item item="{{ item }}" />
+  {{/each}}
+</ul>
+</div>
+<script>
+import { defp } from 'coreds/lib/util'
+import * as rpc from 'coreds/lib/rpc/'
+import { Store } from 'coreds/lib/store/'
+import { wrapPojo, mergePojo } from '../common/context'
+
+import «name»Item from './«name»Item.html'
+
+const PAGE_SIZE = 5,
+    MULTIPLIER = 3
+
+function fetch(req) {
+    return rpc.post('/todo/user/«name»/list', JSON.stringify(req))
+}
+
+export default {
+    components: {
+        «name»Item
+    },
+    data() {
+        let store = new Store(null, wrapPojo, mergePojo, PAGE_SIZE, MULTIPLIER),
+            items = defp(store, 'items', [])
+        for (var i = 0; i < PAGE_SIZE; i++) items.push({ c$: null })
+        return {
+            errmsg: '',
+            loading: false,
+            desc: true,
+            size: 0,
+            page: 0,
+            page_count: 0,
+            store,
+            items
+        }
+    },
+    oncreate() {
+        let state = this.get(),
+            opts = state['opts'],
+            store = state['store']
+        store.vm = this
+        defp(this, 'm', {
+            fetch$$S: store.cbFetchSuccess.bind(store),
+            fetch$$F: store.cbFetchFailed.bind(store),
+            fetch: opts && opts.fetch ? opts.fetch.bind(this) : fetch,
+            store
+        })
+        store.fetchNewer()
+    },
+    computed: {
+        page_info(page, size, desc, store) {
+            let items = store.items
+            if (!items[0].c$) return ''
+
+            let page_items = store.page_items(),
+                len = page_items.length,
+                i = 0
+            for (; i < len; i++) items[i].c$.update(page_items[i].orig)
+            for (len = items.length; i < len; i++) items[i].c$.update(null)
+
+            return store.page_info() 
+        }
+    },
+    methods: {
+        goto(page, store) { store.goto(page) },
+        toggleDesc(store) { store.toggleDesc() },
+        fetchUpdate(store) { store.fetchUpdate() },
+        prevOrLoad(store) { store.prevOrLoad() },
+        nextOrLoad(store) { store.nextOrLoad() },
+        fetch(req) {
+            let m = this.m
+            return m.fetch(req).then(m.fetch$$S).then(undefined, m.fetch$$F)
+        }
+    }
+}
+</script>
+>>

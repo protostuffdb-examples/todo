@@ -1,0 +1,24 @@
+<li ref:root class="hide">
+{{#if pojo }}
+  <div class="content main">
+    {{ pojo['3'] }}
+  </div>
+{{/if}}
+</li>
+<script>
+export default {
+    data: () => ({ pojo: null }),
+    oncreate() { this.get('item')['c$'] = this },
+    methods: {
+        update(pojo) {
+            let root = this.refs.root
+            if (!pojo) {
+                root.className = 'hide'
+            } else {
+                this.set({ pojo })
+                root.className = 'item'
+            }
+        }
+    }
+}
+</script>

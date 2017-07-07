@@ -1,0 +1,33 @@
+import "fbsgen/base"
+import "fbsgen/dict"
+
+p_block(p, module) ::= <<
+«p_main_block(p, module, module.w.v.(p.("name")).val, p.("dir_name"), module.w.vfmt.("UC"), module.w.vfmt.("UC&&_==-"))»
+>>
+
+p_main_block(p, module, name, module_name, nameUC, nameKC) ::= <<
+<li ref:root class="hide">
+{{#if pojo }}
+  <div class="content main">
+    {{ pojo['3'] }}
+  </div>
+{{/if}}
+</li>
+<script>
+export default {
+    data: () => ({ pojo: null }),
+    oncreate() { this.get('item')['c$'] = this },
+    methods: {
+        update(pojo) {
+            let root = this.refs.root
+            if (!pojo) {
+                root.className = 'hide'
+            } else {
+                this.set({ pojo })
+                root.className = 'item'
+            }
+        }
+    }
+}
+</script>
+>>
