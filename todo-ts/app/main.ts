@@ -3,6 +3,6 @@
 
 import { TARGET } from './util'
 
-import '../src/scss/app.scss'
+import '../app.scss'
 import App from './App.html'
 new App({ target: document.getElementById(TARGET) })

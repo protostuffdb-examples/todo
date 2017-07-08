@@ -1,28 +1,28 @@
 
 // Mixins & variables first
-@import "../../node_modules/pavilion/scss/pavilion-parts/functions";
-@import "../../node_modules/pavilion/scss/pavilion-parts/mixins";
-@import "./_variables.scss";
+@import "./node_modules/pavilion/scss/pavilion-parts/functions";
+@import "./node_modules/pavilion/scss/pavilion-parts/mixins";
+@import "./src/scss/_variables.scss";
 
 // Core pavilion-parts
-@import "../../node_modules/pavilion/scss/pavilion-parts/normalize";
-@import "../../node_modules/pavilion/scss/pavilion-parts/base";
-@import "../../node_modules/pavilion/scss/pavilion-parts/grid";
-@import "../../node_modules/pavilion/scss/pavilion-parts/typography";
-@import "./buttons";
-@import "../../node_modules/pavilion/scss/pavilion-parts/lists";
-@import "../../node_modules/pavilion/scss/pavilion-parts/forms";
-@import "../../node_modules/pavilion/scss/pavilion-parts/tables";
-@import "../../node_modules/pavilion/scss/pavilion-parts/utilities";
+@import "./node_modules/pavilion/scss/pavilion-parts/normalize";
+@import "./node_modules/pavilion/scss/pavilion-parts/base";
+@import "./node_modules/pavilion/scss/pavilion-parts/grid";
+@import "./node_modules/pavilion/scss/pavilion-parts/typography";
+@import "./src/scss/buttons";
+@import "./node_modules/pavilion/scss/pavilion-parts/lists";
+@import "./node_modules/pavilion/scss/pavilion-parts/forms";
+@import "./node_modules/pavilion/scss/pavilion-parts/tables";
+@import "./node_modules/pavilion/scss/pavilion-parts/utilities";
 
 
-@import "./fa.scss";
+@import "./src/scss/fa.scss";
 
 i.icon.desc-yes { @extend i.icon.down-big; }
 i.icon.desc-no { @extend i.icon.up-big; }
 i.icon.close { @extend i.icon.cancel; }
 
-@import "./list.scss";
+@import "./src/scss/list.scss";
 
 li.item > button.stripped {
   font-size: 1.1em;
@@ -98,7 +98,7 @@ li.item > button.stripped {
   }
 }
 
-@import "./spectre.scss";
+@import "./src/scss/spectre.scss";
 
 div.detail > hr {
   margin: 0.5em 0;
