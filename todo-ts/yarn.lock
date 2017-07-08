@@ -771,6 +771,14 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
+coreds-ui@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/coreds-ui/-/coreds-ui-0.2.0.tgz#cd332483020c6eda510ea2324b01a1cdfb5617ed"
+  dependencies:
+    "@types/hammerjs" "^2.0.32"
+    hammerjs "^2.0.8"
+    vuets "^0.10.0"
+
 coreds@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/coreds/-/coreds-0.7.0.tgz#ccf445dca1078bb3ad70dbe08c29e5d068429ca3"
@@ -4438,10 +4446,6 @@ to-absolute-glob@^0.1.1:
 to-arraybuffer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-arraybuffer/-/to-arraybuffer-1.0.1.tgz#7d229b1fcc637e466ca081180836a7aabff83f43"
-
-toprogress@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/toprogress/-/toprogress-0.1.3.tgz#e1fc9c032d345e6c871adafd3c099b226890aa85"
 
 tough-cookie@~2.3.0:
   version "2.3.2"

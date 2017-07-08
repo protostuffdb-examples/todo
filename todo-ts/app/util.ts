@@ -1,4 +1,4 @@
-import ToProgress from 'toprogress'
+import { ToProgress } from 'coreds-ui/lib/progress'
 
 export const CONFIG = window['app_config'] || {},
     TARGET = CONFIG['target'] || 'app'
