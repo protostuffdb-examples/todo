@@ -31,7 +31,7 @@ export class TodoPage {
             multiplier: MULTIPLIER,
             descriptor: $.$d,
             createObservable(so: ItemSO, idx: number) {
-                return $.$new0()
+                return $.$new('')
             },
             onSelect(selected: user.Todo, flags: SelectionFlags): number {
                 if (!(flags & SelectionFlags.CLICKED_UPDATE))
@@ -71,7 +71,7 @@ export class TodoPage {
         stores.todo = pstore
         self.pager = pstore.pager
     }
-    
+
     static mounted(self: TodoPage) {
         self.pstore.requestNewer()
     }
