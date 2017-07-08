@@ -81,11 +81,10 @@ export class TodoPage {
     }
 
     pnew$$S(data) {
-        this.pstore.addAll(data['1'], true, true)
-
         let pnew = this.pnew,
             el = document.getElementById('todo-ff') as any
         
+        this.pstore.addAll(data['1'], true, true)
         form.$success(pnew)
         el.focus()
         return true
