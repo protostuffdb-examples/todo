@@ -120,7 +120,7 @@ export function form(pojo: string, $d: any, ffid: string|null,
   ${form_body(pojo, $d, update, { pojo, ffid })}
   ${content_slot === ContentSlot.BOTTOM && content || ''}
   ${form_msg(pojo, update)}
-  <button type="submit" class="ui fluid submit button" @click.prevent="${pojo}$$">
+  <button type="submit" class="outlined" @click.prevent="${pojo}$$">
     ${update ? 'Update' : 'Submit'}
   </button>
 </form>
