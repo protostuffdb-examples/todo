@@ -1,5 +1,5 @@
-/// <reference path="../scss.d.ts" />
-/// <reference path="../html.d.ts" />
+/// <reference path="./scss.d.ts" />
+/// <reference path="./html.d.ts" />
 
 import { TARGET } from './util'
 
