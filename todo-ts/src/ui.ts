@@ -127,12 +127,12 @@ export function form(pojo: string, $d: any, ffid: string|null,
 `/**/
 }
 
-interface FormOpts {
+interface FormRoot {
     pojo: string
     ffid: string|null
 }
 
-function form_body(pojo: string, $d: any, update: boolean, root: FormOpts): string {
+function form_body(pojo: string, $d: any, update: boolean, root: FormRoot): string {
     let out = '',
         array = $d.$fdf
     
@@ -171,7 +171,7 @@ function form_field_class(pojo: string, fd: any): string {
         return `:class="'${base}' + ((${pojo}._.vfbs & ${1 << (fd._ - 1)}) && ${pojo}._['${fd._}'] && ' error' || '')"`
 }
 
-function form_field_switch(pojo: string, fd: any, update: boolean, root: FormOpts, idx: number, ffid: any): string {
+function form_field_switch(pojo: string, fd: any, update: boolean, root: FormRoot, idx: number, ffid: any): string {
     let buf = '',
         t = fd.t
     
@@ -200,7 +200,7 @@ function help_text(str): string {
     return /**/`<div class="help-text">${str}</div>`/**/
 }
 
-function field_bool(pojo: string, fd: any, update: boolean, root: FormOpts, ffid: any): string {
+function field_bool(pojo: string, fd: any, update: boolean, root: FormRoot, ffid: any): string {
     return /**/`
 <label class="switch">
   <input${ffid && ffid_attr(ffid) || ''} type="checkbox" v-sval:${fd.t}="${pojo}['${fd._}']"
@@ -218,7 +218,7 @@ function enum_options(arrayValue: any[], arrayDisplay: any[]): string {
     }
     return out
 }
-function field_enum(pojo: string, fd: any, update: boolean, root: FormOpts, ffid: any): string {
+function field_enum(pojo: string, fd: any, update: boolean, root: FormRoot, ffid: any): string {
     return /**/`
 <div class="fluid picker">
   <select${ffid && ffid_attr(ffid) || ''} v-sval:${fd.t}="${pojo}['${fd._}']"
@@ -237,7 +237,7 @@ export const enum DPFlags {
 function dpicker(pojo: string, field: number, update: boolean): string {
     return ` v-dpicker:${DPFlags.TRIGGER_CHANGE_ON_SELECT | (update ? DPFlags.UPDATE : 0)}="{ pojo: ${pojo}, field: '${field}' }"`
 }
-function field_num(pojo: string, fd: any, update: boolean, root: FormOpts, ffid: any): string {
+function field_num(pojo: string, fd: any, update: boolean, root: FormRoot, ffid: any): string {
     return /**/`
 <div class="ui input">
   <input${ffid && ffid_attr(ffid) || ''} type="text"${fd.o === 2 && dpicker(pojo, fd._, update) || ''}
@@ -249,7 +249,7 @@ function field_num(pojo: string, fd: any, update: boolean, root: FormOpts, ffid:
 `/**/
 }
 
-function field_textarea(pojo: string, fd: any, update: boolean, root: FormOpts, ffid: any): string {
+function field_textarea(pojo: string, fd: any, update: boolean, root: FormRoot, ffid: any): string {
     return /**/`
 <div class="ui input">
   <textarea${ffid && ffid_attr(ffid) || ''} v-sval:${fd.t}="${pojo}['${fd._}']"
@@ -260,7 +260,7 @@ function field_textarea(pojo: string, fd: any, update: boolean, root: FormOpts, 
 `/**/
 }
 
-function field_default(pojo: string, fd: any, update: boolean, root: FormOpts, ffid: any): string {
+function field_default(pojo: string, fd: any, update: boolean, root: FormRoot, ffid: any): string {
     return /**/`
 <div class="ui input">
   <input${ffid && ffid_attr(ffid) || ''} type="${fd.pw ? 'password' : 'text'}"
