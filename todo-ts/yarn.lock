@@ -3724,7 +3724,7 @@ require-main-filename@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-1.0.1.tgz#97f717b69d48784f5f526a6c5aa8ffdda055a4d1"
 
-require-relative@0.8.7:
+require-relative@0.8.7, require-relative@^0.8.7:
   version "0.8.7"
   resolved "https://registry.yarnpkg.com/require-relative/-/require-relative-0.8.7.tgz#7999539fc9e047a37928fa196f8e1563dabd36de"
 
@@ -3821,10 +3821,11 @@ rollup-plugin-scss@^0.2.0:
     node-sass "^3.10.1"
     rollup-pluginutils "^1.5.2"
 
-rollup-plugin-svelte@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/rollup-plugin-svelte/-/rollup-plugin-svelte-1.8.1.tgz#3a28dbfd073c4780e46207a74dd6999c6f56b97c"
+rollup-plugin-svelte@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-svelte/-/rollup-plugin-svelte-2.0.2.tgz#12fb3abc77b68ed4b42f084b2f8b7481f27e62e8"
   dependencies:
+    require-relative "^0.8.7"
     rollup-pluginutils "^2.0.1"
     svelte "^1.11.2"
 
@@ -4313,9 +4314,9 @@ supports-color@^4.0.0:
   dependencies:
     has-flag "^2.0.0"
 
-svelte@^1.11.2:
-  version "1.18.2"
-  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.18.2.tgz#36a61f96d7d3e5d6c7c074bbd86eb03d10f06d84"
+svelte@^1.11.2, svelte@^1.24.0:
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/svelte/-/svelte-1.24.0.tgz#7f4aa063a38ded2df4903208859f417e0a848f60"
 
 svgo@^0.7.0:
   version "0.7.2"
