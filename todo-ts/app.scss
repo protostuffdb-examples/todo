@@ -56,7 +56,7 @@ li.item > button.stripped {
 .field {
   border: 0;
   padding: 0;
-  margin: 0 0 1.5rem;
+  margin: 0 0 0.8rem;
 }
 
 .ui.msg,
@@ -105,6 +105,10 @@ li.item > button.stripped {
 
 div.detail > hr {
   margin: 0.5em 0;
+}
+
+div.detail > form {
+  margin-bottom: 0;
 }
 
 .content.dd {

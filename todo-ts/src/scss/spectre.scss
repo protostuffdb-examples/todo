@@ -10,6 +10,7 @@ label.switch {
   line-height: 2rem;
   padding: .2rem 2rem .2rem 3.6rem;
   position: relative;
+  margin-bottom: 0;
 
   > i {
     background: $light-gray-color;
@@ -42,7 +43,12 @@ label.switch {
   }
 
   > input {
-    display: none;
+    margin: 0 1em 0 -2em;
+    &:focus + i {
+      &::after {
+        background: lighten($primary-color, 40%);
+      }
+    }
     &:checked + i {
       background: $primary-color;
       border-color: $primary-color;
@@ -57,3 +63,4 @@ label.switch {
     }
   }
 }
+
