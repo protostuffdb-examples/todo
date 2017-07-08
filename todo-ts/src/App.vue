@@ -3,7 +3,7 @@
   <div id="popup" class="popup">&nbsp;</div>
   <div style="display:none">
     <Suggest />
-    <Calendar />
+    <!--<Calendar />-->
   </div>
   <div class="container-full-width">
     <home></home>
