@@ -18,7 +18,7 @@
     "app.b": "TARGET=app rollup -c --environment production && cleancss -O2 removeDuplicateRules:on dist/app.css > dist/app.min.css && mv dist/app.min.css dist/app.css"
   },
   "dependencies": {
-    "coreds": "^0.7.0",
+    "coreds": "^0.7.1",
     "coreds-ui": "^0.2.0",
     "pavilion": "^2.0.3",
     "vue": "2.1.10",
