@@ -4616,6 +4616,10 @@ uuid@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
+v_@2.1.10:
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/v_/-/v_-2.1.10.tgz#22bf18af3d130dffe861c169fcb0802eaf64a89a"
+
 vali-date@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/vali-date/-/vali-date-1.0.0.tgz#1b904a59609fb328ef078138420934f6b86709a6"

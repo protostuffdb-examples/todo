@@ -95,16 +95,13 @@ export class TodoPage {
     }
     pnew$$() {
         let pnew = this.pnew,
-            req,
             lastSeen
         if (!form.$prepare(pnew))
             return
         
-        req = mergeFrom(pnew, $.$d, $.$new0())
-        if ((lastSeen = this.pstore.getLastSeenObj()))
-            req['1'] = lastSeen['1']
+        pnew['1'] = (lastSeen = this.pstore.getLastSeenObj()) && lastSeen['1']
         
-        $.ForUser.create(req)
+        $.ForUser.create(pnew)
             .then(this.pnew$$S).then(undefined, this.pnew$$F)
     }
     pupdate$$S(data) {
