@@ -70,7 +70,10 @@ export class TodoPage {
         }))
         stores.todo = pstore
         self.pager = pstore.pager
-        pstore.requestNewer()
+    }
+    
+    static mounted(self: TodoPage) {
+        self.pstore.requestNewer()
     }
 
     fetch$$S(data) {
@@ -130,6 +133,7 @@ export class TodoPage {
 }
 export default component({
     created(this: TodoPage) { TodoPage.created(this) },
+    mounted(this: TodoPage) { TodoPage.mounted(this) },
     components: {
         item: {
             name: 'Item', props: { pojo: { type: Object, required: true } }, data() { return {} },
