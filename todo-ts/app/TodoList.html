@@ -1,51 +1,49 @@
 <div class="col-pp-100 col-pl-50 col-tl-33">
 <ul class="ui right floated horizontal list">
   <li class="item" title="sort">
-    <a disabled="{{ loading || 2 > size }}" on:click="toggleDesc(store)">
+    <button class="stripped" disabled="{{ loading || 2 > size }}" on:click="toggleDesc(store)">
       <i class="{{ desc ? 'icon desc-yes' : 'icon desc-no' }}"></i>
-    </a>
+    </button>
   </li>
   <li class="item" title="refresh">
-    <a title="refresh" disabled="{{ loading || 0 === size }}" on:click="fetchUpdate(store)">
+    <button class="stripped" title="refresh" disabled="{{ loading || 0 === size }}" on:click="fetchUpdate(store)">
       <i class="icon cw"></i>
-    </a>
+    </button>
   </li>
   <li class="item">  
-    <a disabled="{{ loading || 0 === page }}" on:click="goto(0, store)">
+    <button class="stripped" disabled="{{ loading || 0 === page }}" on:click="goto(0, store)">
       <i class="icon angle-double-left"></i>
-    </a>
+    </button>
   </li>
   <li class="item">
-    <a disabled="{{ loading }}" on:click="prevOrLoad(store)">
+    <button class="stripped" disabled="{{ loading }}" on:click="prevOrLoad(store)">
       <i class="icon angle-left"></i>
-    </a>
+    </button>
   </li>
   <li class="item">
-    <a disabled="{{ loading || 0 === size }}" on:click="nextOrLoad(store)">
+    <button class="stripped" disabled="{{ loading || 0 === size }}" on:click="nextOrLoad(store)">
       <i class="icon angle-right"></i>
-    </a>
+    </button>
   </li>
   <li class="item">
-    <a disabled="{{ loading || page_count === page }}" on:click="goto(page_count, store)">
+    <button class="stripped" disabled="{{ loading || page_count === page }}" on:click="goto(page_count, store)">
       <i class="icon angle-double-right"></i>
-    </a>
+    </button>
   </li>
   <li ref:plus class="item" title="add" on:click="toggle('pnew', '', 'pnew_msg', true, 'pnew_ff')">
-    <a><i class="icon plus"></i></a>
+    <button class="stripped"><i class="icon plus"></i></button>
   </li>
   <!--<li ref:filter class="item" title="filter">
-    <a><i class="icon filter"></i></a>
+    <button class="stripped"><i class="icon filter"></i></button>
   </li>-->
 </ul>
 <ul class="ui horizontal list">
-  <li class="item">
-    <sup>{{ page_info }}</sup>
-  </li>
+  <li class="item page-info">{{ page_info }}</li>
 </ul>
 <form ref:pnew class="hide">
   <div class="ib float-right">
     <input ref:pnew_ff type="text" placeholder="Title" bind:value="pnew['3']" disabled="{{ loading }}" />
-    <button type="submit" class="button button-outlined" on:click="pnew$$(event)" disabled="{{ loading }}">
+    <button type="submit" class="outlined" on:click="pnew$$(event)" disabled="{{ loading }}">
       <i class="icon play"></i>
     </button>
   </div>

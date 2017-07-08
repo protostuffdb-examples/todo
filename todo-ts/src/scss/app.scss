@@ -9,7 +9,7 @@
 @import "../../node_modules/pavilion/scss/pavilion-parts/base";
 @import "../../node_modules/pavilion/scss/pavilion-parts/grid";
 @import "../../node_modules/pavilion/scss/pavilion-parts/typography";
-@import "../../node_modules/pavilion/scss/pavilion-parts/buttons";
+@import "./buttons";
 @import "../../node_modules/pavilion/scss/pavilion-parts/lists";
 @import "../../node_modules/pavilion/scss/pavilion-parts/forms";
 @import "../../node_modules/pavilion/scss/pavilion-parts/tables";
@@ -24,9 +24,8 @@ i.icon.close { @extend i.icon.cancel; }
 
 @import "./list.scss";
 
-ul.ui.horizontal.list > li.item > a {
-  cursor: pointer;
-  text-decoration: none;
+li.item > button.stripped {
+  font-size: 1.1em;
 }
 
 // tab
@@ -124,7 +123,7 @@ div.ib {
     display: inline-block;
     width: auto;
   }
-  > button.button-outlined {
+  > button.outlined {
     padding: 0.5rem 0.5rem 0.5rem 0.9rem;
     margin: 0;
   }
