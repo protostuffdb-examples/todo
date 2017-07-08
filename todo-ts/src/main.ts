@@ -3,10 +3,9 @@ declare function require(path: string): any;
 // ================================================== 
 // override
 
-const ToProgress = require('toprogress')
+import { ToProgress } from './progress'
 const tp = new ToProgress({
-    color: '#0080FF',
-    position: 'top'
+    color: '#0080FF'
 })
 function finish() {
     tp.finish()
