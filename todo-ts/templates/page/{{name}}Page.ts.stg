@@ -39,7 +39,7 @@ export class «name»Page {
             multiplier: MULTIPLIER,
             descriptor: $.$d,
             createObservable(so: ItemSO, idx: number) {
-                return $.$new0()
+                return $.$new(/*TODO*/)
             },
             onSelect(selected: «module_name».«name», flags: SelectionFlags): number {
                 if (!(flags & SelectionFlags.CLICKED_UPDATE))
