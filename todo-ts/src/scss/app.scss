@@ -117,3 +117,19 @@ small.description {
 div.content.completed {
   text-decoration: line-through;
 }
+
+div.ib {
+  display: inline-block;
+  > input {
+    display: inline-block;
+    width: auto;
+  }
+  > button.button-outlined {
+    padding: 0.5rem 0.5rem 0.5rem 0.9rem;
+    margin: 0;
+  }
+}
+
+.float-right {
+  float: right;
+}

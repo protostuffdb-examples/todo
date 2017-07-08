@@ -19,12 +19,49 @@ export function mergeFrom(src, target/*, other?*/) {
     return target
 }
 
+function plural(num, unit, suffix) {
+    num = ~~num
+    var buf = ''
+    buf += num
+    buf += ' '
+    buf += unit
+    if (num !== 1)
+        buf += 's'
+    if (suffix)
+        buf += suffix
+    
+    return buf
+}
+
+const MINUTE = 60
+const HOUR = 60 * MINUTE
+const DAY = 24 * HOUR
+
+export function timebetween(a, b, suffix) {
+    const elapsed = b - a;
+
+    if (elapsed === 0) {
+        return 'just moments' + suffix
+    } else if (elapsed < MINUTE) {
+        return plural(elapsed, 'second', suffix);
+    } else if (elapsed < HOUR) {
+        return plural(elapsed / MINUTE, 'minute', suffix);
+    } else if (elapsed < DAY) {
+        return plural(elapsed / HOUR, 'hour', suffix);
+    } else {
+        return plural(elapsed / DAY, 'day', suffix);
+    }
+}
+
+export function timeago(ts) {
+    return timebetween(Math.floor(ts/1000), Math.floor(Date.now()/1000), ' ago')
+}
+
 // ================================================== 
 // override
 
 const tp = new ToProgress({
-    color: '#0080FF',
-    position: 'top'
+    color: '#0080FF'
 })
 function finish() {
     tp.finish()
