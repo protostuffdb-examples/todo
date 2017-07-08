@@ -28,7 +28,7 @@ i.icon.close { @extend i.icon.cancel; }
 @import "./scss/list.scss";
 
 li.item > button.stripped {
-  font-size: 1.1em;
+  font-size: 1.05em;
 }
 
 // tab
@@ -120,7 +120,7 @@ small.description {
 }
 
 // app specific
-div.content.completed {
+div.completed {
   text-decoration: line-through;
 }
 
@@ -138,4 +138,8 @@ div.ib {
 
 .float-right {
   float: right;
+}
+
+.page-info {
+  font-size: 0.85em;
 }
