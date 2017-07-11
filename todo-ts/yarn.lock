@@ -779,9 +779,9 @@ coreds-ui@^0.2.1:
     hammerjs "^2.0.8"
     vuets "^0.10.0"
 
-coreds@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/coreds/-/coreds-0.7.3.tgz#5c4c77b912ab2df5da7fa7266b33309210fe8802"
+coreds@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/coreds/-/coreds-0.7.4.tgz#5eea1295d552a3073b65b1a2222c938411fa6fb2"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.6"
