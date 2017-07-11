@@ -14,10 +14,9 @@
 @import "./node_modules/pavilion/scss/pavilion-parts/forms";
 @import "./node_modules/pavilion/scss/pavilion-parts/tables";
 @import "./node_modules/pavilion/scss/pavilion-parts/utilities";
-
-select {
-  -webkit-appearance: none;
-}
+@import "./scss/msg.scss";
+@import "./scss/spectre.scss";
+@import "./scss/tab.scss";
 
 @import "./scss/fa.scss";
 
@@ -25,83 +24,27 @@ i.icon.desc-yes { @extend i.icon.down-big; }
 i.icon.desc-no { @extend i.icon.up-big; }
 i.icon.close { @extend i.icon.cancel; }
 
+@import "./scss/form.scss";
+
+select {
+  -webkit-appearance: none;
+}
+
 @import "./scss/list.scss";
 
 li.item > button.stripped {
   font-size: 1.05em;
 }
 
-// tab
-
-.ui.tab {
-  display:none;
-  position: relative;
-  > i.close {
-    position: absolute;
-    margin: 0;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-  }
-}
-.ui.tab.active, .ui.tab.open {
-  display:block;
+li.item > .ui.msg {
+  margin: 0.5em 0 0 0;
 }
 
-.ui.tab.box > * {
-  background-color: $subtleTransparentBlack;
-  padding: 0.5em;
+.page-info {
+  font-size: 0.85em;
 }
 
-.field {
-  border: 0;
-  padding: 0;
-  margin: 0 0 0.8rem;
-}
-
-.ui.msg,
-.ui.message {
-  position: relative;
-  padding: 1em 0.5em 0.5em 0.5em;
-  margin-bottom: 0.5em;
-  cursor: default;
-  > .close {
-    position: absolute;
-    padding: 0.2em 0.3em;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
-}
-
-.ui.msg.success,
-.ui.message.status-1 {
-  background-color: $success-bg-color;
-  color: $success-color;
-  border-left: 4px solid $success-color;
-}
-
-.ui.msg.error,
-.ui.message.status-2 {
-  background-color: $error-bg-color;
-  color: $error-color;
-  border-left: 4px solid $error-color;
-}
-.ui.msg.warning,
-.ui.message.status-4 {
-  background-color: $warning-bg-color;
-  color: $warning-color;
-  border-left: 4px solid $warning-color;
-}
-
-.ui.button {
-  &:hover, &:focus {
-    color: $primary-color;
-  }
-}
-
-@import "./scss/spectre.scss";
+// item detail
 
 div.detail > hr {
   margin: 0.5em 0;
@@ -111,7 +54,7 @@ div.detail > form {
   margin-bottom: 0;
 }
 
-.content.dd {
+div.content.dd {
   margin-left: 1.25em;
 }
 
@@ -119,9 +62,11 @@ small.description {
   color: $alt-color !important;
 }
 
-// app specific
-div.completed {
-  text-decoration: line-through;
+// ================================================== 
+// misc
+
+.float-right {
+  float: right;
 }
 
 div.ib {
@@ -136,10 +81,9 @@ div.ib {
   }
 }
 
-.float-right {
-  float: right;
-}
+// ================================================== 
+// app specific
 
-.page-info {
-  font-size: 0.85em;
+div.completed {
+  text-decoration: line-through;
 }
