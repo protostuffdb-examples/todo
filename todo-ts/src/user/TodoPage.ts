@@ -130,29 +130,13 @@ export class TodoPage {
     change(e, field, pojo, update, root) {
         return form.$change(e, field, pojo, update, root)
     }
+    toggle(field, pojo) {
+        // TODO
+    }
 }
 export default component({
     created(this: TodoPage) { TodoPage.created(this) },
     mounted(this: TodoPage) { TodoPage.mounted(this) },
-    components: {
-        item: {
-            name: 'Item', props: { pojo: { type: Object, required: true } }, data() { return {} },
-            template: /**/`
-<li v-defp:pager_item="pojo" v-show="(pojo._.lstate & ${PojoListState.INCLUDED})"
-    :class="(pojo._.lstate & ${PojoListState.SELECTED}) ? 'item active' : 'item'">
-  <div class="content">
-    <small class="description">
-      ${ui.icon_timeago}
-    </small>
-  </div>
-  <div :class="!pojo['${$.$.completed}'] ? 'content dd' : 'content dd completed'">
-    {{ pojo['${$.$.title}'] }}
-  </div>
-  <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:todo-detail="pojo._.state & ${PojoState.UPDATE}"></div>
-</li>
-            `/**/
-        }
-    },
     template: /**/`
 <div class="col-pp-100 col-pl-50 col-tl-33" v-pager="pager">
 <ul class="ui right floated horizontal list">
@@ -172,7 +156,18 @@ ${ui.pager_controls}
 </div>
 ${ui.pager_msg}
 <ul class="ui small divided selection list">
-  <item v-for="pojo of pager.array" :pojo="pojo" />
+<pi v-for="pojo of pager.array" :pojo="pojo">
+  <div class="content right floated">
+    ${ui.icon_toggle($.$.completed, 32, 'circle', ` :title="pojo[''] ? 'Completed' : 'Mark Completed?'"`)}
+  </div>
+  <div class="content">
+    <small class="description">${ui.icon_timeago}</small>
+  </div>
+  <div :class="!pojo['${$.$.completed}'] ? 'content dd' : 'content dd completed'">
+    {{ pojo['${$.$.title}'] }}
+  </div>
+  <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:todo-detail="pojo._.state & ${PojoState.UPDATE}"></div>
+</pi>
 </ul>
 <div style="display:none">
   <div id="todo-detail" class="detail">

@@ -1,9 +1,14 @@
-import { PagerState, PojoState, FieldType } from 'coreds/lib/types'
+import { PagerState, PojoState, FieldType, PojoListState } from 'coreds/lib/types'
 
 export const enum ContentSlot {
     TOP = 0,
     BOTTOM = 1
 }
+
+export const pi_expr = /**/`
+v-defp:pager_item="pojo" v-show="(pojo._.lstate & ${PojoListState.INCLUDED})"
+:class="(pojo._.lstate & ${PojoListState.SELECTED}) ? 'item active' : 'item'"
+`/**/
 
 export const suggest_controls = /**/`
 <ul class="ui horizontal list">
@@ -97,6 +102,15 @@ export const pager_msg = /**/`
 export const icon_timeago = /**/`
 <i class="icon clock"></i>{{ pojo['2'] | prettydate }}
 `/**/
+
+export function icon_toggle(fk: string, bit: number, icon_class: string, suffix?: string): string {
+    if (bit < 32) throw 'Invalid bit: ' + bit
+    return /**/`
+<i :class="'icon action ${icon_class}' + (!pojo['${fk}'] ? ' empty' : '')" @click.prevent="(pojo._.state ^= ${bit})"${suffix}></i>
+<i class="icon action ok-circled" v-show="(pojo._.state & ${bit})" @click.prevent="toggle('${fk}', pojo, pojo._.state ^= ${bit})"></i>
+<i class="icon action cancel-circled" v-show="(pojo._.state & ${bit})" @click.prevent="(pojo._.state ^= ${bit})"></i>
+`/**/
+}
 
 // ================================================== 
 // form
