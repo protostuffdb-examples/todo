@@ -13,7 +13,7 @@ import { PojoStore } from 'coreds/lib/pstore/'
 import { mergeFrom } from 'coreds/lib/diff'
 import { ParamRangeKey } from 'coreds/lib/prk'
 import * as form from 'coreds/lib/form'
-import * as ui from '../ui'
+import * as ui from '../ui/'
 import { stores } from '../context'
 import { «module_name» } from '../../g/«module_name»/'
 const $ = «module_name».«name»
