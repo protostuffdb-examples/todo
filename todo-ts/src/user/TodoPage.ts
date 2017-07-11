@@ -138,7 +138,7 @@ export class TodoPage {
         form.$toggle_failed(this.pager, err)
     }
     toggle(field, pojo) {
-        let mc = form.$toggle(this.pager, field)
+        let mc = form.$toggle(this.pager, field, pojo)
         mc && $.ForUser.update(form.$update_req(pojo['1'] as string, mc))
             .then(this.toggle$$S).then(undefined, this.toggle$$F)
     }
