@@ -10,6 +10,13 @@ v-defp:pager_item="pojo" v-show="(pojo._.lstate & ${PojoListState.INCLUDED})"
 :class="(pojo._.lstate & ${PojoListState.SELECTED}) ? 'item active' : 'item'"
 `/**/
 
+export const pi_msg = /**/`
+<div :class="'ui msg status-' + (pojo._.state & ${PojoState.MASK_STATUS})" v-show="pojo._.msg">
+  <i class="close icon" @click.prevent="pojo._.msg = null"></i>
+  <span v-text="pojo._.msg"></span>
+</div>
+`/**/
+
 export const suggest_controls = /**/`
 <ul class="ui horizontal list">
   <li class="item">
@@ -89,7 +96,7 @@ export const pager_controls = /**/`
 
 export const pager_msg = /**/`
 <div v-show="pager.msg && (pager.state & ${PagerState.MASK_STATUS})">
-  <div :class="'ui message status-' + (pager.state & ${PagerState.MASK_STATUS})">
+  <div :class="'ui msg status-' + (pager.state & ${PagerState.MASK_STATUS})">
     <i class="close icon" @click.prevent="pager.msg = null"></i>
     <span v-text="pager.msg"></span>
   </div>
@@ -121,7 +128,7 @@ function form_msg_show(pojo: string): string {
 
 function form_msg(pojo: string, update: boolean): string {
     return /**/`
-<div :class="'ui message status-' + (${pojo}._.state & ${PojoState.MASK_STATUS})"
+<div :class="'ui msg status-' + (${pojo}._.state & ${PojoState.MASK_STATUS})"
     v-show="${pojo}._.msg${update && form_msg_show(pojo) || ''}">
   <i class="icon close" @click.prevent="${pojo}._.msg = null"></i>
   <span v-text="${pojo}._.msg"></span>
