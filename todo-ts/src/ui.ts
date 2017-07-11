@@ -115,7 +115,7 @@ export function icon_toggle(fk: string, bit: number, icon_class: string, name?: 
     let suffix = !name ? '' : ` :title="pojo['${fk}'] ? '${name}' : 'Mark ${name}?'"`
     return /**/`
 <i :class="'icon action ${icon_class}' + (!pojo['${fk}'] ? ' empty' : '')" @click.prevent="(pojo._.state ^= ${bit})"${suffix}></i>
-<i class="icon action ok-circled" v-show="(pojo._.state & ${bit})" @click.prevent="!(pojo._.state ^= ${bit}) && $emit('toggle', '${fk}')"></i>
+<i class="icon action ok-circled" v-show="(pojo._.state & ${bit})" @click.prevent="0 <= (pojo._.state ^= ${bit}) && $emit('toggle', '${fk}')"></i>
 <i class="icon action cancel-circled" v-show="(pojo._.state & ${bit})" @click.prevent="(pojo._.state ^= ${bit})"></i>
 `/**/
 }
