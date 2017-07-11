@@ -4,7 +4,6 @@ declare function require(path: string): any;
 
 import * as Vue from 'vue'
 import { TARGET, filters } from './util'
-//import { pi_attrs } from './ui'
 
 //import { registerDefaults } from 'coreds-ui/lib/screen_util'
 //registerDefaults()
@@ -30,12 +29,6 @@ Vue.directive('dpicker', require('coreds-ui/lib/d2/dpicker'))
 //Vue.directive('rappendto', require('coreds-ui/lib/d2/rappendto'))
 //Vue.directive('rclass', require('coreds-ui/lib/d2/rclass'))
 //Vue.directive('lsearch', require('coreds-ui/lib/d2/lsearch'))
-
-// components
-//Vue.component('pi', {
-//    name: 'PagerItem', props: { pojo: { type: Object, required: true } }, data() { return {} },
-//    template: /**/`<li ${pi_attrs}><slot /></li>`/**/
-//})
 
 let app = require('./App.vue')
 new Vue(app).$mount(document.getElementById(TARGET) as any)
