@@ -5,8 +5,9 @@ import { PojoStore } from 'coreds/lib/pstore/'
 import { mergeFrom } from 'coreds/lib/diff'
 import { ParamRangeKey } from 'coreds/lib/prk'
 import * as form from 'coreds/lib/form'
-import * as ui from '../ui'
+import * as ui from '../ui/'
 import { stores } from '../context'
+import { qd, QForm } from '../../g/user/TodoQForm'
 import { user } from '../../g/user/'
 const $ = user.Todo
 
@@ -16,6 +17,7 @@ const PAGE_SIZE = 10,
 export class TodoPage {
     pager: Pager
     pstore: PojoStore<user.Todo>
+    qform = new QForm()
 
     pnew = form.initObservable($.$new0(), $.$d)
     pupdate = form.initObservable($.$new0(), $.$d)
@@ -68,9 +70,18 @@ export class TodoPage {
                 return 0
             },
             fetch(prk: ParamRangeKey, pager: Pager) {
-                return $.ForUser.list(prk).then(self.fetch$$S).then(undefined, self.fetch$$F)
+                return self.qform.send(prk)
             }
         }))
+        QForm.init(self.qform, self, {
+            pager: pstore.pager, 
+            cbSuccess: self.fetch$$S, 
+            cbFailed: self.fetch$$F,
+            hasToken: { token: '' },
+            list(prk: ParamRangeKey, hasToken: { token: string }): PromiseLike<any> {
+                return $.ForUser.list(prk)
+            }
+        })
         stores.todo = pstore
         self.pager = pstore.pager
     }
@@ -187,7 +198,7 @@ ${ui.pager_controls}
   ${ui.form('pnew', $.$d, 'todo-ff')}
 </div>
 <div class="ui tab">
-  TODO filter
+  ${ui.qform(qd)}
 </div>
 ${ui.pager_msg}
 <ul class="ui small divided selection list">
