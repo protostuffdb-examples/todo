@@ -130,8 +130,17 @@ export class TodoPage {
     change(e, field, pojo, update, root) {
         return form.$change(e, field, pojo, update, root)
     }
+
+    toggle$$S(data) {
+        form.$toggle_success(this.pager, this.pupdate)
+    }
+    toggle$$F(err) {
+        form.$toggle_failed(this.pager, err)
+    }
     toggle(field, pojo) {
-        // TODO
+        let mc = form.$toggle(this.pager, field)
+        mc && $.ForUser.update(form.$update_req(pojo['1'] as string, mc))
+            .then(this.toggle$$S).then(undefined, this.toggle$$F)
     }
 }
 export default component({
@@ -167,6 +176,7 @@ ${ui.pager_msg}
     {{ pojo['${$.$.title}'] }}
   </div>
   <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:todo-detail="pojo._.state & ${PojoState.UPDATE}"></div>
+  ${ui.pi_msg}
 </pi>
 </ul>
 <div style="display:none">
