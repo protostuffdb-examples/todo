@@ -167,7 +167,7 @@ ${ui.pager_msg}
 <ul class="ui small divided selection list">
 <pi v-for="pojo of pager.array" :pojo="pojo">
   <div class="content right floated">
-    ${ui.icon_toggle($.$.completed, 32, 'circle', ` :title="pojo[''] ? 'Completed' : 'Mark Completed?'"`)}
+    ${ui.icon_toggle($.$.completed, 32, 'circle', $.$d[$.$.completed].$n)}
   </div>
   <div class="content">
     <small class="description">${ui.icon_timeago}</small>

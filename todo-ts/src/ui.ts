@@ -110,8 +110,9 @@ export const icon_timeago = /**/`
 <i class="icon clock"></i>{{ pojo['2'] | prettydate }}
 `/**/
 
-export function icon_toggle(fk: string, bit: number, icon_class: string, suffix?: string): string {
+export function icon_toggle(fk: string, bit: number, icon_class: string, name?: string): string {
     if (bit < 32) throw 'Invalid bit: ' + bit
+    let suffix = !name ? '' : ` :title="pojo['${fk}'] ? '${name}' : 'Mark ${name}?'"`
     return /**/`
 <i :class="'icon action ${icon_class}' + (!pojo['${fk}'] ? ' empty' : '')" @click.prevent="(pojo._.state ^= ${bit})"${suffix}></i>
 <i class="icon action ok-circled" v-show="(pojo._.state & ${bit})" @click.prevent="toggle('${fk}', pojo, pojo._.state ^= ${bit})"></i>
