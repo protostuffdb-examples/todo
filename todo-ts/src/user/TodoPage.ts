@@ -140,7 +140,12 @@ export default component({
             template: /**/`
 <li v-defp:pager_item="pojo" v-show="(pojo._.lstate & ${PojoListState.INCLUDED})"
     :class="(pojo._.lstate & ${PojoListState.SELECTED}) ? 'item active' : 'item'">
-  <div :class="!pojo['${$.$.completed}'] ? '' : 'completed'">
+  <div class="content">
+    <small class="description">
+      ${ui.icon_timeago}
+    </small>
+  </div>
+  <div :class="!pojo['${$.$.completed}'] ? 'content dd' : 'content dd completed'">
     {{ pojo['${$.$.title}'] }}
   </div>
   <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:todo-detail="pojo._.state & ${PojoState.UPDATE}"></div>

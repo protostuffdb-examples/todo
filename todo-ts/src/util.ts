@@ -1,7 +1,12 @@
 import { ToProgress } from 'coreds-ui/lib/progress'
+import { prettyDate } from 'coreds/lib/datetime_util'
 
 export const CONFIG = window['app_config'] || {},
     TARGET = CONFIG['target'] || 'app'
+
+export const filters = {
+    prettydate: value => value ? prettyDate(value) : ''
+}
 
 // ================================================== 
 // override

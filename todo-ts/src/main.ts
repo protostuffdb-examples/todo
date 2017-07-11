@@ -3,16 +3,13 @@ declare function require(path: string): any;
 // ==================================================
 
 import * as Vue from 'vue'
-import { TARGET } from './util'
+import { TARGET, filters } from './util'
 
-import { registerDefaults } from 'coreds-ui/lib/screen_util'
-//import * as filters from 'coreds-ui/lib/filters'
+//import { registerDefaults } from 'coreds-ui/lib/screen_util'
+//registerDefaults()
 
-registerDefaults()
-
-//for (var i in filters) {
-//    Vue.filter(i, filters[i])
-//}
+// global filters
+for (var i of Object.keys(filters)) Vue.filter(i, filters[i])
 
 // directives
 Vue.directive('append', require('coreds-ui/lib/d2/append'))

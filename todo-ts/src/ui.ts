@@ -92,6 +92,13 @@ export const pager_msg = /**/`
 `/**/
 
 // ================================================== 
+// icons
+
+export const icon_timeago = /**/`
+<i class="icon clock"></i>{{ pojo['2'] | prettydate }}
+`/**/
+
+// ================================================== 
 // form
 
 function form_msg_show(pojo: string): string {
