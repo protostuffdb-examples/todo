@@ -141,8 +141,10 @@ export class TodoPage {
     toggle$$F(err) {
         form.$toggle_failed(this.pager, err)
     }
-    toggle(field, pojo) {
-        let mc = form.$toggle(this.pager, field, pojo)
+    toggle(field) {
+        let pager = this.pager,
+            pojo = pager.pojo,
+            mc = form.$toggle(pager, field, pojo)
         mc && $.ForUser.update(form.$update_req(pojo['1'] as string, mc))
             .then(this.toggle$$S).then(undefined, this.toggle$$F)
     }
@@ -155,7 +157,9 @@ export default component({
             name: 'Item', props: { pojo: { type: Object, required: true } }, data() { return {} },
             template: /**/`
 <li ${ui.pi_attrs}>
-  <slot/>
+  <div class="content right floated">
+    ${ui.icon_toggle($.$.completed, 32, 'circle', $.$d[$.$.completed].$n)}
+  </div>
   <div class="content">
     <small class="description">${ui.icon_timeago}</small>
   </div>
@@ -187,11 +191,7 @@ ${ui.pager_controls}
 </div>
 ${ui.pager_msg}
 <ul class="ui small divided selection list">
-  <item v-for="pojo of pager.array" :pojo="pojo">
-    <div class="content right floated">
-      ${ui.icon_toggle($.$.completed, 32, 'circle', $.$d[$.$.completed].$n)}
-    </div>
-  </item>
+  <item v-for="pojo of pager.array" :pojo="pojo" v-on:toggle="toggle" />
 </ul>
 <div style="display:none">
   <div id="todo-detail" class="detail">
