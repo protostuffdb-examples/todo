@@ -109,6 +109,7 @@ export class TodoPage {
         $.ForUser.create(pnew)
             .then(this.pnew$$S).then(undefined, this.pnew$$F)
     }
+    
     pupdate$$S(data) {
         let pager = this.pager,
             selected = pager.pojo as user.Todo,

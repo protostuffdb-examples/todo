@@ -117,6 +117,7 @@ export class «name»Page {
         $.ForUser.create(pnew)
             .then(this.pnew$$S).then(undefined, this.pnew$$F)
     }
+    
     pupdate$$S(data) {
         let pager = this.pager,
             selected = pager.pojo as «module_name».«name»,
