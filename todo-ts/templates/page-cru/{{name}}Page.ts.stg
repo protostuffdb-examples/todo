@@ -186,16 +186,10 @@ export default component({
   <li class="item" title="add" v-toggle="'1__.3'">
     &nbsp;&nbsp;<button class="stripped"><i class="icon plus"></i></button>
   </li>
-  <li class="item" title="filter" v-toggle="'1__.4'">
-    <button class="stripped"><i class="icon filter"></i></button>
-  </li>
 </ul>
 ${ui.pager_controls}
 <div class="ui tab box">
   ${ui.form('pnew', $.$d, '«nameKC»-ff')}
-</div>
-<div class="ui tab">
-  TODO filter
 </div>
 ${ui.pager_msg}
 <ul class="ui small divided selection list">
