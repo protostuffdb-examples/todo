@@ -1,6 +1,6 @@
 import { component } from 'vuets'
-import { defp, nullp  } from 'coreds/lib/util'
-import { Pager, ItemSO, SelectionFlags, PojoListState, PojoSO, PojoState } from 'coreds/lib/types'
+import { $any, defg, defp, nullp } from 'coreds/lib/util'
+import { Pager, ItemSO, SelectionFlags, PojoSO, PojoState } from 'coreds/lib/types'
 import { PojoStore } from 'coreds/lib/pstore/'
 import { mergeFrom } from 'coreds/lib/diff'
 import { ParamRangeKey } from 'coreds/lib/prk'
@@ -20,6 +20,9 @@ export class TodoPage {
     pnew = form.initObservable($.$new0(), $.$d)
     pupdate = form.initObservable($.$new0(), $.$d)
 
+    m = defg(this, 'm', {
+        ff: $any(null) // first field
+    })
     constructor() {
         nullp(this, 'pager')
     }
@@ -73,6 +76,8 @@ export class TodoPage {
     }
 
     static mounted(self: TodoPage) {
+        // cache lookup
+        self.m.ff = document.getElementById('todo-ff')
         self.pstore.requestNewer()
     }
 
@@ -84,13 +89,11 @@ export class TodoPage {
     }
 
     pnew$$S(data) {
-        let pnew = this.pnew,
-            el = document.getElementById('todo-ff') as any
+        let pnew = this.pnew
         
         this.pstore.addAll(data['1'], true, true)
         form.$success(pnew)
-        el.focus()
-        return true
+        this.m.ff.focus()
     }
     pnew$$F(err) {
         form.$failed(this.pnew, err)
