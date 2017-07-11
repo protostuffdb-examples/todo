@@ -5,7 +5,7 @@ export const enum ContentSlot {
     BOTTOM = 1
 }
 
-export const pi_expr = /**/`
+export const pi_attrs = /**/`
 v-defp:pager_item="pojo" v-show="(pojo._.lstate & ${PojoListState.INCLUDED})"
 :class="(pojo._.lstate & ${PojoListState.SELECTED}) ? 'item active' : 'item'"
 `/**/
