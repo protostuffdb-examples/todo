@@ -63,6 +63,8 @@ cd todo-ts
 yarn run build
 # finally, run your production app
 nw .
+# or
+node chrome-app.js
 ```
 
 ## Packaging for desktop (nwjs)
