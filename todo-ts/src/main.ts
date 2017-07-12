@@ -5,7 +5,7 @@ declare function require(path: string): any;
 import * as Vue from 'vue'
 import { TARGET, filters } from './util'
 
-// global filters
+// filters
 for (var i of Object.keys(filters)) Vue.filter(i, filters[i])
 
 // directives
