@@ -32,6 +32,7 @@ enum AuthFilter { NONE = 1 [ f0 = Role.NONE ]; }
 
 // ==================================================
 
+@Observable
 @Entity(kind = 10, seq = true)
 message Todo {
 
