@@ -68,7 +68,7 @@ function field_num_range(pojo: string, fd: any, display: string): string {
 `/**/
 }
 
-function field_default(pojo: string, fd: any, display: string, flags: string): string {
+function field_default(pojo: string, fd: any, display: string, flags: number): string {
     return /**/`
 <div class="ui input">
   <input type="text" :disabled="${pojo}.disable_" placeholder="${display}"
@@ -112,9 +112,9 @@ function filter_fields(qd: any, jso: any, fields: number[], pojo: string, nf: st
             // check range
             buf += (jso['e' + fk] ? field_num_range(pojo, fd, display) : field_num(pojo, fd, display))
         } else if (jso['p' + fk]) {
-            buf += field_default(pojo, fd, display, `${ChangeFlags.SKIP_VALIDATE}`)
+            buf += field_default(pojo, fd, display, ChangeFlags.SKIP_VALIDATE)
         } else {
-            buf += field_default(pojo, fd, display, '0')
+            buf += field_default(pojo, fd, display, 0)
             // TODO range for string?
             /*if (jso['e' + fk]) {
 
