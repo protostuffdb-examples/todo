@@ -39,6 +39,9 @@ mvn install
 
 cd todo-ts
 yarn install
+
+# build css
+yarn run ns.b
 ```
 
 ## Dev mode
