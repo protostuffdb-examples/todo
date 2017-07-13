@@ -5,6 +5,7 @@ todo-all/target/todo-all-jarjar.jar
 todo-ts/package.json
 todo-ts/index.html
 todo-ts/dist
+todo-ts/assets
 todo-ts/chrome-app.js
 todo-ts/node-chrome-app.vbs
 todo-ts/nw
