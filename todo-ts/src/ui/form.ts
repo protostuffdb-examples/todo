@@ -22,7 +22,7 @@ export function form(pojo: string, $d: any, ffid: string|null,
         content_slot = ContentSlot.TOP
     
     return /**/`
-<form :class="'ui form status-' + (${pojo}._.state & ${PojoState.MASK_STATUS})">
+<form v-clear="${pojo}._" :class="'ui form status-' + (${pojo}._.state & ${PojoState.MASK_STATUS})">
   ${content_slot === ContentSlot.TOP && content || ''}
   ${body(pojo, $d, update, { pojo, ffid })}
   ${content_slot === ContentSlot.BOTTOM && content || ''}
@@ -178,3 +178,4 @@ function field_default(pojo: string, fd: any, update: boolean, root: FormRoot, f
 </div>
 `/**/
 }
+
