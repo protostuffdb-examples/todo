@@ -35,7 +35,7 @@ export const suggest_controls = /**/`
       <b><i class="icon angle-right"></i></b>
     </button>
   <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || pager.page_count === pager.page"
+    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 0 === pager.size || pager.page_count === pager.page"
         @click.prevent="pager.store.repaint((pager.page = pager.page_count))">
       <i class="icon angle-double-right"></i>
     </button>
@@ -77,7 +77,7 @@ export const pager_controls = /**/`
     </button>
   </li>
   <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || pager.page_count === pager.page"
+    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 0 === pager.size || pager.page_count === pager.page"
         @click.prevent="pager.store.repaint((pager.page = pager.page_count))">
       <i class="icon angle-double-right"></i>
     </button>
