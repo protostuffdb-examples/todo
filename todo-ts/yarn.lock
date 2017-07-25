@@ -771,17 +771,17 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-coreds-ui@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/coreds-ui/-/coreds-ui-0.4.0.tgz#08d66b32d5430249d2f041f9ae4ad3196a2fb573"
+coreds-ui@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/coreds-ui/-/coreds-ui-0.7.0.tgz#239f4b759480cc87e981d22317fe1af5d9579165"
   dependencies:
     "@types/hammerjs" "^2.0.32"
     hammerjs "^2.0.8"
     vuets "^0.10.0"
 
-coreds@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/coreds/-/coreds-0.9.0.tgz#bcdd2b614e65877dcc0229cf2fc1c67273c8f03b"
+coreds@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/coreds/-/coreds-0.9.1.tgz#b8b67489923e24ed085dabcf59e71dbe2e42cf1b"
   dependencies:
     "@types/numeral" "0.0.16"
     numeral "^1.5.6"
