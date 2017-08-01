@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "coreds": "^0.9.1",
-    "coreds-ui": "^0.7.0",
+    "coreds-ui": "^0.8.1",
     "pavilion": "^2.0.3",
     "v_": "2.1.10",
     "vue": "2.1.10",
