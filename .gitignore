@@ -1,4 +1,5 @@
 /chrome-app
+/todo-ts/opt-nw
 node_modules
 dist
 g
