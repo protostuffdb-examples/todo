@@ -116,8 +116,13 @@ function resolveBin(p, c) {
 }
 
 function openWindow() {
-    var args = ['--app=http://127.0.0.1:' + str_port, '--disk-cache-size 0', '--no-proxy-server'],
-        home = process.env.HOME
+    var args = [
+        '--app=http://127.0.0.1:' + str_port,
+        '--disk-cache-size 0',
+        '--no-proxy-server',
+        '--app-shell-host-window-size=715x430'
+    ]
+    var home = process.env.HOME
     
     if (home)
         args.push('--user-data-dir=' + path.join(home, '.todo'))
