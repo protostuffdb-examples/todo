@@ -9,6 +9,7 @@ v-defp:pager_item="pojo" v-show="(pojo._.lstate & ${PojoListState.INCLUDED})"
 `/**/
 
 export const pi_msg = /**/`
+<div class="clear both"></div>
 <div :class="'ui msg status-' + (pojo._.state & ${PojoState.MASK_STATUS})" v-show="pojo._.msg">
   <i class="close icon" @click.prevent="pojo._.msg = null"></i>
   <span v-text="pojo._.msg"></span>

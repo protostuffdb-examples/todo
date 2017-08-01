@@ -174,8 +174,8 @@ export default component({
   <div :class="!pojo['${$.$.completed}'] ? 'content dd' : 'content dd completed'">
     {{ pojo['${$.$.title}'] }}
   </div>
-  <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:«nameKC»-detail="pojo._.state & ${PojoState.UPDATE}"></div>
   ${ui.pi_msg}
+  <div v-show="pojo._.state & ${PojoState.UPDATE}" v-append:«nameKC»-detail="pojo._.state & ${PojoState.UPDATE}"></div>
 </li>
             `/**/
         }
