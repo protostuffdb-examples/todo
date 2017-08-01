@@ -4,6 +4,7 @@ run.properties
 todo-all/target/todo-all-jarjar.jar
 todo-ts/package.json
 todo-ts/index.html
+todo-ts/favicon.ico
 todo-ts/dist
 todo-ts/assets
 todo-ts/chrome-app.js
