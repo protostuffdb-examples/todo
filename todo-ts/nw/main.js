@@ -109,7 +109,7 @@ function onOpen(w) {
 
 function openWindow() {
     global.rpc_host = rpc_http_host
-    nw.Window.open('index.html', { show: false }, onOpen)
+    nw.Window.open('index.html', { show: false, show_in_taskbar: !win32 }, onOpen)
 }
 
 startProtostuffdb()
