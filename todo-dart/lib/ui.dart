@@ -63,15 +63,21 @@ const Duration SNACKBAR_DURATION = const Duration(milliseconds: 2000);
 // ==================================================
 // widgets
 
-class AppBarWidget extends StatelessWidget implements AppBarBottomWidget {
+class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final WidgetBuilder wb;
   final double bottomHeight;
-  AppBarWidget(this.wb, this.bottomHeight);
+  final Size _preferredSize;
+
+  AppBarWidget(this.wb, this.bottomHeight)
+      : _preferredSize = new Size.fromHeight(bottomHeight);
 
   @override
   Widget build(BuildContext context) {
     return wb(context);
   }
+
+  @override
+  Size get preferredSize => _preferredSize;
 }
 
 class AppBarPopup extends StatelessWidget {
@@ -234,7 +240,7 @@ Widget rel_box(Widget w, {
   return new Container(
     padding: new EdgeInsets.only(left: padLR, right: padLR, top: padTop),
     decoration: new BoxDecoration(
-      backgroundColor: bg_color,
+      color: bg_color,
     ),
     child: w,
   );
@@ -247,7 +253,7 @@ Widget box(Widget w, {
   return new Container(
     padding: pad,
     decoration: new BoxDecoration(
-      backgroundColor: bg_color,
+      color: bg_color,
     ),
     child: w,
   );
