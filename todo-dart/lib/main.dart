@@ -113,20 +113,7 @@ class AppWidget extends StatelessWidget {
       return new Text('');
     }
 
-    final store = app.store,
-        size = store.list.length;
-    if (size == 0)
-      return new Text('');
-
-    final pageSize = store.pageSize,
-        page = app.navPage,
-        start = (page * pageSize) + 1,
-        end = start + pageSize - 1;
-
-    if (start == size)
-      return new Text('$start of $size');
-
-    return new Text('$start - ${math.min(end, size)} of $size');
+    return new Text(app.store.page_info(app.navPage));
   }
 
   Widget $nav_filter_text(BuildContext context) {
