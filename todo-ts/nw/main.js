@@ -33,10 +33,20 @@ function findSubDir(baseDir, subDirPrefix) {
     return null
 }
 
+function resolveBin(child_cwd) {
+    if (win32) return path.join(child_cwd, 'target/protostuffdb')
+    
+    var bin = path.join(child_cwd, 'target/hprotostuffdb-rjre')
+    if (fs.existsSync(bin) || fs.existsSync(bin = path.join(child_cwd, 'target/hprotostuffdb')))
+        return bin
+    
+    return path.join(child_cwd, 'target/protostuffdb')
+}
+
 function startProtostuffdb() {
     var spawn = require('child_process').spawn,
         child_cwd = path.join(__dirname, '..'),
-        bin = path.join(child_cwd, 'target/protostuffdb'),
+        bin = resolveBin(child_cwd),
         port = fs.readFileSync(path.join(child_cwd, 'PORT.txt'), 'utf8').trim(),
         extra_args = fs.readFileSync(path.join(child_cwd, 'ARGS.txt'), 'utf8').trim().split(' '),
         child_args = getChildArgs(['127.0.0.1:' + port, path.join(__dirname, 'g/user/UserServices.json')], extra_args, child_cwd),
@@ -45,7 +55,8 @@ function startProtostuffdb() {
     
     if (!win32) {
         target_cwd = child_cwd
-    } else if (isDir(target_cwd = 'C:/Program Files/Java/jdk1.7.0_79/jre/bin/server')) {
+    } else if (isDir(target_cwd = 'C:/opt/jre/bin/server') ||
+            isDir(target_cwd = 'C:/Program Files/Java/jdk1.7.0_79/jre/bin/server')) {
         bin += '.exe'
     } else if (fs.existsSync(p = path.join(child_cwd, 'JDK_DIR.txt'))) {
         if (!isDir(target_cwd = path.join(fs.readFileSync(p, 'utf8').trim(), 'jre/bin/server'))) {
@@ -66,9 +77,15 @@ function startProtostuffdb() {
     }
     
     pdb = spawn(bin, child_args, { cwd: target_cwd })
+    pdb.on('error', onChildError)
     pdb.stdout.on('data', onChildOut)
     pdb.on('close', onChildClose)
     rpc_http_host = 'http://127.0.0.1:' + port
+}
+
+function onChildError(err) {
+    println('protostuffdb spawn failed')
+    process.exit(1)
 }
 
 function isStart(data) {
