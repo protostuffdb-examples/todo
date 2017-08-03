@@ -21,8 +21,8 @@
     "cleancss": "cleancss --skip-rebase -O2 removeDuplicateRules:on dist/app.css > dist/app.min.css && mv dist/app.min.css dist/app.css"
   },
   "dependencies": {
-    "coreds": "^0.9.1",
-    "coreds-ui": "^0.8.1",
+    "coreds": "^0.9.2",
+    "coreds-ui": "^0.8.2",
     "pavilion": "^2.0.3",
     "v_": "2.1.10",
     "vue": "2.1.10",
