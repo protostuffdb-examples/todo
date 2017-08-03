@@ -7,7 +7,6 @@ todo-ts/index.html
 todo-ts/favicon.ico
 todo-ts/dist
 todo-ts/assets
-todo-ts/chrome-app.js
 todo-ts/nw
 todo-ts/g/user/UserServices.json
 target/data/main/README.txt
