@@ -181,9 +181,10 @@ export default component({
     template: /**/`
 <div class="col-pp-100 col-pl-50 col-tl-33" v-pager="pager">
 <ul class="ui right floated horizontal list">
-  <li class="item">&nbsp;
-    <a title="add">
-      <i class="icon plus" v-toggle:click,1,todo_ff="'.1'"></i>
+  ${ui.pager_item_btns}
+  <li class="item">
+    <a>
+      <i class="icon plus" title="add" v-toggle:click,1,todo_ff="'.1'"></i>
       <div class="dropdown">
         <div class="dropdown-menu mfluid2 pull-right">
           ${ui.form('pnew', $.$d, 'todo_ff', undefined, undefined, 3)}
@@ -192,10 +193,12 @@ export default component({
     </a>
   </li>
   <li class="item">
-    <a><i class="icon filter" title="filter" v-toggle="'3__.3'"></i></a>
+    <a><i class="icon filter" title="filter" v-toggle="'3__.2'"></i></a>
   </li>
 </ul>
-${ui.pager_controls}
+<ul class="ui horizontal list">
+  ${ui.pager_item_info}
+</ul>
 <div class="ui tab">
   ${ui.qform(qd)}
 </div>

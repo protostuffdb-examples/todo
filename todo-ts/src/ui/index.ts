@@ -58,52 +58,51 @@ export const suggest_controls = /**/`
 </ul>
 `/**/
 
-export const pager_controls = /**/`
-<ul class="ui right floated horizontal list">
-  <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 2 > pager.size"
-        @click.prevent="pager.store.repaint((pager.state ^= ${PagerState.DESC}))">
-      <i :class="(pager.state & ${PagerState.DESC}) ? 'icon desc-yes' : 'icon desc-no'"></i>
-    </button>
-  </li>
-  <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.MASK_RPC_DISABLE}) || 0 === pager.size"
-        @click.prevent="pager.store.reload()">
-      <i class="icon cw"></i>
-    </button>
-  </li>
-  <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 0 === pager.page"
-        @click.prevent="pager.store.repaint((pager.page = 0))">
-      <i class="icon angle-double-left"></i>
-    </button>
-  </li>
-  <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.MASK_RPC_DISABLE})"
-        @click.prevent="pager.store.pagePrevOrLoad(0)">
-      <b><i class="icon angle-left"></i></b>
-    </button>
-  </li>
-  <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.MASK_RPC_DISABLE}) || 0 === pager.size"
-        @click.prevent="pager.store.pageNextOrLoad(0)">
-      <b><i class="icon angle-right"></i></b>
-    </button>
-  </li>
-  <li class="item">
-    <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 0 === pager.size || pager.page_count === pager.page"
-        @click.prevent="pager.store.repaint((pager.page = pager.page_count))">
-      <i class="icon angle-double-right"></i>
-    </button>
-  </li>
-</ul>
-<ul class="ui horizontal list">
-  <li class="item">
-    <div class="page-info">
-    {{ pager.page_from }}{{ pager.page_from === pager.page_to ? ' of ' : (' - ' + pager.page_to + ' of ') }}{{ pager.size }}
-    </div>
-  </li>
-</ul>
+export const pager_item_btns = /**/`
+<li class="item">
+  <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 2 > pager.size"
+      @click.prevent="pager.store.repaint((pager.state ^= ${PagerState.DESC}))">
+    <i :class="(pager.state & ${PagerState.DESC}) ? 'icon desc-yes' : 'icon desc-no'"></i>
+  </button>
+</li>
+<li class="item">
+  <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.MASK_RPC_DISABLE}) || 0 === pager.size"
+      @click.prevent="pager.store.reload()">
+    <i class="icon cw"></i>
+  </button>
+</li>
+<li class="item">
+  <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 0 === pager.page"
+      @click.prevent="pager.store.repaint((pager.page = 0))">
+    <i class="icon angle-double-left"></i>
+  </button>
+</li>
+<li class="item">
+  <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.MASK_RPC_DISABLE})"
+      @click.prevent="pager.store.pagePrevOrLoad(0)">
+    <b><i class="icon angle-left"></i></b>
+  </button>
+</li>
+<li class="item">
+  <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.MASK_RPC_DISABLE}) || 0 === pager.size"
+      @click.prevent="pager.store.pageNextOrLoad(0)">
+    <b><i class="icon angle-right"></i></b>
+  </button>
+</li>
+<li class="item">
+  <button class="stripped" :disabled="0 !== (pager.state & ${PagerState.LOADING}) || 0 === pager.size || pager.page_count === pager.page"
+      @click.prevent="pager.store.repaint((pager.page = pager.page_count))">
+    <i class="icon angle-double-right"></i>
+  </button>
+</li>
+`/**/
+
+export const pager_item_info = /**/`
+<li class="item">
+  <div class="page-info">
+  {{ pager.page_from }}{{ pager.page_from === pager.page_to ? ' of ' : (' - ' + pager.page_to + ' of ') }}{{ pager.size }}
+  </div>
+</li>
 `/**/
 
 export const pager_msg = /**/`
