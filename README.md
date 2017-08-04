@@ -13,11 +13,6 @@ Long-press the item to update.
 - jdk7
 - [nwjs](https://nwjs.io/) [0.19.5](https://dl.nwjs.io/v0.19.5/) or higher
 
-### Running the desktop app without building
-- download either **todo-linux-x64.tar.gz** or **todo-win-x64.zip** from [here](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo)
-- extract it and cd into the directory
-- finally, exec: ```nw todo-ts```
-
 ## Dev requirements
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
 - yarn (npm install -g yarn)
