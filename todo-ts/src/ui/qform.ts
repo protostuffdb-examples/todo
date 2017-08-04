@@ -1,5 +1,6 @@
 import { FieldType, PagerState, ChangeFlags } from 'coreds/lib/types'
 import { enum_options, option_empty, dpicker } from './form'
+import { Flags } from 'coreds-ui/lib/_suggest'
 
 function field_enum(pojo: string, fd: any, display: string): string {
     return /**/`
@@ -30,8 +31,8 @@ function field_suggest(pojo: string, fd: any, display: string): string {
     return /**/`
 <div class="ui input">
   <input type="text" :disabled="${pojo}.disable_" placeholder="${display}"
-      :class="!${pojo}.disable_ ? '' : 'disabled'" 
-      v-suggest="{ pojo: ${pojo}, field: '${fd._}', fetch: qform.f${fd._}$$AC }" />
+      :class="!${pojo}.disable_ ? '' : 'disabled'"
+      v-suggest:${Flags.CBFN_AFTER_SET}="{ pojo: ${pojo}, field: '${fd._}', fetch: suggest, onSelect: ${pojo}$$ }" />
 </div>
 `/**/
 }
@@ -87,20 +88,20 @@ function filter_fields(qd: any, jso: any, fields: number[], pojo: string, nf: st
         disable,
         display,
         suggestKind
-    
+
     buf += `<div class="field" v-show="${pojo}.show__ && ${pojo}.show_">`
     for (let i = 0, len = fields.length; i < len; i++) {
         fk = String(fields[i])
         if (jso['i' + fk])
             continue
-        
+
         fd = descriptor[fk]
         disable = pojo + '.disable_'
         if (jso['r' + fk])
             display = fd.$n + ' *'
         else
             display = fd.$n
-        
+
         suggestKind = jso['s' + fk]
         if (suggestKind) {
             buf += field_suggest(pojo, fd, display)
@@ -130,14 +131,14 @@ function items(qd: any, values: any[]): string {
     let buf = '',
         key_array = qd.key_array,
         jso
-    
+
     for (let i = 0, len = key_array.length; i < len; i++) {
         jso = qd[key_array[i]]
         if (!jso || !jso.fields)
             continue
         buf += filter_fields(qd, jso, jso.fields, `qform.${jso.$}`, String(values[i]))
     }
-    
+
     return buf
 }
 
