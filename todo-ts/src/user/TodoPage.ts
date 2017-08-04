@@ -1,5 +1,5 @@
 import { component } from 'vuets'
-import { $any, defg, defp, nullp } from 'coreds/lib/util'
+import { defp, nullp } from 'coreds/lib/util'
 import { Pager, ItemSO, SelectionFlags, PojoSO, PojoState } from 'coreds/lib/types'
 import { PojoStore } from 'coreds/lib/pstore/'
 import { mergeFrom } from 'coreds/lib/diff'
@@ -22,9 +22,6 @@ export class TodoPage {
     pnew = form.initObservable($.$new0(), $.$d)
     pupdate = form.initObservable($.$new0(), $.$d)
 
-    m = defg(this, 'm', {
-        ff: $any(null) // first field
-    })
     constructor() {
         nullp(this, 'pager')
     }
@@ -87,8 +84,6 @@ export class TodoPage {
     }
 
     static mounted(self: TodoPage) {
-        // cache lookup
-        self.m.ff = document.getElementById('todo-ff')
         self.pstore.requestNewer()
     }
 
@@ -104,7 +99,7 @@ export class TodoPage {
         
         this.pstore.addAll(data['1'], true, true)
         form.$success(pnew)
-        this.m.ff.focus()
+        this['$refs'].todo_ff.focus()
     }
     pnew$$F(err) {
         form.$failed(this.pnew, err)
@@ -186,17 +181,21 @@ export default component({
     template: /**/`
 <div class="col-pp-100 col-pl-50 col-tl-33" v-pager="pager">
 <ul class="ui right floated horizontal list">
-  <li class="item" title="add" v-toggle="'1__.3'">
-    &nbsp;&nbsp;<button class="stripped"><i class="icon plus"></i></button>
+  <li class="item">&nbsp;
+    <a title="add">
+      <i class="icon plus" v-toggle:click,1,todo_ff="'.1'"></i>
+      <div class="dropdown">
+        <div class="dropdown-menu mfluid2 pull-right">
+          ${ui.form('pnew', $.$d, 'todo_ff', undefined, undefined, 3)}
+        </div>
+      </div>
+    </a>
   </li>
-  <li class="item" title="filter" v-toggle="'1__.4'">
-    <button class="stripped"><i class="icon filter"></i></button>
+  <li class="item">
+    <a><i class="icon filter" title="filter" v-toggle="'3__.3'"></i></a>
   </li>
 </ul>
 ${ui.pager_controls}
-<div class="ui tab box">
-  ${ui.form('pnew', $.$d, 'todo-ff')}
-</div>
 <div class="ui tab">
   ${ui.qform(qd)}
 </div>
