@@ -62,13 +62,3 @@ nw .
 node chrome-app.js
 ```
 
-## Packaging for desktop (nwjs)
-Exec
-```sh
-./scripts/archive.sh
-```
-
-That script generates:
-- target/todo-linux-x64.tar.gz
-- target/todo-win-x64.zip
-
