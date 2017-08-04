@@ -38,7 +38,7 @@ li.item {
     cursor: pointer;
     text-decoration: none;
   }
-  > button.stripped, a {
+  > button.stripped, > a {
     font-size: 1.05em;
   }
   > div.ui.msg {
@@ -59,6 +59,14 @@ div.detail > hr {
 div.detail > form,
 div.dropdown-menu > form {
   margin-bottom: 0;
+}
+
+div.content.floated {
+  > i.icon.action,
+  > i.icon.ok-circled,
+  > i.icon.cancel-circled {
+    cursor: pointer;
+  }
 }
 
 div.content.dd {

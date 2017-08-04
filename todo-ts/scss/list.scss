@@ -224,7 +224,7 @@ $selectionListActiveColor: $selectedTextColor;
 
 .ui.selection.list .list > .item,
 .ui.selection.list > .item {
-  cursor: pointer;
+  cursor: default;
   background: $selectionListBackground;
   padding: $selectionListItemVerticalPadding $selectionListItemHorizontalPadding;
   margin: $selectionListItemMargin;
