@@ -17,6 +17,7 @@ cat /proc/sys/net/core/somaxconn
 
 ## Bench
 ```
+./bench-echo.sh
 ./bench-create.sh
 ./bench-list.sh 10
 ./bench-list.sh 100
