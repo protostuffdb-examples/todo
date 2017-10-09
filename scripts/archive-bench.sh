@@ -5,7 +5,7 @@
 TAR_FILE=target/todo-linux-bench-x64.tar.gz
 ZIP_FILE=target/todo-win-bench-x64.zip
 
-COMMON_FILES='ARGS.txt PORT.txt todo-ts/g/user/UserServices.json bench/README.md bench/run.properties bench/run.sh bench/run-uri.sh bench/payload'
+COMMON_FILES='ARGS.txt PORT.txt todo-all/target/todo-all-jarjar.jar todo-ts/g/user/UserServices.json bench/README.md bench/run.properties bench/run.sh bench/run-uri.sh bench/payload'
 
 echo "========== tar.gz"
 rm -f $TAR_FILE
