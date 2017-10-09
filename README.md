@@ -1,6 +1,10 @@
 # full-stack todo app
 
-The app is live at [https://dyuproject.com/todo/](https://dyuproject.com/todo/) and [google play](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter)
+It can be seen live [here](https://apps.dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and desktop (nwjs) apps.
+
+They all have the same semantics.
+Swipe horizontally to nagivate the pages (paginate).
+Long-press the item to update.
 
 ## Server runtime dependencies
 - jdk7
@@ -9,28 +13,30 @@ The app is live at [https://dyuproject.com/todo/](https://dyuproject.com/todo/) 
 - jdk7
 - [nwjs](https://nwjs.io/) [0.19.5](https://dl.nwjs.io/v0.19.5/) or higher
 
-### Running the desktop app without building
-- download either **todo-linux-x64.tar.gz** or **todo-win-x64.zip** from [here](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo)
-- extract it and cd into the directory
-- finally, exec: ```nw todo-ts```
-
-## Build requirements
-- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (download the [binary](https://1drv.ms/f/s!Ah8UGrNGpqlzeAVPYtkNffvNZBo) and put it in ```target/``` and ```/opt/protostuffdb/bin/```)
-  - When packaging for windows and linux, both **protostuffdb** and **protostuffdb.exe** needs to be in ```target/``` dir
+## Dev requirements
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
 - yarn (npm install -g yarn)
 - jdk7 (at /usr/lib/jvm/java-7-oracle)
 - [maven](https://maven.apache.org/download.cgi)
+- [protostuffdb](https://gitlab.com/dyu/protostuffdb) (downloaded below)
 
 ## Setup
 ```sh
 mkdir -p target/data/main
-wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.4/fbsgen-ds-fatjar-1.0.4.jar
+echo "Your data lives in user/ dir.  Feel free to back it up." > target/data/main/README.txt
+
+# download protostuffdb
+yarn add protostuffdb@0.15.0 && mv node_modules/protostuffdb/dist/* target/ && rm -f package.json yarn.lock && rm -r node_modules
+
+wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.12/fbsgen-ds-fatjar-1.0.12.jar
 ./modules/codegen.sh
 mvn install
 
 cd todo-ts
 yarn install
+
+# build css
+yarn run ns.b
 ```
 
 ## Dev mode
@@ -52,18 +58,7 @@ cd todo-ts
 yarn run build
 # finally, run your production app
 nw .
+# or
+node chrome-app.js
 ```
-
-## Packaging for desktop (nwjs)
-Make sure these files are in the ```target/``` dir:
-- protostuffdb (linux binary)
-- protostuffdb.exe (windows binary)
-
-```sh
-./scripts/archive.sh
-```
-
-That script generates:
-- target/todo-linux-x64.tar.gz
-- target/todo-win-x64.zip
 

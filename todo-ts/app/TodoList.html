@@ -1,0 +1,191 @@
+<div class="col-pp-100 col-pl-50 col-tl-33">
+<ul class="ui right floated horizontal list">
+  <li class="item" title="sort">
+    <button class="stripped" disabled="{{ loading || 2 > size }}" on:click="toggleDesc(store)">
+      <i class="{{ desc ? 'icon desc-yes' : 'icon desc-no' }}"></i>
+    </button>
+  </li>
+  <li class="item" title="refresh">
+    <button class="stripped" title="refresh" disabled="{{ loading || 0 === size }}" on:click="fetchUpdate(store)">
+      <i class="icon cw"></i>
+    </button>
+  </li>
+  <li class="item">  
+    <button class="stripped" disabled="{{ loading || 0 === page }}" on:click="goto(0, store)">
+      <i class="icon angle-double-left"></i>
+    </button>
+  </li>
+  <li class="item">
+    <button class="stripped" disabled="{{ loading }}" on:click="prevOrLoad(store)">
+      <i class="icon angle-left"></i>
+    </button>
+  </li>
+  <li class="item">
+    <button class="stripped" disabled="{{ loading || 0 === size }}" on:click="nextOrLoad(store)">
+      <i class="icon angle-right"></i>
+    </button>
+  </li>
+  <li class="item">
+    <button class="stripped" disabled="{{ loading || page_count === page }}" on:click="goto(page_count, store)">
+      <i class="icon angle-double-right"></i>
+    </button>
+  </li>
+  <li ref:plus class="item" title="add" on:click="toggle('pnew', '', 'pnew_msg', true, 'pnew_ff')">
+    <button class="stripped"><i class="icon plus"></i></button>
+  </li>
+  <!--<li ref:filter class="item" title="filter">
+    <button class="stripped"><i class="icon filter"></i></button>
+  </li>-->
+</ul>
+<ul class="ui horizontal list">
+  <li class="item"><span class="page-info">{{ page_info }}</span></li>
+</ul>
+<form ref:pnew class="hide">
+  <div class="ib float-right">
+    <input ref:pnew_ff type="text" placeholder="Title" bind:value="pnew['3']" disabled="{{ loading }}" />
+    <button type="submit" class="outlined" on:click="pnew$$(event)" disabled="{{ loading }}">
+      <i class="icon play"></i>
+    </button>
+  </div>
+  <div class="{{ !pnew_msg ? 'hide' : 'ui msg error' }}">
+    <i class="icon close" on:click="set({ pnew_msg: '' })"></i>
+    {{ pnew_msg }}
+  </div>
+</form>
+<div style="clear:both"></div>
+<div class="{{ !errmsg ? 'hide' : 'ui msg error' }}">
+  <i class="icon close" on:click="set({ errmsg: '' })"></i>
+  {{ errmsg }}
+</div>
+<ul class="ui small divided selection list">
+  {{#each items as item}}
+  <TodoItem item="{{ item }}" />
+  {{/each}}
+</ul>
+</div>
+<script>
+import { defp, setp, extractMsg } from 'coreds/lib/util'
+import * as rpc from 'coreds/lib/rpc/'
+import { Store } from 'coreds/lib/store/'
+import { wrapPojo, mergePojo } from './util'
+
+import TodoItem from './TodoItem.html'
+
+const PAGE_SIZE = 10,
+    MULTIPLIER = 3
+
+function fetch(req) {
+    return rpc.post('/todo/user/Todo/list', JSON.stringify(req))
+}
+
+export default {
+    components: {
+        TodoItem
+    },
+    data() {
+        let store = new Store(null, wrapPojo, mergePojo, PAGE_SIZE, MULTIPLIER),
+            items = defp(store, 'items', [])
+        for (var i = 0; i < PAGE_SIZE; i++) items.push({ c$: null, store })
+        return {
+            errmsg: '',
+            loading: false,
+            desc: true,
+            size: 0,
+            page: 0,
+            page_count: 0,
+            store,
+            items,
+            pnew: { '1': undefined, '3': '' }, pnew_msg: ''
+        }
+    },
+    oncreate() {
+        let state = this.get(),
+            opts = state['opts'],
+            store = state['store']
+        store.vm = this
+        defp(this, 'm', {
+            fetch$$S: store.cbFetchSuccess.bind(store),
+            fetch$$F: store.cbFetchFailed.bind(store),
+            fetch: opts && opts.fetch ? opts.fetch.bind(this) : fetch,
+            store,
+
+            pnew$$S: this.pnew$$S.bind(this),
+            pnew$$F: this.pnew$$F.bind(this)
+        })
+        store.fetchNewer()
+    },
+    computed: {
+        page_info(page, size, desc, store) {
+            let items = store.items
+            if (!items[0].c$) return ''
+
+            let page_items = store.page_items(),
+                len = page_items.length,
+                i = 0
+            for (; i < len; i++) items[i].c$.update(page_items[i].orig)
+            for (len = items.length; i < len; i++) items[i].c$.update(null)
+
+            return store.page_info() 
+        }
+    },
+    methods: {
+        goto(page, store) { store.goto(page) },
+        toggleDesc(store) { store.toggleDesc() },
+        fetchUpdate(store) { store.fetchUpdate() },
+        prevOrLoad(store) { store.prevOrLoad() },
+        nextOrLoad(store) { store.nextOrLoad() },
+        fetch(req) {
+            let m = this.m
+            return m.fetch(req).then(m.fetch$$S).then(undefined, m.fetch$$F)
+        },
+        toggle(ref_key, ref_class, clear_key, focus, focus_key) {
+            var el = this.refs[ref_key],
+                hidden = 'hide' === el.className
+            el.className = hidden ? ref_class : 'hide'
+            if (hidden) {
+                // show
+                if (!focus) return
+                if (focus_key) el = this.refs[focus_key]
+                el.focus()
+            } else if (clear_key && this.get(clear_key)) {
+                // clear str
+                this.set(setp({}, clear_key, ''))
+            }
+        },
+
+        pnew$$S(data) {
+            let state = this.get(),
+                store = state.store,
+                pnew = state.pnew
+            
+            pnew['3'] = ''
+            store._fetchType = 1
+            store.cbFetchSuccess(data)
+            this.refs.pnew_ff.focus()
+        },
+        pnew$$F(err) {
+            this.set({ loading: false, pnew_msg: extractMsg(err) })
+        },
+        pnew$$(e) {
+            e.preventDefault()
+            let state = this.get(),
+                pnew = state.pnew,
+                val = pnew['3'].trim()
+            if (!val) {
+                this.set({ pnew_msg: 'Title is required.' })
+                return
+            }
+
+            let m = this.m,
+                latest = m.store.latest()
+            pnew['1'] = latest && latest['1']
+            pnew['3'] = val // trimmed
+
+            rpc.post('/todo/user/Todo/create', JSON.stringify(pnew))
+                    .then(m.pnew$$S).then(undefined, m.pnew$$F)
+            
+            this.set({ loading: true, pnew_msg: '' })
+        }
+    }
+}
+</script>

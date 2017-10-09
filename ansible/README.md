@@ -11,5 +11,6 @@ offsite_backup_base=
 ngx_domain=todo.intra
 ngx_certs_dir=
 target_user=todo
+assets_only=0
 ```
 

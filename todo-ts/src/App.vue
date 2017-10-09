@@ -1,28 +1,28 @@
 <template>
-<div class="container-full-width">
+<div>
   <div id="popup" class="popup">&nbsp;</div>
-  <div style="display:none">
-    <calendar></calendar>
-    <suggest></suggest>
+  <!--<div style="display:none">
+    <Suggest />
+    <Calendar />
+  </div>-->
+  <div class="container-full-width">
+    <home></home>
   </div>
-  <home></home>
 </div>
 </template>
 <script>
-import Suggest from 'vueds-ui/lib/c/suggest'
-import Calendar from 'vueds-ui/lib/c/calendar'
+import * as ui from './ui'
+//import Suggest from 'coreds-ui/lib/c/suggest'
+//import Calendar from 'coreds-ui/lib/c/calendar'
 import Home from './user/'
 export default {
   data() {
     return {}
   },
   components: {
-    Suggest,
-    Calendar,
+    //Suggest,
+    //Calendar,
     Home
   }
 }
 </script>
-<style lang="scss">
-@import './scss/app.scss';
-</style>

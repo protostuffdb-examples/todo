@@ -64,28 +64,28 @@ class TodoItemState extends State<TodoItemWidget> implements SelectableItem {
 
   int _fieldUpdate = 0;
 
-  int get index => config.idx;
+  int get index => widget.idx;
 
   void reset() {
-    config.reset();
+    widget.reset();
 
     if (mounted)
       setState(noop);
   }
 
   void _longPressed() {
-    final pair = config.pair;
+    final pair = widget.pair;
     pair.msg = '';
     pair.active = !pair.active;
 
     if (pair.active)
-      config.app.store.select(this);
+      widget.app.store.select(this);
 
     setState(noop);
   }
 
   void _updateSuccess(dynamic data) {
-    final pair = config.pair;
+    final pair = widget.pair;
 
     pair.loading = false;
     pair.msg = '';
@@ -105,7 +105,7 @@ class TodoItemState extends State<TodoItemWidget> implements SelectableItem {
   }
 
   void _updateFailed(dynamic e) {
-    var pair = config.pair,
+    var pair = widget.pair,
         msg = rpc.getErrMsg(e);
 
     if (msg.startsWith('CAS'))
@@ -119,7 +119,7 @@ class TodoItemState extends State<TodoItemWidget> implements SelectableItem {
   }
 
   void _updateWith(ds.MultiCAS mc) {
-    final pair = config.pair;
+    final pair = widget.pair;
 
     user.Todo.ForUser$$update(ds.ParamUpdate.$create(pair.orig.key, mc))
         .then(_updateSuccess).catchError(_updateFailed);
@@ -128,7 +128,7 @@ class TodoItemState extends State<TodoItemWidget> implements SelectableItem {
   }
 
   void _toggleCompleted() {
-    final pair = config.pair;
+    final pair = widget.pair;
     if (pair.loading)
       return;
 
@@ -148,7 +148,7 @@ class TodoItemState extends State<TodoItemWidget> implements SelectableItem {
   }
 
   void _titleChanged(String text) {
-    final pair = config.pair;
+    final pair = widget.pair;
     if (pair.loading)
       return;
 
@@ -179,7 +179,7 @@ class TodoItemState extends State<TodoItemWidget> implements SelectableItem {
 
   @override
   Widget build(BuildContext context) {
-    final c = config,
+    final c = widget,
         pair = c.pair,
         copy = pair.copy,
         children = <Widget>[];

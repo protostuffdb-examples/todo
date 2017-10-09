@@ -1,7 +1,7 @@
 /* List */
 $listStyleType: none;
 $listStylePosition: outside;
-$margin: 1em 0em;
+$margin: 0em 0em;
 $verticalPadding: 0em;
 $horizontalPadding: 0em;
 
@@ -144,18 +144,9 @@ $horizontalVerticalAlign: middle;
        Divided
 --------------------*/
 
-$circularRadius                : 500rem;
-
-$borderColor               : rgba(34, 36, 38, 0.15);
-$strongBorderColor         : rgba(34, 36, 38, 0.22);
-$internalBorderColor       : rgba(34, 36, 38, 0.1);
-$selectedBorderColor       : rgba(34, 36, 38, 0.35);
-$strongSelectedBorderColor : rgba(34, 36, 38, 0.5);
-$disabledBorderColor       : rgba(34, 36, 38, 0.5);
-
 /* Divided */
 $dividedBorderWidth: 1px;
-$dividedBorder: $dividedBorderWidth solid $borderColor;
+$dividedBorder: $dividedBorderWidth solid $border-color;
 $dividedChildListBorder: none;
 $dividedChildItemBorder: none;
 
@@ -165,7 +156,7 @@ $horizontalDividedLineHeight: 0.6;
 
 /* Divided */
 $celledBorderWidth: 1px;
-$celledBorder: $celledBorderWidth solid $borderColor;
+$celledBorder: $celledBorderWidth solid $border-color;
 $celledHorizontalPadding: 0.5em;
 $celledChildListBorder: none;
 $celledChildItemBorder: none;
@@ -210,9 +201,6 @@ $hoveredTextColor: $textColor;
 $pressedTextColor: darken($textColor, 10%);
 $selectedTextColor: $textColor;
 
-$subtleTransparentBlack     : rgba(0, 0, 0, 0.03);
-$transparentBlack           : rgba(0, 0, 0, 0.05);
-
 /* Selection List */
 $selectionListItemMargin: 0em;
 $selectionListItemBorderRadius: 0.5em;
@@ -227,16 +215,16 @@ $selectionListTransition:
 /* Selection List States */
 $selectionListBackground: transparent;
 $selectionListColor: $unselectedTextColor;
-$selectionListHoverBackground: $subtleTransparentBlack;
+$selectionListHoverBackground: $subtle-transparent-black;
 $selectionListHoverColor: $hoveredTextColor;
-$selectionListDownBackground: $transparentBlack;
+$selectionListDownBackground: $transparent-black;
 $selectionListDownColor: $pressedTextColor;
-$selectionListActiveBackground: $transparentBlack;
+$selectionListActiveBackground: $transparent-black;
 $selectionListActiveColor: $selectedTextColor;
 
 .ui.selection.list .list > .item,
 .ui.selection.list > .item {
-  cursor: pointer;
+  cursor: default;
   background: $selectionListBackground;
   padding: $selectionListItemVerticalPadding $selectionListItemHorizontalPadding;
   margin: $selectionListItemMargin;
@@ -248,6 +236,7 @@ $selectionListActiveColor: $selectedTextColor;
 .ui.selection.list > .item:last-child {
   margin-bottom: 0em;
 }
+/* no hover style
 .ui.selection.list.list >  .item:hover,
 .ui.selection.list > .item:hover {
   background: $selectionListHoverBackground;
@@ -258,6 +247,7 @@ $selectionListActiveColor: $selectedTextColor;
   background: $selectionListDownBackground;
   color: $selectionListDownColor;
 }
+*/
 .ui.selection.list .list > .item.active,
 .ui.selection.list > .item.active {
   background: $selectionListActiveBackground;

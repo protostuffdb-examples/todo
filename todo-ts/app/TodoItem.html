@@ -1,0 +1,78 @@
+<li ref:root class="hide">
+{{#if pojo }}
+  <div class="content right floated">
+    <i class="{{ !pojo['4'] ? 'icon action circle empty' : 'icon action circle' }}"
+        on:click="toggle(1)" title="{{ !pojo['4'] ? 'Mark Completed?' : 'Completed' }}"></i>
+    <i class="{{ !(flags & 1) ? 'hide' : 'icon action ok-circled' }}" on:click="toggle$$(1, '4')"></i>
+    <i class="{{ !(flags & 1) ? 'hide' : 'icon action cancel-circled' }}" on:click="toggle(1)"></i>
+  </div>
+  <div class="content">
+    <small class="description"><i class="icon clock"></i>{{ timeago(pojo['2']) }}</small>
+  </div>
+  <div class="{{ !pojo['4'] ? 'content dd' : 'content dd completed' }}">
+    {{ pojo['3'] }}
+  </div>
+{{/if}}
+</li>
+<script>
+import { defp, extractMsg } from 'coreds/lib/util'
+import * as rpc from 'coreds/lib/rpc/'
+import { timeago } from './util'
+export default {
+    data: () => ({ pojo: null, flags: 0, fk: '' }),
+    oncreate() {
+        this.get('item')['c$'] = this
+        defp(this, 'm', {
+            toggle$$S: this.toggle$$S.bind(this),
+            toggle$$F: this.toggle$$F.bind(this)
+        })
+    },
+    helpers: {
+        timeago
+    },
+    methods: {
+        update(pojo) {
+            let root = this.refs.root
+            if (!pojo) {
+                root.className = 'hide'
+            } else {
+                this.set({ pojo })
+                root.className = 'item'
+            }
+        },
+        toggle(bit) {
+            this.set({ flags: this.get('flags') ^ bit })
+        },
+        toggle$$S() {
+            let state = this.get(),
+                pojo = state.pojo,
+                fk = state.fk
+            // set
+            pojo[fk] = !pojo[fk]
+            // reset
+            this.set({ fk: '' })
+            state.item.store.vm.set({ loading: false, errmsg: '' })
+        },
+        toggle$$F(err) {
+            this.get('item').store.vm.set({ loading: false, errmsg: extractMsg(err) })
+        },
+        toggle$$(bit, fk) {
+            let state = this.get(),
+                vm = state.item.store.vm
+            if (vm.get('loading'))
+                return
+            
+            let m = this.m,
+                pojo = state.pojo,
+                op = { '1': parseInt(fk, 10), '2': pojo[fk], '3': !pojo[fk] },
+                req = { '1': pojo['1'], '2': { '1': [op] } }
+            
+            rpc.post('/todo/user/Todo/update', JSON.stringify(req))
+                    .then(m.toggle$$S).then(undefined, m.toggle$$F)
+            
+            this.set({ fk, flags: state.flags ^ bit })
+            vm.set({ loading: true, errmsg: '' })
+        }
+    }
+}
+</script>

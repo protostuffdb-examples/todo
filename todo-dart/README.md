@@ -2,7 +2,7 @@
 
 ## Initial
 ```sh
-flutter packages get && cd todo && flutter packages get && cd ..
+cd todo && flutter packages get && cd .. && flutter packages get
 ```
 
 ## Running
@@ -10,13 +10,8 @@ flutter packages get && cd todo && flutter packages get && cd ..
 flutter run
 ```
 
-## Release mode
+## Build release mode
 ```sh
-flutter run --release
-```
-
-## Dev mode codegen
-```sh
-./todo/watch.sh
+JAVA_HOME=/usr/lib/jvm/java-8-oracle flutter build apk --release
 ```
 

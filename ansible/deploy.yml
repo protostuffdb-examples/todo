@@ -19,12 +19,18 @@
       sudo: true
       when: target_user != 'todo'
     
-    - name: project dirs
+    - name: data dirs
       file: path={{item}} owner={{target_user}} group=webstack state=directory mode=0775
       with_items:
         - /data/deploy/todo/main
         - /data/deploy/todo/prev
         - /data/deploy/todo/next
+      sudo: true
+      when: not assets_only
+    
+    - name: project dirs
+      file: path={{item}} owner={{target_user}} group=webstack state=directory mode=0775
+      with_items:
         - /home/deploy/backups/todo
         - /home/deploy/projects/todo
         - /home/deploy/projects/todo/target
@@ -40,6 +46,7 @@
             state=link
             mode=0775
       sudo: true
+      when: not assets_only
     
     - name: sync files to host
       sudo: false
@@ -47,10 +54,12 @@
         command /usr/bin/rsync -az
           --rsync-path="sudo -n rsync"
           -e "ssh -p {{ ansible_port | default(ansible_ssh_port) }}"
+          {% if not assets_only %}
           --include='/run.properties'
           --include='/ngx-upstream/todo/upstream.conf'
           --include='/todo-all/target/*jarjar.jar'
           --include='/todo-ts/g/user/UserServices.json'
+          {% endif %}
           --include='/todo-ts/dist/**'
           --include='/todo-ts/*.html'
           --include='/todo-ts/favicon.ico'
@@ -74,6 +83,7 @@
                   regexp="^  server_name todo.local;$"
                   line="  server_name {{ngx_domain}};{% if ngx_certs_dir %} listen 443 ssl http2; ssl_certificate {{ngx_certs_dir}}/cert_chain.crt; ssl_certificate_key {{ngx_certs_dir}}/private.key;{% endif %}"
       sudo: true
+      when: not assets_only
     
     - name: link nginx www dir
       file: src=/home/deploy/projects/todo/{{deploy_rev}}/todo-ts
@@ -83,6 +93,7 @@
             state=link
             mode=0775
       sudo: true
+      when: not assets_only
     
     - name: link target dir
       file: src=/home/deploy/projects/todo/target
@@ -92,6 +103,7 @@
             state=link 
             mode=0775
       sudo: true
+      when: not assets_only
     
     - name: link current rev
       file: src=/home/deploy/projects/todo/{{deploy_rev}}
@@ -110,6 +122,7 @@
             state=link
             mode=0775
       sudo: true
+      when: not assets_only
     
     - name: link /opt/todo
       file: src=/home/deploy/projects/todo/current
@@ -150,6 +163,7 @@
     - name: systemd template
       template: src=systemd/todo.service dest=/etc/systemd/system/todo.service owner=deploy group=deploy
       sudo: true
+      when: not assets_only
     
     - name: stop nginx
       command: systemctl stop nginx
@@ -161,7 +175,7 @@
       command: systemctl restart todo
       ignore_errors: true
       sudo: true
-      when: deploy_type != '0'
+      when: not assets_only and deploy_type != '0'
     
     - name: start nginx
       command: systemctl start nginx

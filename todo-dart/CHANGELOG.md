@@ -1,3 +1,7 @@
+## 0.5.0
+
+* Update to flutter master (2017-08-02)
+
 ## 0.4.0
 
 * Update to flutter master (2017-04-04)

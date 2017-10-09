@@ -90,7 +90,7 @@ $base-line-height: 1.45;
   font-family: 'Karla';
   font-style: normal;
   font-weight: 400;
-  src: url(./assets/fonts/Karla-Regular.ttf) format('truetype');
+  src: url(/assets/fonts/Karla-Regular.ttf) format('truetype');
 }
 
 $base-font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -106,3 +106,16 @@ $error-color: #A95252;
 $error-bg-color: #F1D7D7;
 $warning-color: #96904D;
 $warning-bg-color: #F6F3D5;
+
+$circular-radius             : 500rem;
+
+$border-color                : rgba(34, 36, 38, 0.15);
+$strong-border-color         : rgba(34, 36, 38, 0.22);
+$internal-border-color       : rgba(34, 36, 38, 0.1);
+$selected-border-color       : rgba(34, 36, 38, 0.35);
+$strongSelected-border-color : rgba(34, 36, 38, 0.5);
+$disabled-border-color       : rgba(34, 36, 38, 0.5);
+
+$subtle-transparent-black    : rgba(0, 0, 0, 0.03);
+$transparent-black           : rgba(0, 0, 0, 0.05);
+
