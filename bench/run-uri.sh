@@ -13,7 +13,10 @@ fi
 
 cd $SCRIPT_DIR
 
-if [ -n "$1" ] && [ -e "/opt/protostuffdb/bin/$1-bench" ]; then
+if [ -n "$1" ] && [ -e "../target/$1-bench" ]; then
+    echo "$1"
+    BIN="../target/$1-bench"
+elif [ -n "$1" ] && [ -e "/opt/protostuffdb/bin/$1-bench" ]; then
     echo "$1"
     BIN="/opt/protostuffdb/bin/$1-bench"
 elif [ -e target/protostuffdb-bench ]; then
