@@ -24,7 +24,7 @@ else
 fi
 
 URI=$2
-[ -n "$URI" ] || { echo "Execute with (hprotostuffdb|protostuffdb) uri [ payload, iterations, warmups ]" }
+[ -n "$URI" ] || { echo "Execute with (hprotostuffdb|protostuffdb) uri [ payload, iterations, warmups ]"; exit 1; }
 
 BENCH_ARGS="-Dbench.uri=$URI"
 
