@@ -22,4 +22,12 @@ cat /proc/sys/net/core/somaxconn
 ./bench-list.sh 100
 ```
 
-
+## local bench (no networking involved)
+```
+./run-uri.sh protostuffdb /todo/user/echoInt payload/echoInt.json
+./run-uri.sh protostuffdb /todo/user/echoStr payload/echoStr.json
+./run-uri.sh protostuffdb /todo/user/echoKey payload/echoKey.json
+./run-uri.sh protostuffdb /todo/user/Todo/create payload/create.json
+./run-uri.sh protostuffdb /todo/user/Todo/list payload/get.json
+./run-uri.sh protostuffdb /todo/user/Todo/list payload/list.json
+```
