@@ -15,6 +15,16 @@ cat /proc/sys/net/core/somaxconn
 ./run.sh
 ```
 
+## Test via curl
+```
+curl http://127.0.0.1:5000/todo/user/echoInt -X POST -d @payload/echoInt.json
+curl http://127.0.0.1:5000/todo/user/echoStr -X POST -d @payload/echoStr.json
+curl http://127.0.0.1:5000/todo/user/echoKey -X POST -d @payload/echoKey.json
+curl http://127.0.0.1:5000/todo/user/Todo/create -X POST -d @payload/create.json
+curl http://127.0.0.1:5000/todo/user/Todo/list -X POST -d @payload/get.json
+curl http://127.0.0.1:5000/todo/user/Todo/list -X POST -d @payload/list.json
+```
+
 ## Bench
 ```
 ./bench-echo.sh
@@ -32,3 +42,4 @@ cat /proc/sys/net/core/somaxconn
 ./run-uri.sh protostuffdb /todo/user/Todo/list payload/get.json
 ./run-uri.sh protostuffdb /todo/user/Todo/list payload/list.json
 ```
+
