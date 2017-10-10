@@ -9,7 +9,7 @@ COMMON_FILES='ARGS.txt PORT.txt todo-all/target/todo-all-jarjar.jar todo-ts/g/us
 
 echo "========== tar.gz"
 rm -f $TAR_FILE
-tar -cvzf $TAR_FILE target/hprotostuffdb-bench target/protostuffdb-bench $COMMON_FILES
+tar -cvzf $TAR_FILE target/protostuffdb-bench target/hprotostuffdb-bench target/hprotostuffdb-rmaster-bench  $COMMON_FILES
 
 echo "\n========== zip"
 rm -f $ZIP_FILE
