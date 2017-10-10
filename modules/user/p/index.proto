@@ -105,6 +105,11 @@ message EchoStr {
 }
 
 service ForUser {
+  @ReadOnly
+  rpc generateInt(void) returns (EchoInt);
+  
+  @ReadOnly
+  rpc parseInt(EchoInt) returns (void);
 
   @ReadOnly
   rpc echoInt(EchoInt) returns (EchoInt);

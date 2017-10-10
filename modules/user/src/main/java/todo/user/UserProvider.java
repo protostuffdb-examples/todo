@@ -41,6 +41,21 @@ public class UserProvider extends RpcServiceProvider
     public static final UserServices.ForUser FOR_USER = new UserServices.ForUser()
     {
         @Override
+        public boolean generateInt(Datastore store, RpcResponse res,
+                Pipe.Schema<EchoInt> resPipeSchema, RpcHeader header) throws IOException
+        {
+            res.output.writeInt32(EchoInt.FN_P, 123456789, false);
+            return true;
+        }
+        
+        @Override
+        public String parseInt(EchoInt req, Datastore store, WriteContext context,
+                RpcHeader header) throws IOException
+        {
+            return null;
+        }
+        
+        @Override
         public boolean echoInt(EchoInt req, Datastore store, RpcResponse res,
                 Pipe.Schema<EchoInt> resPipeSchema, RpcHeader header) throws IOException
         {

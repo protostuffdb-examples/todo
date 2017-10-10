@@ -35,6 +35,8 @@ curl http://127.0.0.1:5000/todo/user/Todo/list -X POST -d @payload/list.json
 
 ## local bench (no networking involved)
 ```
+./run-uri.sh protostuffdb /todo/user/generateInt /dev/null
+./run-uri.sh protostuffdb /todo/user/parseInt payload/echoInt.json
 ./run-uri.sh protostuffdb /todo/user/echoInt payload/echoInt.json
 ./run-uri.sh protostuffdb /todo/user/echoStr payload/echoStr.json
 ./run-uri.sh protostuffdb /todo/user/echoKey payload/echoKey.json
