@@ -20,10 +20,14 @@ jarjar() {
   cd - > /dev/null
 }
 
-MASTER_PORT=$1
-[ "$MASTER_PORT" = "" ] && MASTER_PORT=$(cat ../PORT.txt)
-
 ARGS_TXT=$(cat ../ARGS.txt)
+
+MASTER_PORT=$1
+if [ "$MASTER_PORT" = "" ]; then
+    MASTER_PORT=$(cat ../PORT.txt)
+else
+    ARGS_TXT="$ARGS_TXT -Dprotostuffdb.rep_idle_refresh_interval=1"
+fi
 
 BIN=/opt/protostuffdb/bin/protostuffdb-rslave
 ARGS="$ARGS_TXT -Dprotostuffdb.with_backup=true -Dprotostuffdb.master=ws://127.0.0.1:$MASTER_PORT"
