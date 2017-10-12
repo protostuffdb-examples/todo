@@ -13,9 +13,14 @@ fi
 
 cd $SCRIPT_DIR
 
+ARGS=$(cat ../ARGS.txt)
+PORT=$(cat ../PORT.txt)
+
 if [ -n "$1" ] && [ -e "/opt/protostuffdb/bin/$1" ]; then
     echo "$1"
     BIN="/opt/protostuffdb/bin/$1"
+    SUFFIX=`printf $1 | tail -c 3`
+    [ "$SUFFIX" = "-rt" ] && ARGS="-Dprotostuffdb.tlab=true -Dprotostuffdb.readers=1 $ARGS"
 elif [ -e /opt/protostuffdb/bin/protostuffdb ]; then
     BIN=/opt/protostuffdb/bin/protostuffdb
 elif [ -e target/protostuffdb ]; then
@@ -27,8 +32,6 @@ fi
 
 DATA_DIR=target/data/main
 JAR=../todo-all/target/todo-all-jarjar.jar
-ARGS=$(cat ../ARGS.txt)
-PORT=$(cat ../PORT.txt)
 
 mkdir -p $DATA_DIR
 
