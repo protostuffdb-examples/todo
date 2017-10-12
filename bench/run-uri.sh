@@ -47,5 +47,5 @@ PORT=$(cat ../PORT.txt)
 
 mkdir -p $DATA_DIR
 
-$BIN $PORT ../todo-ts/g/user/UserServices.json $ARGS $BENCH_ARGS -Des.key=bench000123456781234567812345678 -Djava.class.path=$JAR todo.all.Main
+$BIN $PORT ../todo-ts/g/user/UserServices.json $ARGS $BENCH_ARGS -Djava.class.path=$JAR todo.all.Main
 
