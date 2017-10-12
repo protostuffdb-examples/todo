@@ -25,7 +25,7 @@ MASTER_PORT=$1
 
 ARGS_TXT=$(cat ../ARGS.txt)
 
-BIN=/opt/protostuffdb/bin/hprotostuffdb-rslave
+BIN=/opt/protostuffdb/bin/protostuffdb-rslave
 ARGS="$ARGS_TXT -Dprotostuffdb.with_backup=true -Dprotostuffdb.master=ws://127.0.0.1:$MASTER_PORT"
 
 DATA_DIR=target/data/main
