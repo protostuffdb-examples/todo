@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
     }
     
     auto body = res.body();
-    if (body[0] != '+')
+    if ('+' != body[0])
     {
         fprintf(stderr, "Failed.\n%s\n", body.c_str());
         return 1;
@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
     
     if (!parser.ParseJson(json, true))
     {
-        fprintf(stderr, "Could not parse json.\n%s\n", json);
+        fprintf(stderr, "Could not parse json.\n%s\n%s\n", json, parser.error_.c_str());
         return 1;
     }
     
