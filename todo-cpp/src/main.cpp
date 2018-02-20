@@ -4,12 +4,68 @@
 
 #include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/idl.h>
+#include <thread>
 
 #include "UrlRequest.h"
 #include "ui.h"
 
 #include "../g/user/fbs_schema.h"
 #include "../g/user/index_generated.h"
+
+static const char* extractJson(std::string& body)
+{
+    // remove suffix: ]
+    body[body.size() - 1] = '\0';
+    
+    // remove prefix: +[0,
+    return body.c_str() + 4;
+}
+
+static const char* extractMsg(std::string& body)
+{
+    // TODO
+    return body.c_str();
+}
+
+static void printTodos(void* flatbuf)
+{
+    auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
+    auto plist = wrapper->p();
+    fprintf(stdout, "%d todo(s)\n", plist->Length());
+    for (auto it = plist->begin(); it != plist->end(); ++it)
+        fprintf(stdout, "  key: %s, title: %s\n", it->key()->c_str(), it->title()->c_str());
+}
+
+static bool fetchInitialTodos(UrlRequest& req, flatbuffers::Parser& parser, std::string& errmsg)
+{
+    req.uri("/todo/user/Todo/list")
+        .method("POST")
+        .addHeader("Content-Type: application/json")
+        .body(R"({"1":true,"2":31})");
+    
+    auto res = std::move(req.perform());
+    auto body = res.body();
+    
+    if (200 != res.statusCode())
+    {
+        errmsg.assign("Request failed.");
+        return false;
+    }
+    
+    if ('+' != body[0])
+    {
+        errmsg.assign(body.c_str() + 1);
+        return false;
+    }
+    
+    if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(extractJson(body), true))
+    {
+        errmsg.assign("Malformed message.");
+        return false;
+    }
+    
+    return true;
+}
 
 struct Home : ui::Panel
 {
@@ -58,6 +114,10 @@ struct App
     nana::label test{ content, "test" };
     nana::label about{ content, "about" };
     
+    flatbuffers::Parser parser;
+    UrlRequest req;
+    std::string errmsg;
+    
     App()
     {
         place.div(
@@ -103,8 +163,26 @@ struct App
         content.place.collocate();
     }
     
-    int show()
+    int show(const char* host, int port)
     {
+        req.host(host).port(port);
+        {
+            std::thread t([this] {
+                if (fetchInitialTodos(req, parser, errmsg))
+                {
+                    // TODO display todos
+                    // nana::internal_scope_guard lock;
+                    printTodos(parser.builder_.GetBufferPointer());
+                }
+                else
+                {
+                    // TODO display errmsg
+                    // nana::internal_scope_guard lock;
+                }
+            });
+            t.detach();
+        }
+        
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
             if (nana::label::command::click == cmd)
@@ -161,20 +239,11 @@ static const char* resolveIpPort(char* arg, int* port)
     return arg;
 }
 
-static void print_todos(void* flatbuf)
-{
-    auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
-    auto plist = wrapper->p();
-    fprintf(stdout, "%d todo(s)\n", plist->Length());
-    for (auto it = plist->begin(); it != plist->end(); ++it)
-        fprintf(stdout, "  key: %s, title: %s\n", it->key()->c_str(), it->title()->c_str());
-}
-
 int main(int argc, char* argv[])
 {
     int port;
     const char* host = resolveIpPort(argc > 1 ? argv[1] : nullptr, &port);
-    
+    /*
     flatbuffers::Parser parser;
     if (!parser.Parse(todo_user_schema) || !parser.SetRootType("Todo_PList"))
     {
@@ -230,7 +299,12 @@ int main(int argc, char* argv[])
     }
     
     fprintf(stdout, "body:\n%s\n", json);
+    */
     
     App app;
-    return app.show();
+    bool ok = app.parser.Parse(todo_user_schema);
+    if (!ok)
+        fprintf(stderr, "Could not load schema.\n");
+    
+    return !ok ? 1 : app.show(host, port);
 }
