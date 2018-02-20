@@ -9,6 +9,7 @@
 #include "ui.h"
 
 #include "../g/user/fbs_schema.h"
+#include "../g/user/index_generated.h"
 
 struct Home : ui::Panel
 {
@@ -171,6 +172,18 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Could not load schema.\n");
         return 1;
     }
+    
+    if (!parser.ParseJson(R"({"p":[{"key":"CgAAAAAAAACZ","ts":1491921868559,"title":"world","completed":false}]})"))
+    {
+        fprintf(stderr, "Failed to parse json.\n");
+        return 1;
+    }
+    
+    auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(parser.builder_.GetBufferPointer());
+    auto plist = wrapper->p();
+    fprintf(stdout, "%d todo(s)\n", plist->Length());
+    for (auto it = plist->begin(); it != plist->end(); ++it)
+        fprintf(stdout, "  key: %s, title: %s\n", it->key()->c_str(), it->title()->c_str());
     
     UrlRequest req;
     req.host(host).port(port).uri("/todo/user/Todo/list")
