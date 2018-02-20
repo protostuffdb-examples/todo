@@ -161,6 +161,15 @@ static const char* resolveIpPort(char* arg, int* port)
     return arg;
 }
 
+static void print_todos(void* flatbuf)
+{
+    auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
+    auto plist = wrapper->p();
+    fprintf(stdout, "%d todo(s)\n", plist->Length());
+    for (auto it = plist->begin(); it != plist->end(); ++it)
+        fprintf(stdout, "  key: %s, title: %s\n", it->key()->c_str(), it->title()->c_str());
+}
+
 int main(int argc, char* argv[])
 {
     int port;
@@ -178,12 +187,15 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Failed to parse json.\n");
         return 1;
     }
+    print_todos(parser.builder_.GetBufferPointer());
     
-    auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(parser.builder_.GetBufferPointer());
-    auto plist = wrapper->p();
-    fprintf(stdout, "%d todo(s)\n", plist->Length());
-    for (auto it = plist->begin(); it != plist->end(); ++it)
-        fprintf(stdout, "  key: %s, title: %s\n", it->key()->c_str(), it->title()->c_str());
+    // numeric
+    if (!parser.ParseJson(R"({"1":[{"1":"CgAAAAAAAACZ","2":1491921868559,"3":"world","4":false}]})", true))
+    {
+        fprintf(stderr, "Failed to parse numeric json.\n");
+        return 1;
+    }
+    print_todos(parser.builder_.GetBufferPointer());
     
     UrlRequest req;
     req.host(host).port(port).uri("/todo/user/Todo/list")
