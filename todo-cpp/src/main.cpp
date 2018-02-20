@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
     
     if (!parser.ParseJson(R"({"p":[{"key":"CgAAAAAAAACZ","ts":1491921868559,"title":"world","completed":false}]})"))
     {
-        fprintf(stderr, "Failed to parse json.\n");
+        fprintf(stderr, "Failed to parse json.\n%s\n", parser.error_.c_str());
         return 1;
     }
     print_todos(parser.builder_.GetBufferPointer());
@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
     // numeric
     if (!parser.ParseJson(R"({"1":[{"1":"CgAAAAAAAACZ","2":1491921868559,"3":"world","4":false}]})", true))
     {
-        fprintf(stderr, "Failed to parse numeric json.\n");
+        fprintf(stderr, "Failed to parse numeric json.\n%s\n", parser.error_.c_str());
         return 1;
     }
     print_todos(parser.builder_.GetBufferPointer());
