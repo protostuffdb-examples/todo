@@ -1,0 +1,7 @@
+executable("todo") {
+  sources = [ "src/main.cpp" ]
+  deps = [
+    "//deps/nana:base",
+    "//deps/nana:gui",
+  ]
+}

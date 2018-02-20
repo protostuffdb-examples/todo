@@ -1,4 +1,8 @@
 /chrome-app
+/todo-cpp/deps
+/todo-cpp/gn-build
+/todo-cpp/gn-out
+/todo-cpp/.gn
 /todo-ts/opt-nw
 node_modules
 dist
