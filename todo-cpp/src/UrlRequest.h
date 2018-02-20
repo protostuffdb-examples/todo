@@ -418,8 +418,9 @@ public:
         return *this;
     }
     
-    void port(decltype(_port)value){
+    UrlRequest& port(decltype(_port)value){
         _port=value;
+        return *this;
     }
     
     template<class Method>
