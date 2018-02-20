@@ -3,5 +3,6 @@ executable("todo") {
   deps = [
     "//deps/nana:base",
     "//deps/nana:gui",
+    "//deps/flatbuffers:flatbuffers",
   ]
 }
