@@ -66,10 +66,12 @@ struct App
     nana::label about{ content, "about" };
     
     flatbuffers::Parser parser;
-    UrlRequest req;
     std::string errmsg;
     
-    App()
+    const std::string host;
+    const int port;
+    
+    App(const char* host, int port) : host(host), port(port)
     {
         place.div(
             "vert margin=5"
@@ -114,12 +116,12 @@ struct App
         content.place.collocate();
     }
     
-    int show(const char* host, int port)
+    int show()
     {
-        req.host(host).port(port);
         {
             std::thread t([this] {
-                if (rpc::fetchInitialTodos(req, parser, errmsg))
+                UrlRequest req;
+                if (rpc::fetchInitialTodos(req.host(host).port(port), parser, errmsg))
                 {
                     // TODO display todos
                     // nana::internal_scope_guard lock;
@@ -252,10 +254,10 @@ int main(int argc, char* argv[])
     fprintf(stdout, "body:\n%s\n", json);
     */
     
-    App app;
+    App app(host, port);
     bool ok = app.parser.Parse(todo_user_schema);
     if (!ok)
         fprintf(stderr, "Could not load schema.\n");
     
-    return !ok ? 1 : app.show(host, port);
+    return !ok ? 1 : app.show();
 }
