@@ -54,5 +54,5 @@ let override = {
     }
 }
 window['rpc_config'] = override
-if (!rpc_host && '8080' === window.location.port && isLocal(window.location.hostname))
+if (!rpc_host && 0 === window.location.port.indexOf('80') && isLocal(window.location.hostname))
     window['rpc_host'] = 'http://127.0.0.1:5000'
