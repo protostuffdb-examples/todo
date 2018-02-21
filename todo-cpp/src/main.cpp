@@ -140,7 +140,7 @@ struct App : rpc::Base
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
     {
-        connect();
+        connect(true);
     }
     
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
@@ -150,7 +150,7 @@ struct App : rpc::Base
             // wait for epoll
             loop->loop(10000);
         }
-        else if (!connect())
+        else if (!connect(false))
         {
             // TODO show error
             

@@ -169,11 +169,11 @@ private:
     
 protected:
     /**
-     * Returns true if already connected or if the connection was successful. 
+     * Returns true if the connection is successful or if already connected when not forced.
      */
-    bool connect()
+    bool connect(bool force)
     {
-        bool ret = SOCKET_ERROR != fd;
+        bool ret = !force && SOCKET_ERROR != fd;
         
         if (!ret && SOCKET_ERROR != (fd = brynet::net::base::Connect(false, host, port)))
         {
@@ -184,7 +184,7 @@ protected:
         
         return ret;
     }
-    std::function<void ()> $connect = std::bind(&Base::connect, this);
+    std::function<void ()> $connect = std::bind(&Base::connect, this, false);
     
 public:
     bool isConnected()
