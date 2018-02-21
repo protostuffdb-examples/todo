@@ -182,7 +182,7 @@ struct App : rpc::Base
         
         place.collocate();
         fm.show();
-        service.startWorkThread(1, $onLoop);
+        start();
         nana::exec();
         return 0;
     }

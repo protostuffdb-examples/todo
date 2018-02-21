@@ -114,9 +114,12 @@ struct Base
     
     flatbuffers::Parser parser;
     std::string errmsg;
+
+private:
+    brynet::net::WrapTcpService service;
+    bool started{ false };
     
 protected:
-    brynet::net::WrapTcpService service;
     int fd{ SOCKET_ERROR };
     
     Base(const char* host, int port) : host(host), port(port)
@@ -127,6 +130,15 @@ protected:
     virtual void onLoop(const brynet::net::EventLoop::PTR& loop) = 0;
     std::function<void (const brynet::net::EventLoop::PTR& loop)> $onLoop =
             std::bind(&Base::onLoop, this, std::placeholders::_1);
+    
+    void start()
+    {
+        if (!started)
+        {
+            started = true;
+            service.startWorkThread(1, $onLoop);
+        }
+    }
     
     virtual void onHttpData(const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session) = 0;
     std::function<void (const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session)> $onHttpData =
