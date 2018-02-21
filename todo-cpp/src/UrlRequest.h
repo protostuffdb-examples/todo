@@ -20,6 +20,11 @@
 
 #ifdef _WIN32
 
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #define _WINSOCK_DEPCRECATED
 #include <winsock2.h>
@@ -436,6 +441,7 @@ public:
     
     UrlRequest& body(const char* content){
         _body = content;
+        return *this;
     }
     
     UrlRequest& bodyMultipart(std::function<void(MultipartAdapter&)> f){
