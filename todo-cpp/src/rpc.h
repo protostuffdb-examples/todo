@@ -3,7 +3,8 @@
 #include <flatbuffers/flatbuffers.h>
 #include <flatbuffers/idl.h>
 
-#include "UrlRequest.h"
+#include <brynet/net/http/HttpService.h>
+#include <brynet/net/http/HttpFormat.h>
 
 namespace rpc {
 
@@ -22,6 +23,7 @@ const char* extractMsg(std::string& body)
     return body.c_str();
 }
 
+/*
 bool fetchInitialTodos(UrlRequest& req, flatbuffers::Parser& parser, std::string& errmsg)
 {
     req.uri("/todo/user/Todo/list")
@@ -52,5 +54,6 @@ bool fetchInitialTodos(UrlRequest& req, flatbuffers::Parser& parser, std::string
     
     return true;
 }
+*/
 
 } // rpc

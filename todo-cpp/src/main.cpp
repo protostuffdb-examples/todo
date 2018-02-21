@@ -68,6 +68,9 @@ struct App
     flatbuffers::Parser parser;
     std::string errmsg;
     
+    brynet::net::WrapTcpService service;
+    sock fd{ SOCKET_ERROR };
+    
     const std::string host;
     const int port;
     
@@ -116,25 +119,70 @@ struct App
         content.place.collocate();
     }
     
+    void onConnect(const brynet::net::HttpSession::PTR& httpSession)
+    {
+        httpSession->setHttpCallback([this](const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session) {
+            auto body = httpParser.getBody();
+            if ('+' != body[0])
+            {
+                errmsg.assign(body.data() + 1, body.size() - 1);
+            }
+            else if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(rpc::extractJson(body), true))
+            {
+                errmsg.assign("Malformed message.");
+            }
+            else
+            {
+                printTodos(parser.builder_.GetBufferPointer());
+            }
+        });
+        
+        brynet::net::HttpRequest req;
+        req.setMethod(brynet::net::HttpRequest::HTTP_METHOD::HTTP_METHOD_POST);
+        req.setUrl("/todo/user/Todo/list");
+        req.setBody(R"({"1":true,"2":31})");
+        
+        std::string payload = req.getResult();
+        httpSession->send(payload.c_str(), payload.size());
+    }
+    
+    void networkLoop(const brynet::net::EventLoop::PTR& loop)
+    {
+        if (SOCKET_ERROR != fd)
+        {
+            // wait for epoll
+            loop->loop(10000);
+            return;
+        }
+        
+        //fprintf(stdout, "Reconnecting ...\n");
+        if (SOCKET_ERROR == (fd = brynet::net::base::Connect(false, host, port)))
+        {
+            // TODO show error
+            
+            // reconnect every 5 seconds
+            loop->loop(5000);
+            return;
+        }
+        
+        auto socket = brynet::net::TcpSocket::Create(fd, false);
+        
+        service.addSession(std::move(socket), [this](const brynet::net::TCPSession::PTR& tcpSession) {
+            brynet::net::HttpService::setup(tcpSession, [this](const brynet::net::HttpSession::PTR& httpSession) {
+                httpSession->setCloseCallback([this](const brynet::net::HttpSession::PTR& arg) {
+                    // reconnect right away
+                    fd = brynet::net::base::Connect(false, host, port);
+                });
+                onConnect(httpSession);
+            });
+        }, false, nullptr, 1024 * 1024, false);
+    }
+    
     int show()
     {
-        {
-            std::thread t([this] {
-                UrlRequest req;
-                if (rpc::fetchInitialTodos(req.host(host).port(port), parser, errmsg))
-                {
-                    // TODO display todos
-                    // nana::internal_scope_guard lock;
-                    printTodos(parser.builder_.GetBufferPointer());
-                }
-                else
-                {
-                    // TODO display errmsg
-                    // nana::internal_scope_guard lock;
-                }
-            });
-            t.detach();
-        }
+        service.startWorkThread(1, [this](const brynet::net::EventLoop::PTR& loop) {
+            networkLoop(loop);
+        });
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
