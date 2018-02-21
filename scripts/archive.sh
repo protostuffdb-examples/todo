@@ -8,7 +8,7 @@ ZIP_FILE=target/todo-win-x64.zip
 echo "========== tar.gz"
 rm -f $TAR_FILE
 cp target/opt-nw todo-ts/todo
-tar -cvzf $TAR_FILE target/hprotostuffdb-rjre target/jre todo-ts/todo -T scripts/files.txt
+tar -cvzf $TAR_FILE target/protostuffdb todo-ts/todo -T scripts/files.txt
 rm -f todo-ts/todo
 
 echo "\n========== zip"
