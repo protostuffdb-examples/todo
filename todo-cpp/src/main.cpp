@@ -118,7 +118,7 @@ struct App : rpc::Base
         auto body = httpParser.getBody();
         if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
         {
-            printTodos(parser.builder_.GetBufferPointer());
+            //printTodos(parser.builder_.GetBufferPointer());
         }
         else
         {
@@ -129,18 +129,14 @@ struct App : rpc::Base
     
     void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
-        brynet::net::HttpRequest req;
-        req.setMethod(brynet::net::HttpRequest::HTTP_METHOD::HTTP_METHOD_POST);
-        req.setUrl("/todo/user/Todo/list");
-        req.setBody(R"({"1":true,"2":31})");
-        
-        const std::string payload = req.getResult();
-        session->send(payload.data(), payload.size());
+        post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
     {
-        connect(true);
+        fprintf(stdout, "disconnected\n");
+        fd = SOCKET_ERROR;
+        //connect(true);
     }
     
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
@@ -156,6 +152,10 @@ struct App : rpc::Base
             
             // reconnect every 5 seconds
             loop->loop(5000);
+        }
+        else
+        {
+            fprintf(stdout, "connected\n");
         }
     }
     
