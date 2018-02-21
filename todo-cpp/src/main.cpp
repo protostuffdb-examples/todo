@@ -118,7 +118,7 @@ struct App : rpc::Base
         auto body = httpParser.getBody();
         if (3 > body.size())
         {
-            errmsg.assign(MALFORMED_MESSAGE);
+            errmsg.assign(rpc::MALFORMED_MESSAGE);
         }
         else if ('-' == body[0])
         {
@@ -126,7 +126,7 @@ struct App : rpc::Base
         }
         else if ('+' != body[0] || '[' != body[1])
         {
-            errmsg.assign(MALFORMED_MESSAGE);
+            errmsg.assign(rpc::MALFORMED_MESSAGE);
         }
         else if ('0' != body[2])
         {
@@ -134,7 +134,7 @@ struct App : rpc::Base
         }
         else if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(rpc::extractJson(body), true))
         {
-            errmsg.assign(MALFORMED_MESSAGE);
+            errmsg.assign(rpc::MALFORMED_MESSAGE);
         }
         else
         {

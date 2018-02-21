@@ -8,19 +8,27 @@
 
 namespace rpc {
 
+const char* const MALFORMED_MESSAGE = "Malformed message.";
+
 const char* extractJson(std::string& body)
 {
     // remove suffix: ]
     body[body.size() - 1] = '\0';
     
     // remove prefix: +[0,
-    return body.c_str() + 4;
+    return body.data() + 4;
 }
 
 const char* extractMsg(std::string& body)
 {
-    // TODO
-    return body.c_str();
+    size_t found = body.find('"');
+    if (found == std::string::npos || '"' == body[found + 1])
+        return MALFORMED_MESSAGE;
+    
+    // remove suffix: "}]
+    body[body.size() - 3] = '\0';
+    
+    return body.data() + found + 1;
 }
 
 /*
