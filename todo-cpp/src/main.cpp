@@ -116,29 +116,14 @@ struct App : rpc::Base
             const brynet::net::HttpSession::PTR& session) override
     {
         auto body = httpParser.getBody();
-        if (3 > body.size())
+        if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
         {
-            errmsg.assign(rpc::MALFORMED_MESSAGE);
-        }
-        else if ('-' == body[0])
-        {
-            errmsg.assign(body.data() + 1, body.size() - 1);
-        }
-        else if ('+' != body[0] || '[' != body[1])
-        {
-            errmsg.assign(rpc::MALFORMED_MESSAGE);
-        }
-        else if ('0' != body[2])
-        {
-            errmsg.assign(rpc::extractMsg(body));
-        }
-        else if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(rpc::extractJson(body), true))
-        {
-            errmsg.assign(rpc::MALFORMED_MESSAGE);
+            printTodos(parser.builder_.GetBufferPointer());
         }
         else
         {
-            printTodos(parser.builder_.GetBufferPointer());
+            // TODO show errmsg
+            fprintf(stdout, "Error:\n%s\n", errmsg.c_str());
         }
     }
     

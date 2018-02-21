@@ -42,6 +42,38 @@ const char* extractMsg(std::string& body)
     return body.data() + colon + 2;
 }
 
+const bool parseJson(std::string& body,
+        const char* root, flatbuffers::Parser& parser, std::string& errmsg)
+{
+    bool ok = false;
+    if (3 > body.size())
+    {
+        errmsg.assign(MALFORMED_MESSAGE);
+    }
+    else if ('-' == body[0])
+    {
+        errmsg.assign(body.data() + 1, body.size() - 1);
+    }
+    else if ('+' != body[0] || '[' != body[1])
+    {
+        errmsg.assign(MALFORMED_MESSAGE);
+    }
+    else if ('0' != body[2])
+    {
+        errmsg.assign(rpc::extractMsg(body));
+    }
+    else if (!parser.SetRootType(root) || !parser.ParseJson(rpc::extractJson(body), true))
+    {
+        errmsg.assign(MALFORMED_MESSAGE);
+    }
+    else
+    {
+        ok = true;
+    }
+    
+    return ok;
+}
+
 /*
 bool fetchInitialTodos(UrlRequest& req, flatbuffers::Parser& parser, std::string& errmsg)
 {
