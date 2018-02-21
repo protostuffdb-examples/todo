@@ -110,7 +110,8 @@ struct App : rpc::Base
         content.place.collocate();
     }
     
-    void onHttpData(const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session) override
+    void onHttpData(const brynet::net::HTTPParser& httpParser,
+            const brynet::net::HttpSession::PTR& session) override
     {
         auto body = httpParser.getBody();
         if ('+' != body[0])
@@ -127,18 +128,18 @@ struct App : rpc::Base
         }
     }
     
-    void onHttpOpen(const brynet::net::HttpSession::PTR& httpSession)
+    void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
         brynet::net::HttpRequest req;
         req.setMethod(brynet::net::HttpRequest::HTTP_METHOD::HTTP_METHOD_POST);
         req.setUrl("/todo/user/Todo/list");
         req.setBody(R"({"1":true,"2":31})");
         
-        std::string payload = req.getResult();
-        httpSession->send(payload.c_str(), payload.size());
+        const std::string payload = req.getResult();
+        session->send(payload.data(), payload.size());
     }
     
-    void onHttpClose(const brynet::net::HttpSession::PTR& httpSession) override
+    void onHttpClose(const brynet::net::HttpSession::PTR& session) override
     {
         connect();
     }
