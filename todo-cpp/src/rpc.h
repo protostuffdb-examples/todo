@@ -21,14 +21,25 @@ const char* extractJson(std::string& body)
 
 const char* extractMsg(std::string& body)
 {
-    size_t found = body.find('"');
-    if (found == std::string::npos || '"' == body[found + 1])
+    size_t last_dquote = body.rfind('"'),
+            expect_dquote = body.size() - 3,
+            colon;
+    
+    if (last_dquote != expect_dquote ||
+            std::string::npos == (colon = body.find(':')) ||
+            // prevent empty string
+            2 > (last_dquote - colon + 1) ||
+            '"' != body[colon + 1] ||
+            '"' == body[colon + 2])
+    {
         return MALFORMED_MESSAGE;
+    }
     
     // remove suffix: "}]
-    body[body.size() - 3] = '\0';
+    body[expect_dquote] = '\0';
     
-    return body.data() + found + 1;
+    // :"
+    return body.data() + colon + 2;
 }
 
 /*
