@@ -2,6 +2,8 @@ source_set("util") {
   sources = [
     "src/rpc.h",
     "src/ui.h",
+    "g/user/index_generated.h",
+    "g/user/fbs_schema.h",
   ]
 }
 
