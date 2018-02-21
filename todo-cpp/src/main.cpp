@@ -69,7 +69,7 @@ struct App
     std::string errmsg;
     
     brynet::net::WrapTcpService service;
-    sock fd{ SOCKET_ERROR };
+    int fd{ SOCKET_ERROR };
     
     const std::string host;
     const int port;
