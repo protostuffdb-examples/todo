@@ -1,6 +1,14 @@
+source_set("util") {
+  sources = [
+    "src/rpc.h",
+    "src/ui.h",
+  ]
+}
+
 executable("todo") {
   sources = [ "src/main.cpp" ]
   deps = [
+    ":util",
     "//deps/nana:base",
     "//deps/nana:gui",
     "//deps/flatbuffers:flatbuffers",
