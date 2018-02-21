@@ -116,6 +116,8 @@ struct Base
     std::string errmsg;
 
 private:
+    std::string req_host;
+    std::string req_buf;
     brynet::net::WrapTcpService service;
     bool started{ false };
     
@@ -124,7 +126,40 @@ protected:
     
     Base(const char* host, int port) : host(host), port(port)
     {
+        req_host += host;
+        if (port != 0)
+        {
+            req_host += ':';
+            req_host += std::to_string(port);
+        }
+    }
+    
+    void post(const brynet::net::HttpSession::PTR& session,
+            const std::string& uri, const std::string& body)
+    {
+        /*
+        brynet::net::HttpRequest req, 
         
+        req.setMethod(brynet::net::HttpRequest::HTTP_METHOD::HTTP_METHOD_POST);
+        req.setUrl(uri);
+        req.setHost(req_host);
+        req.setContentType("application/json");
+        req.setBody(body);
+        
+        const std::string payload = req.getResult();
+        session->send(payload.data(), payload.size());
+        */
+        
+        req_buf.assign("POST ");
+        req_buf += uri;
+        req_buf += " HTTP/1.1\r\nHost: ";
+        req_buf += req_host;
+        req_buf += "\r\nContent-Type: application/json\r\nContent-Length: ";
+        req_buf += std::to_string(body.size());
+        req_buf += "\r\n\r\n";
+        req_buf += body;
+        
+        session->send(req_buf.data(), req_buf.size());
     }
     
     virtual void onLoop(const brynet::net::EventLoop::PTR& loop) = 0;
