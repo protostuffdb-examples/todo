@@ -40,6 +40,8 @@ struct Home : ui::Panel
     }
 };
 
+static const char MALFORMED_MESSAGE[] = "Malformed message.";
+
 static const char* LINKS[] = {
     "<color=0x0080FF size=11 target=\"content_0\">Home</>",
     "<color=0x0080FF size=11 target=\"content_1\">Test</>",
@@ -114,13 +116,25 @@ struct App : rpc::Base
             const brynet::net::HttpSession::PTR& session) override
     {
         auto body = httpParser.getBody();
-        if ('+' != body[0])
+        if (3 > body.size())
+        {
+            errmsg.assign(MALFORMED_MESSAGE);
+        }
+        else if ('-' == body[0])
         {
             errmsg.assign(body.data() + 1, body.size() - 1);
         }
+        else if ('+' != body[0] || '[' != body[1])
+        {
+            errmsg.assign(MALFORMED_MESSAGE);
+        }
+        else if ('0' != body[2])
+        {
+            errmsg.assign(rpc::extractMsg(body));
+        }
         else if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(rpc::extractJson(body), true))
         {
-            errmsg.assign("Malformed message.");
+            errmsg.assign(MALFORMED_MESSAGE);
         }
         else
         {
