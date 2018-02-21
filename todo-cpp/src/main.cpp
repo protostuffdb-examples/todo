@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Failed to parse json.\n%s\n", parser.error_.c_str());
         return 1;
     }
-    print_todos(parser.builder_.GetBufferPointer());
+    printTodos(parser.builder_.GetBufferPointer());
     
     // numeric
     if (!parser.ParseJson(R"({"1":[{"1":"CgAAAAAAAACZ","2":1491921868559,"3":"world","4":false}]})", true))
@@ -243,41 +243,7 @@ int main(int argc, char* argv[])
         fprintf(stderr, "Failed to parse numeric json.\n%s\n", parser.error_.c_str());
         return 1;
     }
-    print_todos(parser.builder_.GetBufferPointer());
-    
-    UrlRequest req;
-    req.host(host).port(port).uri("/todo/user/Todo/list")
-        .method("POST")
-        .addHeader("Content-Type: application/json")
-        .body(R"({"1":true,"2":31})");
-    
-    auto res = std::move(req.perform());
-    if (200 != res.statusCode())
-    {
-        fprintf(stderr, "Failed request.\n");
-        return 1;
-    }
-    
-    auto body = res.body();
-    if ('+' != body[0])
-    {
-        fprintf(stderr, "Failed.\n%s\n", body.c_str());
-        return 1;
-    }
-    
-    // remove suffix: ]
-    body[body.size() - 1] = '\0';
-    
-    // remove prefix: +[0,
-    const char* json = body.c_str() + 4;
-    
-    if (!parser.ParseJson(json, true))
-    {
-        fprintf(stderr, "Could not parse json.\n%s\n%s\n", json, parser.error_.c_str());
-        return 1;
-    }
-    
-    fprintf(stdout, "body:\n%s\n", json);
+    printTodos(parser.builder_.GetBufferPointer());
     */
     
     App app(host, port);
