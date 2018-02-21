@@ -46,7 +46,7 @@ static const char* LINKS[] = {
     "<color=0x0080FF size=11 target=\"content_2\">About</>"
 };
 
-struct App
+struct App : rpc::Base
 {
     std::forward_list<nana::label> links;
     int current_selected{ 0 };
@@ -65,16 +65,7 @@ struct App
     nana::label test{ content, "test" };
     nana::label about{ content, "about" };
     
-    flatbuffers::Parser parser;
-    std::string errmsg;
-    
-    brynet::net::WrapTcpService service;
-    int fd{ SOCKET_ERROR };
-    
-    const std::string host;
-    const int port;
-    
-    App(const char* host, int port) : host(host), port(port)
+    App(const char* host, int port) : Base(host, port)
     {
         place.div(
             "vert margin=5"
@@ -119,24 +110,25 @@ struct App
         content.place.collocate();
     }
     
-    void onConnect(const brynet::net::HttpSession::PTR& httpSession)
+    void onHttpData(const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session) override
     {
-        httpSession->setHttpCallback([this](const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session) {
-            auto body = httpParser.getBody();
-            if ('+' != body[0])
-            {
-                errmsg.assign(body.data() + 1, body.size() - 1);
-            }
-            else if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(rpc::extractJson(body), true))
-            {
-                errmsg.assign("Malformed message.");
-            }
-            else
-            {
-                printTodos(parser.builder_.GetBufferPointer());
-            }
-        });
-        
+        auto body = httpParser.getBody();
+        if ('+' != body[0])
+        {
+            errmsg.assign(body.data() + 1, body.size() - 1);
+        }
+        else if (!parser.SetRootType("Todo_PList") || !parser.ParseJson(rpc::extractJson(body), true))
+        {
+            errmsg.assign("Malformed message.");
+        }
+        else
+        {
+            printTodos(parser.builder_.GetBufferPointer());
+        }
+    }
+    
+    void onHttpOpen(const brynet::net::HttpSession::PTR& httpSession)
+    {
         brynet::net::HttpRequest req;
         req.setMethod(brynet::net::HttpRequest::HTTP_METHOD::HTTP_METHOD_POST);
         req.setUrl("/todo/user/Todo/list");
@@ -146,44 +138,29 @@ struct App
         httpSession->send(payload.c_str(), payload.size());
     }
     
-    void networkLoop(const brynet::net::EventLoop::PTR& loop)
+    void onHttpClose(const brynet::net::HttpSession::PTR& httpSession) override
     {
-        if (SOCKET_ERROR != fd)
+        connect();
+    }
+    
+    void onLoop(const brynet::net::EventLoop::PTR& loop) override
+    {
+        if (isConnected())
         {
             // wait for epoll
             loop->loop(10000);
-            return;
         }
-        
-        //fprintf(stdout, "Reconnecting ...\n");
-        if (SOCKET_ERROR == (fd = brynet::net::base::Connect(false, host, port)))
+        else if (!connect())
         {
             // TODO show error
             
             // reconnect every 5 seconds
             loop->loop(5000);
-            return;
         }
-        
-        auto socket = brynet::net::TcpSocket::Create(fd, false);
-        
-        service.addSession(std::move(socket), [this](const brynet::net::TCPSession::PTR& tcpSession) {
-            brynet::net::HttpService::setup(tcpSession, [this](const brynet::net::HttpSession::PTR& httpSession) {
-                httpSession->setCloseCallback([this](const brynet::net::HttpSession::PTR& arg) {
-                    // reconnect right away
-                    fd = brynet::net::base::Connect(false, host, port);
-                });
-                onConnect(httpSession);
-            });
-        }, false, nullptr, 1024 * 1024, false);
     }
     
     int show()
     {
-        service.startWorkThread(1, [this](const brynet::net::EventLoop::PTR& loop) {
-            networkLoop(loop);
-        });
-        
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
             if (nana::label::command::click == cmd)
@@ -205,6 +182,7 @@ struct App
         
         place.collocate();
         fm.show();
+        service.startWorkThread(1, $onLoop);
         nana::exec();
         return 0;
     }
