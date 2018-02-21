@@ -18,5 +18,6 @@ mkdir -p deps && cd deps
 
 GIT_CLONE='git clone --depth 1 --single-branch -b'
 
-[ -e nana ] || $GIT_CLONE gn https://github.com/dyu/nana.git
 [ -e flatbuffers ] || $GIT_CLONE gn https://github.com/fbsgen/flatbuffers.git
+[ -e nana ] || $GIT_CLONE gn https://github.com/dyu/nana.git
+[ -e brynet ] || $GIT_CLONE gn https://github.com/dyu/brynet.git
