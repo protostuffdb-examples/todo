@@ -67,7 +67,7 @@ struct App : rpc::Base
     nana::label test{ content, "test" };
     nana::label about{ content, "about" };
     
-    bool fetched_initial;
+    bool fetched_initial{ false };
     
     App(const char* host, int port) : Base(host, port)
     {
