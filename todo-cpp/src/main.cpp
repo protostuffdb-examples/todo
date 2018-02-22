@@ -23,7 +23,7 @@ static void printTodos(void* flatbuf)
 nana::listbox::oresolver& operator << (nana::listbox::oresolver& orr, const todo::user::Todo* todo)
 {
     orr << todo->title()->c_str();
-    orr << (todo->completed() ? "y" : "n");
+    orr << (todo->completed() ? "*" : " ");
     return orr;
 }
 
@@ -36,7 +36,7 @@ static const int WIDTH = 1005,
         LB_WIDTH = WIDTH - LB_OUTER,
         // inner
         LB_INNER = LB_OUTER * 3,
-        COMPLETED_WIDTH = 80,
+        COMPLETED_WIDTH = 20,
         TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
 
 struct Home : ui::Panel
@@ -47,10 +47,11 @@ struct Home : ui::Panel
         "<lb_>"
     )
     {
-        lb.append_header( "Title", TITLE_WIDTH);
-        lb.append_header( "Completed", COMPLETED_WIDTH);
         lb.show_header(false);
         lb.enable_single(true, true);
+        
+        lb.append_header( "Title", TITLE_WIDTH);
+        lb.append_header( "Completed", COMPLETED_WIDTH);
         
         place["lb_"] << lb;
         place.collocate();
@@ -95,6 +96,9 @@ static const char* LINKS[] = {
     "<color=0x0080FF size=11 target=\"content_0\">Home</>",
     "<color=0x0080FF size=11 target=\"content_1\">About</>"
 };
+
+static const int IDLE_INTERVAL = 10000,
+        RECONNECT_INTERVAL = 5000;
 
 struct App : rpc::Base
 {
@@ -182,19 +186,18 @@ struct App : rpc::Base
         if (isConnected())
         {
             // wait for epoll
-            loop->loop(10000);
+            loop->loop(IDLE_INTERVAL);
         }
         else if (!connect(false))
         {
             // TODO show error
             
-            // reconnect every 5 seconds
-            loop->loop(5000);
+            loop->loop(RECONNECT_INTERVAL);
         }
-        else
+        /*else
         {
             fprintf(stdout, "connected\n");
-        }
+        }*/
     }
     
     int show()
