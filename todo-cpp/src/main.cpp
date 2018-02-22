@@ -67,6 +67,8 @@ struct App : rpc::Base
     nana::label test{ content, "test" };
     nana::label about{ content, "about" };
     
+    bool fetched_initial;
+    
     App(const char* host, int port) : Base(host, port)
     {
         place.div(
@@ -118,7 +120,8 @@ struct App : rpc::Base
         auto body = httpParser.getBody();
         if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
         {
-            //printTodos(parser.builder_.GetBufferPointer());
+            printTodos(parser.builder_.GetBufferPointer());
+            fetched_initial = true;
         }
         else
         {
@@ -129,12 +132,12 @@ struct App : rpc::Base
     
     void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
-        post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
+        if (!fetched_initial)
+            post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
     {
-        fprintf(stdout, "disconnected\n");
         fd = SOCKET_ERROR;
         //connect(true);
     }
