@@ -49,6 +49,8 @@ struct Home : ui::Panel
     {
         lb.append_header( "Title", TITLE_WIDTH);
         lb.append_header( "Completed", COMPLETED_WIDTH);
+        lb.show_header(false);
+        lb.enable_single(true, true);
         
         place["lb_"] << lb;
         place.collocate();
