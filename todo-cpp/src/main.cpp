@@ -1,7 +1,9 @@
-#include <nana/gui/wvl.hpp>
-#include <nana/gui/widgets/label.hpp>
 #include <forward_list>
 #include <thread>
+
+#include <nana/gui/wvl.hpp>
+#include <nana/gui/widgets/label.hpp>
+#include <nana/gui/widgets/listbox.hpp>
 
 #include "ui.h"
 #include "rpc.h"
@@ -18,20 +20,64 @@ static void printTodos(void* flatbuf)
         fprintf(stdout, "  key: %s, title: %s\n", it->key()->c_str(), it->title()->c_str());
 }
 
+nana::listbox::oresolver& operator << (nana::listbox::oresolver& orr, const todo::user::Todo* todo)
+{
+    orr << todo->title()->c_str();
+    orr << (todo->completed() ? "y" : "n");
+    return orr;
+}
+
+static const int WIDTH = 1005,
+        HEIGHT = 710,
+        MARGIN = 5,
+        // listbox
+        LB_OUTER = MARGIN * 2,
+        LB_HEIGHT = HEIGHT - LB_OUTER,
+        LB_WIDTH = WIDTH - LB_OUTER,
+        // inner
+        LB_INNER = LB_OUTER * 3,
+        COMPLETED_WIDTH = 80,
+        TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
+
 struct Home : ui::Panel
 {
-    nana::label left{ *this, "left" };
-    nana::label right{ *this, "right" };
+    nana::listbox lb{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
     
     Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
-        "<left_ weight=30%>"
-        "<right_>"
+        "<lb_>"
     )
     {
-        left.bgcolor(nana::color_rgb(0xFAFAFA));
+        lb.append_header( "Title", TITLE_WIDTH);
+        lb.append_header( "Completed", COMPLETED_WIDTH);
         
-        place["left_"] << left;
-        place["right_"] << right;
+        place["lb_"] << lb;
+        place.collocate();
+        
+        owner.place[field] << *this;
+        if (!display)
+            owner.place.field_display(field, false);
+    }
+    
+    void appendTodos(void* flatbuf)
+    {
+        auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
+        auto plist = wrapper->p();
+        for (int i = 0, len = plist->size(); i < len; i++)
+            lb.at(0).append(plist->Get(i));
+    }
+};
+
+struct About : ui::Panel
+{
+    nana::label text{ *this, "about" };
+    
+    About(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
+        "<text_>"
+    )
+    {
+        //text.bgcolor(nana::color_rgb(0xFCFCFC));
+        
+        place["text_"] << text;
         place.collocate();
         
         owner.place[field] << *this;
@@ -44,8 +90,7 @@ static const char MALFORMED_MESSAGE[] = "Malformed message.";
 
 static const char* LINKS[] = {
     "<color=0x0080FF size=11 target=\"content_0\">Home</>",
-    "<color=0x0080FF size=11 target=\"content_1\">Test</>",
-    "<color=0x0080FF size=11 target=\"content_2\">About</>"
+    "<color=0x0080FF size=11 target=\"content_1\">About</>"
 };
 
 struct App : rpc::Base
@@ -54,17 +99,15 @@ struct App : rpc::Base
     int current_selected{ 0 };
     std::string current_target{ "content_0" };
     
-    ui::Form fm{ {273, 0, 1005, 710}, "Layout example", 0xFFFFFF };
+    ui::Form fm{ {273, 0, WIDTH, HEIGHT}, "Layout example", 0xFFFFFF };
     nana::place place{ fm };
     nana::label bottom{ fm, "Copyright 2018 <color=0x0080FF>David Yu</>" };
     ui::Panel content{ fm,
         "vert"
         "<content_0>"
         "<content_1>"
-        "<content_2>"
     };
     Home home{ content, "content_0" };
-    nana::label test{ content, "test" };
     nana::label about{ content, "about" };
     
     bool fetched_initial{ false };
@@ -78,16 +121,13 @@ struct App : rpc::Base
             "<footer_ weight=20>"
         );
         
-        about.bgcolor(nana::color_rgb(0xFCFCFC));
+        
         
         // content
         //content.place["content_0"] << home;
         
-        content.place["content_1"] << test;
+        content.place["content_1"] << about;
         content.place.field_display("content_1", false);
-        
-        content.place["content_2"] << about;
-        content.place.field_display("content_2", false);
         
         content.place.collocate();
         place["content_"] << content;
@@ -120,7 +160,7 @@ struct App : rpc::Base
         auto body = httpParser.getBody();
         if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
         {
-            printTodos(parser.builder_.GetBufferPointer());
+            home.appendTodos(parser.builder_.GetBufferPointer());
             fetched_initial = true;
         }
         else
