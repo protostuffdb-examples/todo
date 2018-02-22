@@ -108,7 +108,7 @@ struct App : rpc::Base
         "<content_1>"
     };
     Home home{ content, "content_0" };
-    nana::label about{ content, "about" };
+    About about{ content, "content_1", false };
     
     bool fetched_initial{ false };
     
@@ -120,14 +120,6 @@ struct App : rpc::Base
             "<content_>"
             "<footer_ weight=20>"
         );
-        
-        
-        
-        // content
-        //content.place["content_0"] << home;
-        
-        content.place["content_1"] << about;
-        content.place.field_display("content_1", false);
         
         content.place.collocate();
         place["content_"] << content;
