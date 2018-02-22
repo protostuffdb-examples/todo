@@ -62,8 +62,9 @@ struct Home : ui::Panel
     {
         auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
         auto plist = wrapper->p();
+        auto slot = lb.at(0);
         for (int i = 0, len = plist->size(); i < len; i++)
-            lb.at(0).append(plist->Get(i));
+            slot.append(plist->Get(i));
     }
 };
 
