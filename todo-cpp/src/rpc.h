@@ -107,6 +107,17 @@ bool fetchInitialTodos(UrlRequest& req, flatbuffers::Parser& parser, std::string
 }
 */
 
+struct Config
+{
+    const char* host; // ip address
+    const int port;
+    const bool secure; // ssl
+    const char* hostname; // override host that appears in the request header
+    
+    Config(const char* host, const int port, const bool secure, const char* hostname = nullptr):
+        host(host), port(port), secure(secure), hostname(hostname) {}
+};
+
 struct Base
 {
     const std::string host;
@@ -124,14 +135,26 @@ private:
 protected:
     int fd{ SOCKET_ERROR };
     
-    Base(const char* host, int port, bool secure) : host(host), port(port), secure(secure)
+    Base(const char* host, int port, bool secure, const char* hostname = nullptr) :
+            host(host), port(port != 0 ? port : (secure ? 443 : 80)), secure(secure)
     {
-        req_host += host;
-        if (port != 0)
+        if (port == 0)
         {
+            req_host.assign(hostname ? hostname : host);
+        }
+        else if (hostname)
+        {
+            req_host.assign(hostname);
+        }
+        else
+        {
+            req_host += host;
             req_host += ':';
             req_host += std::to_string(port);
         }
+        
+        if (secure)
+            SSL_library_init();
     }
     
     void post(const brynet::net::HttpSession::PTR& session,
@@ -213,7 +236,7 @@ protected:
         if (!ret && SOCKET_ERROR != (fd = brynet::net::base::Connect(false, host, port)))
         {
             auto socket = brynet::net::TcpSocket::Create(fd, false);
-            service.addSession(std::move(socket), $onTcpSession, false, nullptr, 1024 * 1024, false);
+            service.addSession(std::move(socket), $onTcpSession, secure, nullptr, 1024 * 1024, false);
             ret = true;
         }
         

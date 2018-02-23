@@ -348,7 +348,7 @@ struct App : rpc::Base
     
     bool fetched_initial{ false };
     
-    App(const char* host, int port, bool secure, const char* title) : rpc::Base(host, port, secure)
+    App(const char* host, int port, bool secure, const char* hostname, const char* title) : rpc::Base(host, port, secure, hostname)
     {
         fm.caption(title ? title : "Todo App");
         
@@ -453,9 +453,10 @@ namespace todo {
 
 int run(int argc, char* argv[], const char* title)
 {
-    int port;
-    bool secure;
+    int port = 0;
+    bool secure = false;
     const char* host = util::resolveEndpoint(argc > 1 ? argv[1] : nullptr, &port, &secure);
+    const char* hostname = argc > 2 ? argv[2] : nullptr;
     
     if (host == nullptr)
     {
@@ -465,7 +466,7 @@ int run(int argc, char* argv[], const char* title)
     
     todo_items.reserve(PAGE_SIZE);
     
-    App app(host, port, secure, title);
+    App app(host, port, secure, hostname, title);
     
     if (!app.parser.Parse(todo_user_schema))
     {
