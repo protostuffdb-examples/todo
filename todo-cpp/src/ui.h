@@ -8,10 +8,11 @@ namespace ui {
     
     struct Form : nana::form
     {
-        Form(nana::rectangle rect, const char* title, unsigned bg) : nana::form(rect)
+        Form(nana::rectangle rect, unsigned bg, const char* title = nullptr) : nana::form(rect)
         {
-            caption(title);
             bgcolor(nana::color_rgb(bg));
+            if (title)
+                caption(title);
         }
     };
     

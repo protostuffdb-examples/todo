@@ -109,7 +109,7 @@ struct App : rpc::Base
     int current_selected{ 0 };
     std::string current_target{ "content_0" };
     
-    ui::Form fm{ {273, 0, WIDTH, HEIGHT}, "Layout example", 0xFFFFFF };
+    ui::Form fm{ {273, 0, WIDTH, HEIGHT}, 0xFFFFFF };
     nana::place place{ fm };
     nana::label bottom{ fm, "Copyright 2018 <color=0x0080FF>David Yu</>" };
     ui::Panel content{ fm,
@@ -122,8 +122,9 @@ struct App : rpc::Base
     
     bool fetched_initial{ false };
     
-    App(const char* host, int port) : Base(host, port)
+    App(const char* host, int port, const std::string& title) : Base(host, port)
     {
+        fm.caption(title);
         place.div(
             "vert margin=5"
             "<header_ weight=20 margin=[0,30%]>"
@@ -240,12 +241,12 @@ struct App : rpc::Base
 };
 
 namespace todo {
-    
-int run(int argc, char* argv[])
+
+int run(int argc, char* argv[], const std::string& title)
 {
     int port;
     const char* host = util::resolveIpPort(argc > 1 ? argv[1] : nullptr, &port);
-    App app(host, port);
+    App app(host, port, title);
     return app.show();
 }
 
