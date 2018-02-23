@@ -68,16 +68,18 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     nana::textbox txt_;
     nana::button btn_;
     
-    bool initialized{ false };
+    const todo::user::Todo* pojo{ nullptr };
     
     TodoItem()
     {
         todo_items.push_back(this);
     }
     
-    void update(const todo::user::Todo* message)
+    void update(const todo::user::Todo* pojo)
     {
-        auto title = message->title();
+        this->pojo = pojo;
+        
+        auto title = pojo->title();
         std::string str(title->c_str(), title->size());
         lbl_.caption(str);
     }
@@ -130,61 +132,17 @@ private:
         });
         pnl_.place["btn_"] << btn_;
     }
-    void activate(inline_indicator& ind, index_type pos) override
-    {
-        ind_ = &ind;
-        pos_ = pos;
-    }
-    void resize(const nana::size& d) override
-    {
-        pnl_.size(d);
-    }
-    void set(const std::string& value) override
-    {
-        /*
-        bool visible = !value.empty();
-        if (!visible)
-        {
-            // check if it is visible
-            if (pnl_.place.field_visible("btn_"))
-            {
-                pnl_.place.field_visible("btn_", visible);
-                //pnl_.place.field_visible("txt_", visible);
-                pnl_.place.field_visible("lbl_", visible);
-            }
-            return;
-        }
-        
-        // TODO fill data
-        
-        // check if not already visible
-        if (!pnl_.place.field_visible("btn_"))
-        {
-            pnl_.place.field_visible("btn_", visible);
-            //pnl_.place.field_visible("txt_", visible);
-            pnl_.place.field_visible("lbl_", visible);
-        }
-        
-        txt_.caption(value);
-        */
-    }
     void notify_status(status_type status, bool on) override
     {
-        /*switch (status)
+        if (pojo && on && status == status_type::selecting)
         {
-            case status_type::selecting:
-                break;
-            case status_type::checking:
-                break;
-        }*/
+            fprintf(stderr, "selected %s\n", pojo->title()->c_str());
+        }
     }
-    //Determines whether to draw the value of sub item
-    //e.g, when the inline widgets covers the whole background of the sub item,
-    //it should return false to avoid listbox useless drawing
-    bool whether_to_draw() const override
-    {
-        return false;
-    }
+    void activate(inline_indicator& ind, index_type pos) override { ind_ = &ind; pos_ = pos; }
+    void resize(const nana::size& d) override { pnl_.size(d); }
+    void set(const std::string& value) override {}
+    bool whether_to_draw() const override { return false; }
 };
 
 struct Home : ui::Panel
