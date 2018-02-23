@@ -38,6 +38,8 @@ static const int WIDTH = 1005,
         LB_OUTER = MARGIN * 2,
         LB_HEIGHT = HEIGHT - LB_OUTER,
         LB_WIDTH = WIDTH - LB_OUTER,
+        // panel
+        LB_PANEL_WIDTH = LB_WIDTH - (MARGIN * 3),
         // inner
         LB_FIELDS = 2,
         LB_INNER = MARGIN * 3 * LB_FIELDS,
@@ -58,6 +60,8 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     nana::label lbl_;
     nana::textbox txt_;
     nana::button btn_;
+    
+    bool initialized{ false };
     
 private:
     void create(nana::window wd) override
@@ -103,7 +107,38 @@ private:
     }
     void set(const std::string& value) override
     {
-        lbl_.caption(value);
+        bool visible = !value.empty();
+        if (!visible)
+        {
+            // check if it is visible
+            if (pnl_.place.field_visible("btn_"))
+            {
+                pnl_.place.field_visible("btn_", visible);
+                //pnl_.place.field_visible("txt_", visible);
+                pnl_.place.field_visible("lbl_", visible);
+            }
+            return;
+        }
+        
+        // TODO fill data
+        
+        // check if not already visible
+        if (!pnl_.place.field_visible("btn_"))
+        {
+            pnl_.place.field_visible("btn_", visible);
+            //pnl_.place.field_visible("txt_", visible);
+            pnl_.place.field_visible("lbl_", visible);
+        }
+    }
+    void notify_status(status_type status, bool on) override
+    {
+        /*switch (status)
+        {
+            case status_type::selecting:
+                break;
+            case status_type::checking:
+                break;
+        }*/
     }
     //Determines whether to draw the value of sub item
     //e.g, when the inline widgets covers the whole background of the sub item,
@@ -112,25 +147,16 @@ private:
     {
         return false;
     }
-    /*void notify_status(status_type status, bool status_on) override
-    {
-        switch(status)
-        {
-            case status_type::selecting:
-                //If status_on is true, the item is selecting.
-                //If status on is false, the item is unselecting
-                break;
-            case status_type::checking:
-                //If status_on is true, the item is checking
-                //If status_on is false, the item is unchecking
-                break;
-        }
-    }*/
 };
+
+static const int PAGE_SIZE = 25,
+        MULTIPLIER = 2;
 
 struct Home : ui::Panel
 {
     nana::listbox lb{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
+    
+    bool initialized { false };
     
     Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
         "<lb_>"
@@ -139,15 +165,21 @@ struct Home : ui::Panel
         lb.show_header(false);
         lb.enable_single(true, true);
         
-        lb.append_header( "Title", TITLE_WIDTH);
-        lb.append_header( "Completed", COMPLETED_WIDTH);
+        // 1-column inline widgets
+        lb.append_header("", LB_PANEL_WIDTH);
+        lb.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
+        place.field_visible("lb_", false);
+        
+        // 2-column text-only
+        //lb.append_header("", TITLE_WIDTH);
+        //lb.append_header("", COMPLETED_WIDTH);
+        
+        place["lb_"] << lb;
+        place.collocate();
         
         owner.place[field] << *this;
         if (!display)
             owner.place.field_display(field, false);
-        
-        place["lb_"] << lb;
-        place.collocate();
     }
     
     void appendTodos(void* flatbuf)
@@ -155,8 +187,26 @@ struct Home : ui::Panel
         auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
         auto plist = wrapper->p();
         auto slot = lb.at(0);
-        for (int i = 0, len = plist->size(); i < len; i++)
-            slot.append(plist->Get(i));
+        
+        // 1-column inline widgets
+        bool makeVisible = false;
+        if (!initialized)
+        {
+            for (int i = 0; i < PAGE_SIZE; ++i)
+                lb.at(0).append({ "" });
+            
+            initialized = true;
+            makeVisible = true;
+        }
+        
+        // TODO fill data
+        
+        if (makeVisible)
+            place.field_visible("lb_", true);
+        
+        // 2-column text-only
+        //for (int i = 0, len = plist->size(); i < len; i++)
+        //    slot.append(plist->Get(i));
     }
 };
 
