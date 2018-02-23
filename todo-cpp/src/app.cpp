@@ -152,7 +152,7 @@ private:
 
 struct Home : ui::Panel
 {
-    nana::listbox lb{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
+    nana::listbox lb_{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
     
     bool initialized { false };
     
@@ -162,18 +162,18 @@ struct Home : ui::Panel
         "<lb_>"
     )
     {
-        lb.show_header(false);
-        lb.enable_single(true, true);
+        lb_.show_header(false);
+        lb_.enable_single(true, true);
         
         // 1-column inline widgets
-        lb.append_header("", LB_PANEL_WIDTH);
-        lb.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
+        lb_.append_header("", LB_PANEL_WIDTH);
+        lb_.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
         
         // 2-column text-only
-        //lb.append_header("", TITLE_WIDTH);
-        //lb.append_header("", COMPLETED_WIDTH);
+        //lb_.append_header("", TITLE_WIDTH);
+        //lb_.append_header("", COMPLETED_WIDTH);
         
-        place["lb_"] << lb;
+        place["lb_"] << lb_;
         place.collocate();
         place.field_visible("lb_", false);
         
@@ -186,7 +186,7 @@ struct Home : ui::Panel
     {
         auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
         auto plist = wrapper->p();
-        auto slot = lb.at(0);
+        auto slot = lb_.at(0);
         
         // 1-column inline widgets
         if (!initialized)
@@ -213,7 +213,7 @@ struct Home : ui::Panel
 
 struct About : ui::Panel
 {
-    nana::label text{ *this, "about" };
+    nana::label text_{ *this, "about" };
     
     About(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
         "<text_>"
@@ -221,7 +221,7 @@ struct About : ui::Panel
     {
         //text.bgcolor(nana::color_rgb(0xFCFCFC));
         
-        place["text_"] << text;
+        place["text_"] << text_;
         place.collocate();
         
         owner.place[field] << *this;
@@ -242,20 +242,22 @@ static const int IDLE_INTERVAL = 10000,
 
 struct App : rpc::Base
 {
-    std::forward_list<nana::label> links;
-    int current_selected{ 0 };
-    std::string current_target{ "content_0" };
-    
     ui::Form fm{ {273, 0, WIDTH, HEIGHT}, 0xFFFFFF };
     nana::place place{ fm };
-    nana::label bottom{ fm, "Copyright 2018 <color=0x0080FF>David Yu</>" };
-    ui::Panel content{ fm,
+    
+    nana::label footer_{ fm, "Copyright 2018 <color=0x0080FF>David Yu</>" };
+    
+    ui::Panel content_{ fm,
         "vert"
         "<content_0>"
         "<content_1>"
     };
-    Home home{ content, "content_0" };
-    About about{ content, "content_1", false };
+    Home home{ content_, "content_0" };
+    About about{ content_, "content_1", false };
+    
+    std::forward_list<nana::label> links;
+    std::string current_target{ "content_0" };
+    int current_selected{ 0 };
     
     bool fetched_initial{ false };
     
@@ -269,11 +271,11 @@ struct App : rpc::Base
             "<footer_ weight=20>"
         );
         
-        content.place.collocate();
-        place["content_"] << content;
+        content_.place.collocate();
+        place["content_"] << content_;
         
         // bottom
-        place["footer_"] << bottom.text_align(nana::align::center).format(true);
+        place["footer_"] << footer_.text_align(nana::align::center).format(true);
     }
     
     void links$$(const std::string& target)
@@ -283,15 +285,15 @@ struct App : rpc::Base
             return;
         
         // hide current
-        content.place.field_display(current_target.c_str(), false);
+        content_.place.field_display(current_target.c_str(), false);
         
         // set current
         current_selected = selected;
         current_target[current_target.size() - 1] = target.back();
         
         // show
-        content.place.field_display(target.c_str(), true);
-        content.place.collocate();
+        content_.place.field_display(target.c_str(), true);
+        content_.place.collocate();
     }
     
     void onHttpData(const brynet::net::HTTPParser& httpParser,
