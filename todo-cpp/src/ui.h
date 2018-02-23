@@ -32,22 +32,22 @@ struct Icon : nana::picture
     }
 };
 
-struct Panel : nana::panel<true>
+struct Panel : nana::panel<false>
 {
     nana::place place{ *this };
     
-    Panel(nana::widget& owner, const char* layout) : nana::panel<true>(owner)
+    Panel(nana::widget& owner, const char* layout) : nana::panel<false>(owner)
     {
         place.div(layout);
     }
 };
 
-struct DeferredPanel : nana::panel<true>
+struct DeferredPanel : nana::panel<false>
 {
     const char* const layout;
     nana::place place;
     
-    DeferredPanel(const char* layout) : nana::panel<true>(), layout(layout)
+    DeferredPanel(const char* layout) : nana::panel<false>(), layout(layout)
     {
         
     }
@@ -58,7 +58,7 @@ private:
         place.bind(*this);
         place.div(layout);
         
-        transparent(true);
+        //transparent(true);
     }
 };
     
