@@ -107,6 +107,7 @@ private:
         btn_.caption("Delete");
         btn_.events().click([this]
         {
+            ind_->selected(pos_);
             // TODO delete the item when button is clicked
             //auto& lsbox = dynamic_cast<nana::listbox&>(ind->host());
             //lsbox.erase(lsbox.at(pos_));
