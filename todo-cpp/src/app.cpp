@@ -60,9 +60,9 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     
     ui::DeferredPanel pnl_ {
         "margin=[1,10]"
-        "<lbl_ weight=60%>"
-        "<txt_ weight=30% margin=[0,5]>"
-        "<btn_ weight=10%>" 
+        "<lbl_>"
+        "<txt_ weight=200 margin=[0,5]>"
+        "<btn_ weight=25>" 
     };
     nana::label lbl_;
     nana::textbox txt_;
@@ -126,7 +126,7 @@ private:
         
         // button
         btn_.create(pnl_);
-        btn_.caption("Delete");
+        btn_.caption("x");
         //btn_.events().key_press($key_press);
         btn_.events().click([this]
         {
@@ -139,10 +139,10 @@ private:
     }
     void notify_status(status_type status, bool on) override
     {
-        if (pojo && on && status == status_type::selecting)
+        /*if (pojo && on && status == status_type::selecting)
         {
             fprintf(stderr, "selected %s\n", pojo->title()->c_str());
-        }
+        }*/
     }
     void activate(inline_indicator& ind, index_type pos) override { ind_ = &ind; pos_ = pos; }
     void resize(const nana::size& d) override { pnl_.size(d); }
