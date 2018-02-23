@@ -243,7 +243,13 @@ static const int IDLE_INTERVAL = 10000,
 struct App : rpc::Base
 {
     ui::Form fm{ {273, 0, WIDTH, HEIGHT}, 0xFFFFFF };
-    nana::place place{ fm };
+    
+    ui::Place place{ fm, 
+        "vert margin=5"
+        "<header_ weight=20 margin=[0,30%]>"
+        "<content_>"
+        "<footer_ weight=20>"
+    };
     
     nana::label footer_{ fm, "Copyright 2018 <color=0x0080FF>David Yu</>" };
     
@@ -264,12 +270,6 @@ struct App : rpc::Base
     App(const char* host, int port, bool secure, const std::string& title) : rpc::Base(host, port, secure)
     {
         fm.caption(title);
-        place.div(
-            "vert margin=5"
-            "<header_ weight=20 margin=[0,30%]>"
-            "<content_>"
-            "<footer_ weight=20>"
-        );
         
         place["content_"] << content_;
         

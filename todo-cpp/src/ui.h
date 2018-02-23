@@ -16,6 +16,14 @@ struct Form : nana::form
     }
 };
 
+struct Place : nana::place
+{
+    Place(nana::widget& owner, const char* layout) : nana::place(owner)
+    {
+        div(layout);
+    }
+};
+
 struct Icon : nana::picture
 {
     Icon(nana::widget& owner, const char* icon, bool cursor_hand = false) : nana::picture(owner)
