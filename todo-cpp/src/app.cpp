@@ -4,6 +4,8 @@
 #include <nana/gui/wvl.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/listbox.hpp>
+#include <nana/gui/widgets/textbox.hpp>
+#include <nana/gui/widgets/button.hpp>
 
 #include "util.h"
 #include "rpc.h"
@@ -42,6 +44,90 @@ static const int WIDTH = 1005,
         COMPLETED_WIDTH = 20,
         TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
 
+struct TodoItem : nana::listbox::inline_notifier_interface
+{
+    inline_indicator* ind_ { nullptr };
+    index_type pos_;
+    
+    ui::DeferredPanel pnl_ {
+        "margin=[1,10]"
+        "<lbl_ weight=60%>"
+        "<txt_ weight=30% margin=[0,5]>"
+        "<btn_ weight=10%>" 
+    };
+    nana::label lbl_;
+    nana::textbox txt_;
+    nana::button btn_;
+    
+private:
+    void create(nana::window wd) override
+    {
+        auto $selected = [this]() {
+            ind_->selected(pos_);
+        };
+        
+        pnl_.create(wd);
+        
+        // label
+        lbl_.create(pnl_);
+        lbl_.transparent(true)
+            .format(true)
+            .events().click($selected);
+        pnl_.place["lbl_"] << lbl_;
+        
+        // textbox
+        txt_.create(pnl_);
+        txt_.events().click($selected);
+        pnl_.place["txt_"] << txt_;
+        
+        // button
+        btn_.create(pnl_);
+        btn_.caption("Delete");
+        btn_.events().click([this]
+        {
+            // TODO delete the item when button is clicked
+            //auto& lsbox = dynamic_cast<nana::listbox&>(indicator_->host());
+            //lsbox.erase(lsbox.at(pos_));
+        });
+        pnl_.place["btn_"] << btn_;
+    }
+    
+    void activate(inline_indicator& ind, index_type pos) override
+    {
+        ind_ = &ind;
+        pos_ = pos;
+    }
+    void resize(const nana::size& d) override
+    {
+        pnl_.size(d);
+    }
+    void set(const std::string& value) override
+    {
+        lbl_.caption(value);
+    }
+    //Determines whether to draw the value of sub item
+    //e.g, when the inline widgets covers the whole background of the sub item,
+    //it should return false to avoid listbox useless drawing
+    bool whether_to_draw() const override
+    {
+        return false;
+    }
+    /*void notify_status(status_type status, bool status_on) override
+    {
+        switch(status)
+        {
+            case status_type::selecting:
+                //If status_on is true, the item is selecting.
+                //If status on is false, the item is unselecting
+                break;
+            case status_type::checking:
+                //If status_on is true, the item is checking
+                //If status_on is false, the item is unchecking
+                break;
+        }
+    }*/
+};
+
 struct Home : ui::Panel
 {
     nana::listbox lb{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
@@ -56,12 +142,12 @@ struct Home : ui::Panel
         lb.append_header( "Title", TITLE_WIDTH);
         lb.append_header( "Completed", COMPLETED_WIDTH);
         
-        place["lb_"] << lb;
-        place.collocate();
-        
         owner.place[field] << *this;
         if (!display)
             owner.place.field_display(field, false);
+        
+        place["lb_"] << lb;
+        place.collocate();
     }
     
     void appendTodos(void* flatbuf)
