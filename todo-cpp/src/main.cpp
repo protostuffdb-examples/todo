@@ -30,5 +30,5 @@ int main(int argc, char* argv[])
     printTodos(parser.builder_.GetBufferPointer());
     */
     
-    return todo::run(argc, argv, "Todo App");
+    return todo::run(argc, argv);
 }

@@ -339,9 +339,9 @@ struct App : rpc::Base
     
     bool fetched_initial{ false };
     
-    App(const char* host, int port, bool secure, const std::string& title) : rpc::Base(host, port, secure)
+    App(const char* host, int port, bool secure, const char* title) : rpc::Base(host, port, secure)
     {
-        fm.caption(title);
+        fm.caption(title ? title : "Todo App");
         
         place["content_"] << content_;
         
@@ -442,7 +442,7 @@ struct App : rpc::Base
 
 namespace todo {
 
-int run(int argc, char* argv[], const std::string& title)
+int run(int argc, char* argv[], const char* title)
 {
     int port;
     bool secure;
