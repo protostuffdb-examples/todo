@@ -35,7 +35,8 @@ static const int WIDTH = 1005,
         LB_HEIGHT = HEIGHT - LB_OUTER,
         LB_WIDTH = WIDTH - LB_OUTER,
         // inner
-        LB_INNER = LB_OUTER * 3,
+        LB_FIELDS = 2,
+        LB_INNER = MARGIN * 3 * LB_FIELDS,
         COMPLETED_WIDTH = 20,
         TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
 
