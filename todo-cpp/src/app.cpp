@@ -176,7 +176,7 @@ struct Home : ui::Panel
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
     
-    nana::listbox lb_{ *this, { 0, 25, LB_WIDTH, LB_HEIGHT - 25 } };
+    nana::listbox list_{ *this, { 0, 25, LB_WIDTH, LB_HEIGHT - 25 } };
     
     bool initialized { false };
     
@@ -191,7 +191,7 @@ struct Home : ui::Panel
           "<refresh_ weight=80>"
           "<nav_ctrls_>"
         ">"
-        "<lb_>"
+        "<list_>"
     )
     {
         place["search_"] << search_.tip_string("Todo");
@@ -221,20 +221,20 @@ struct Home : ui::Panel
                 .format(true);
         
         // listbox
-        lb_.show_header(false);
-        lb_.enable_single(true, true);
+        list_.show_header(false);
+        list_.enable_single(true, true);
         
         // 1-column inline widgets
-        lb_.append_header("", LB_PANEL_WIDTH);
-        lb_.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
+        list_.append_header("", LB_PANEL_WIDTH);
+        list_.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
         
         // 2-column text-only
-        //lb_.append_header("", TITLE_WIDTH);
-        //lb_.append_header("", COMPLETED_WIDTH);
+        //list_.append_header("", TITLE_WIDTH);
+        //list_.append_header("", COMPLETED_WIDTH);
         
-        place["lb_"] << lb_;
+        place["list_"] << list_;
         place.collocate();
-        place.field_visible("lb_", false);
+        place.field_visible("list_", false);
         
         owner.place[field] << *this;
         if (!display)
@@ -245,7 +245,7 @@ struct Home : ui::Panel
     {
         auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
         auto plist = wrapper->p();
-        auto slot = lb_.at(0);
+        auto slot = list_.at(0);
         
         // 1-column inline widgets
         if (!initialized)
@@ -255,7 +255,7 @@ struct Home : ui::Panel
             for (int i = 0; i < PAGE_SIZE; ++i)
                 slot.append({ "" });
             
-            place.field_visible("lb_", true);
+            place.field_visible("list_", true);
             initialized = true;
         }
         
