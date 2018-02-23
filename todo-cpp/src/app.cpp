@@ -49,8 +49,13 @@ static const int MARGIN = 5,
         COMPLETED_WIDTH = 20,
         TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
 
+// hack
+struct TodoItem;
+static std::vector<TodoItem*> todo_items;
+
 struct TodoItem : nana::listbox::inline_notifier_interface
 {
+    
     inline_indicator* ind_ { nullptr };
     index_type pos_;
     
@@ -66,6 +71,17 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     
     bool initialized{ false };
     
+    TodoItem()
+    {
+        todo_items.push_back(this);
+    }
+    
+    void update(const todo::user::Todo* message)
+    {
+        auto title = message->title();
+        std::string str(title->c_str(), title->size());
+        lbl_.caption(str);
+    }
 private:
     void create(nana::window wd) override
     {
@@ -115,7 +131,6 @@ private:
         });
         pnl_.place["btn_"] << btn_;
     }
-    
     void activate(inline_indicator& ind, index_type pos) override
     {
         ind_ = &ind;
@@ -127,6 +142,7 @@ private:
     }
     void set(const std::string& value) override
     {
+        /*
         bool visible = !value.empty();
         if (!visible)
         {
@@ -151,6 +167,7 @@ private:
         }
         
         txt_.caption(value);
+        */
     }
     void notify_status(status_type status, bool on) override
     {
@@ -176,6 +193,8 @@ struct Home : ui::Panel
     nana::listbox lb{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
     
     bool initialized { false };
+    
+    int item_offset;
     
     Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
         "<lb_>"
@@ -208,23 +227,21 @@ struct Home : ui::Panel
         auto slot = lb.at(0);
         
         // 1-column inline widgets
-        bool makeVisible = false;
         if (!initialized)
         {
+            item_offset = todo_items.size();
+            
             for (int i = 0; i < PAGE_SIZE; ++i)
                 slot.append({ "" });
             
-            initialized = makeVisible = true;
-        }
-        
-        // TODO fill data
-        for (int i = 0, len = PAGE_SIZE/*plist->size()*/; i < len; i++)
-        {
-            slot.at(i).text(0, "gg");
-        }
-        
-        if (makeVisible)
             place.field_visible("lb_", true);
+            initialized = true;
+        }
+        
+        //slot.at(i).text(0, "gg");
+        int i = 0, len = std::min(PAGE_SIZE, static_cast<int>(plist->size()));
+        for (; i < len; i++) todo_items[item_offset + i]->update(plist->Get(i));
+        for (; i < PAGE_SIZE; i++) todo_items[item_offset + i]->update(nullptr);
         
         // 2-column text-only
         //for (int i = 0, len = plist->size(); i < len; i++)
