@@ -33,7 +33,11 @@ nana::listbox::oresolver& operator << (nana::listbox::oresolver& orr, const todo
 
 static const int MARGIN = 5,
         WIDTH = 1005,
+        #ifdef WIN32
+        HEIGHT = 750,
+        #else
         HEIGHT = 710,
+        #endif
         // page
         PAGE_SIZE = 25,
         MULTIPLIER = 2,
@@ -151,8 +155,8 @@ private:
 };
 
 static const char* SORT_TOGGLE[] = {
-    " <color=0x0080FF size=11 target=\"0\"> \u25BC </>",
-    " <color=0x0080FF size=11 target=\"1\"> \u25B2 </>",
+    " <color=0x0080FF size=11 target=\"0\"> dsc </>",
+    " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
 
 struct Home : ui::Panel
@@ -171,14 +175,14 @@ struct Home : ui::Panel
     nana::label nav_{ *this,
         "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
         "     "
-        "<color=0x0080FF size=11 target=\"5\"> \u25C0 </>"
+        "<color=0x0080FF size=11 target=\"5\"> \\< </>"
         "     "
-        "<color=0x0080FF size=11 target=\"6\"> \u25B6 </>"
+        "<color=0x0080FF size=11 target=\"6\"> \\> </>"
         "     "
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
     
-    nana::listbox list_{ *this, { 0, 25 + MARGIN, LB_WIDTH, LB_HEIGHT - (25 + MARGIN) } };
+    nana::listbox list_{ *this, { 0, 25 + MARGIN, unsigned(LB_WIDTH), unsigned(LB_HEIGHT - (25 + MARGIN)) } };
     
     bool desc{ true };
     
@@ -319,7 +323,7 @@ static const int IDLE_INTERVAL = 10000,
 
 struct App : rpc::Base
 {
-    ui::Form fm{ {273, 0, WIDTH, HEIGHT}, 0xFFFFFF };
+    ui::Form fm{ {273, 0, unsigned(WIDTH), unsigned(HEIGHT)}, 0xFFFFFF };
     
     ui::Place place{ fm, 
         "vert margin=5"
