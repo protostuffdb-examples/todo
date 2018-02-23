@@ -345,7 +345,8 @@ struct App : rpc::Base
         
         place["footer_"] << footer_.text_align(nana::align::center).format(true);
     }
-    
+
+private:
     void links$$(const std::string& target)
     {
         int selected = target.back() - 48;
@@ -410,8 +411,9 @@ struct App : rpc::Base
             fprintf(stdout, "connected\n");
         }*/
     }
-    
-    int show()
+
+public:
+    void show()
     {
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
@@ -433,8 +435,6 @@ struct App : rpc::Base
         place.collocate();
         fm.show();
         start();
-        nana::exec();
-        return 0;
     }
 };
 
@@ -462,7 +462,9 @@ int run(int argc, char* argv[], const char* title)
         return 1;
     }
     
-    return app.show();
+    app.show();
+    nana::exec();
+    return 0;
 }
 
 } // todo
