@@ -150,18 +150,20 @@ private:
     bool whether_to_draw() const override { return false; }
 };
 
+static const char* SORT_TOGGLE[] = {
+    " <color=0x0080FF size=11 target=\"0\"> \u25BE </>",
+    " <color=0x0080FF size=11 target=\"1\"> \u25B4 </>",
+};
+
 struct Home : ui::Panel
 {
     nana::textbox search_{ *this };
     
     nana::label add_{ *this,
         "  "
-        "<bold color=0x0080FF size=11 target=\"1\">+</>"
+        "<bold color=0x0080FF size=11 target=\"2\"> + </>"
     };
-    nana::label sort_{ *this,
-        "  "
-        "<color=0x0080FF size=11 target=\"2\">desc</>"
-    };
+    nana::label sort_{ *this, SORT_TOGGLE[0] };
     nana::label refresh_{ *this,
         "  "
         "<color=0x0080FF size=11 target=\"3\">refresh</>"
@@ -176,9 +178,11 @@ struct Home : ui::Panel
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
     
-    nana::listbox list_{ *this, { 0, 25, LB_WIDTH, LB_HEIGHT - 25 } };
+    nana::listbox list_{ *this, { 0, 25 + MARGIN, LB_WIDTH, LB_HEIGHT - (25 + MARGIN) } };
     
-    bool initialized { false };
+    bool desc{ true };
+    
+    bool initialized{ false };
     
     int item_offset;
     
@@ -187,7 +191,7 @@ struct Home : ui::Panel
         "<horizontal weight=25"
           "<search_ weight=200>"
           "<add_ weight=40>"
-          "<sort_ weight=60>"
+          "<sort_ weight=40>"
           "<refresh_ weight=80>"
           "<nav_ctrls_>"
         ">"
@@ -198,9 +202,18 @@ struct Home : ui::Panel
         
         // ctrls
         auto listener = [this](nana::label::command cmd, const std::string& target) {
-            if (nana::label::command::click == cmd)
+            if (nana::label::command::click != cmd)
+                return;
+            
+            int type = std::atoi(target.c_str());
+            switch (type)
             {
-                
+                case 0:
+                case 1:
+                    desc = 0 == (type ^ 1);
+                    sort_.caption(SORT_TOGGLE[type ^ 1]);
+                    break;
+                // TODO
             }
         };
         place["add_"] << add_
