@@ -53,10 +53,13 @@ const char* resolveEndpoint(char* arg, int* port, bool* secure)
     
     if (':' != *(slash - 1))
     {
-        // assume it is a trailing slash
+        // expect a trailing slash
+        if ('\0' != *(slash + 1))
+            return nullptr;
+        
         *secure = false;
         *slash = '\0';
-        return '\0' != *(slash + 1) ? nullptr : resolveIpPort(arg, port); 
+        return resolveIpPort(arg, port); 
     }
     
     if ('/' != *(slash + 1))
