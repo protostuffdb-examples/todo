@@ -105,6 +105,7 @@ private:
         // button
         btn_.create(pnl_);
         btn_.caption("Delete");
+        //btn_.events().key_press($key_press);
         btn_.events().click([this]
         {
             ind_->selected(pos_);
