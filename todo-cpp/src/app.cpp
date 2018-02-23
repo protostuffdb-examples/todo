@@ -258,7 +258,13 @@ struct Home : ui::Panel
     {
         auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
         auto plist = wrapper->p();
+        
+        if (plist == nullptr || 0 == plist->size())
+            return;
+        
         auto slot = list_.at(0);
+        
+        nana::internal_scope_guard lock;
         
         // 1-column inline widgets
         if (!initialized)
