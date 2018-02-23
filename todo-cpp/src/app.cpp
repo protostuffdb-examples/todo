@@ -129,6 +129,8 @@ private:
             //pnl_.place.field_visible("txt_", visible);
             pnl_.place.field_visible("lbl_", visible);
         }
+        
+        txt_.caption(value);
     }
     void notify_status(status_type status, bool on) override
     {
@@ -168,7 +170,6 @@ struct Home : ui::Panel
         // 1-column inline widgets
         lb.append_header("", LB_PANEL_WIDTH);
         lb.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
-        place.field_visible("lb_", false);
         
         // 2-column text-only
         //lb.append_header("", TITLE_WIDTH);
@@ -176,6 +177,7 @@ struct Home : ui::Panel
         
         place["lb_"] << lb;
         place.collocate();
+        place.field_visible("lb_", false);
         
         owner.place[field] << *this;
         if (!display)
@@ -193,13 +195,16 @@ struct Home : ui::Panel
         if (!initialized)
         {
             for (int i = 0; i < PAGE_SIZE; ++i)
-                lb.at(0).append({ "" });
+                slot.append({ "" });
             
-            initialized = true;
-            makeVisible = true;
+            initialized = makeVisible = true;
         }
         
         // TODO fill data
+        for (int i = 0, len = PAGE_SIZE/*plist->size()*/; i < len; i++)
+        {
+            slot.at(i).text(0, "gg");
+        }
         
         if (makeVisible)
             place.field_visible("lb_", true);
