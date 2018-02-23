@@ -1,16 +1,15 @@
-source_set("util") {
+static_library("app") {
   sources = [
-    "src/rpc.h",
-    "src/ui.h",
     "g/user/index_generated.h",
     "g/user/fbs_schema.h",
+    
+    "src/util.h",
+    "src/rpc.h",
+    "src/ui.h",
+    "src/app.h",
+    "src/app.cpp",
   ]
-}
-
-executable("todo") {
-  sources = [ "src/main.cpp" ]
   deps = [
-    ":util",
     "//deps/nana:base",
     "//deps/nana:gui",
     "//deps/flatbuffers:flatbuffers",
@@ -19,4 +18,9 @@ executable("todo") {
     "//deps/brynet:net",
     "//deps/brynet:http",
   ]
+}
+
+executable("todo") {
+  sources = [ "src/main.cpp" ]
+  deps = [ ":app" ]
 }
