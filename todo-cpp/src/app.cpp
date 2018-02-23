@@ -168,7 +168,7 @@ struct Home : ui::Panel
         "  "
         "<color=0x0080FF size=11 target=\"3\">refresh</>"
     };
-    nana::label nav_ctrls_{ *this,
+    nana::label nav_{ *this,
         "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
         "     "
         "<bold color=0x0080FF size=11 target=\"5\">\\<</>"
@@ -193,7 +193,7 @@ struct Home : ui::Panel
           "<add_ weight=40>"
           "<sort_ weight=40>"
           "<refresh_ weight=80>"
-          "<nav_ctrls_>"
+          "<nav_>"
         ">"
         "<list_>"
     )
@@ -228,7 +228,7 @@ struct Home : ui::Panel
                 .text_align(nana::align::center)
                 .add_format_listener(listener)
                 .format(true);
-        place["nav_ctrls_"] << nav_ctrls_
+        place["nav_"] << nav_
                 .text_align(nana::align::right)
                 .add_format_listener(listener)
                 .format(true);
