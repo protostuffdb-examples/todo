@@ -122,7 +122,7 @@ struct App : rpc::Base
     
     bool fetched_initial{ false };
     
-    App(const char* host, int port, const std::string& title) : Base(host, port)
+    App(const char* host, int port, bool secure, const std::string& title) : rpc::Base(host, port, secure)
     {
         fm.caption(title);
         place.div(
@@ -137,7 +137,6 @@ struct App : rpc::Base
         
         // bottom
         place["footer_"] << bottom.text_align(nana::align::center).format(true);
-        this->show();
     }
     
     void links$$(const std::string& target)
@@ -207,12 +206,6 @@ struct App : rpc::Base
     
     int show()
     {
-        if (!parser.Parse(todo_user_schema))
-        {
-            fprintf(stderr, "Could not load schema.\n");
-            return 1;
-        }
-        
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
             if (nana::label::command::click == cmd)
@@ -245,8 +238,23 @@ namespace todo {
 int run(int argc, char* argv[], const std::string& title)
 {
     int port;
-    const char* host = util::resolveIpPort(argc > 1 ? argv[1] : nullptr, &port);
-    App app(host, port, title);
+    bool secure;
+    const char* host = util::resolveEndpoint(argc > 1 ? argv[1] : nullptr, &port, &secure);
+    
+    if (host == nullptr)
+    {
+        fprintf(stderr, "Invalid endpoint %s\n", argv[1]);
+        return 1;
+    }
+    
+    App app(host, port, secure, title);
+    
+    if (!app.parser.Parse(todo_user_schema))
+    {
+        fprintf(stderr, "Could not load schema.\n");
+        return 1;
+    }
+    
     return app.show();
 }
 

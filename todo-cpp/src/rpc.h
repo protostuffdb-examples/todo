@@ -111,7 +111,7 @@ struct Base
 {
     const std::string host;
     const int port;
-    
+    const bool secure;
     flatbuffers::Parser parser;
     std::string errmsg;
 
@@ -124,7 +124,7 @@ private:
 protected:
     int fd{ SOCKET_ERROR };
     
-    Base(const char* host, int port) : host(host), port(port)
+    Base(const char* host, int port, bool secure) : host(host), port(port), secure(secure)
     {
         req_host += host;
         if (port != 0)
