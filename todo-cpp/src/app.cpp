@@ -302,8 +302,6 @@ struct About : ui::Panel
     }
 };
 
-static const char MALFORMED_MESSAGE[] = "Malformed message.";
-
 static const char* LINKS[] = {
     "<color=0x0080FF size=11 target=\"content_0\">Home</>",
     "<color=0x0080FF size=11 target=\"content_1\">About</>"
