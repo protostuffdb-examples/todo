@@ -273,7 +273,6 @@ struct App : rpc::Base
         
         place["content_"] << content_;
         
-        // bottom
         place["footer_"] << footer_.text_align(nana::align::center).format(true);
     }
     
@@ -353,14 +352,12 @@ struct App : rpc::Base
         for (auto text : LINKS)
         {
             links.emplace_front(fm.handle());
-            auto& link = links.front();
             
-            link.text_align(nana::align::center)
+            place["header_"] << links.front()
+                .text_align(nana::align::center)
                 .format(true)
                 .add_format_listener(listener)
                 .caption(text);
-            
-            place["header_"] << link;
         }
         
         place.collocate();
