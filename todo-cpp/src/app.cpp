@@ -78,6 +78,11 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     void update(const todo::user::Todo* message)
     {
         pojo = message;
+        if (message == nullptr)
+        {
+            pnl_.hide();
+            return;
+        }
         
         auto title = pojo->title();
         std::string str(title->c_str(), title->size());
