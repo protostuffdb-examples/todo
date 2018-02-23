@@ -271,7 +271,6 @@ struct App : rpc::Base
             "<footer_ weight=20>"
         );
         
-        content_.place.collocate();
         place["content_"] << content_;
         
         // bottom
