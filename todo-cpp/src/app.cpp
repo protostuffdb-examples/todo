@@ -151,8 +151,8 @@ private:
 };
 
 static const char* SORT_TOGGLE[] = {
-    " <color=0x0080FF size=11 target=\"0\"> \u25BE </>",
-    " <color=0x0080FF size=11 target=\"1\"> \u25B4 </>",
+    " <color=0x0080FF size=11 target=\"0\"> \u25BC </>",
+    " <color=0x0080FF size=11 target=\"1\"> \u25B2 </>",
 };
 
 struct Home : ui::Panel
@@ -171,9 +171,9 @@ struct Home : ui::Panel
     nana::label nav_{ *this,
         "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
         "     "
-        "<bold color=0x0080FF size=11 target=\"5\">\\<</>"
-        "      "
-        "<bold color=0x0080FF size=11 target=\"6\">\\></>"
+        "<color=0x0080FF size=11 target=\"5\"> \u25C0 </>"
+        "     "
+        "<color=0x0080FF size=11 target=\"6\"> \u25B6 </>"
         "     "
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
