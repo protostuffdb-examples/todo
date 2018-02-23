@@ -5,41 +5,61 @@
 #include <nana/gui/widgets/picture.hpp>
 
 namespace ui {
-    
-    struct Form : nana::form
+
+struct Form : nana::form
+{
+    Form(nana::rectangle rect, unsigned bg, const char* title = nullptr) : nana::form(rect)
     {
-        Form(nana::rectangle rect, unsigned bg, const char* title = nullptr) : nana::form(rect)
-        {
-            bgcolor(nana::color_rgb(bg));
-            if (title)
-                caption(title);
-        }
-    };
-    
-    struct Panel : nana::panel<true>
+        bgcolor(nana::color_rgb(bg));
+        if (title)
+            caption(title);
+    }
+};
+
+struct Icon : nana::picture
+{
+    Icon(nana::widget& owner, const char* icon, bool cursor_hand = false) : nana::picture(owner)
     {
-        nana::place place{ *this };
+        load(nana::paint::image(icon));
+        transparent(true);
         
-        Panel(nana::widget& owner, const char* layout) : nana::panel<true>(owner)
-        {
-            place.div(layout);
-        }
-    };
+        if (!cursor_hand)
+            return;
+        
+        events().mouse_move([this](const nana::arg_mouse& arg) {
+            cursor(nana::cursor::hand);
+        });
+    }
+};
+
+struct Panel : nana::panel<true>
+{
+    nana::place place{ *this };
     
-    struct Icon : nana::picture
+    Panel(nana::widget& owner, const char* layout) : nana::panel<true>(owner)
     {
-        Icon(nana::widget& owner, const char* icon, bool cursor_hand = false) : nana::picture(owner)
-        {
-            load(nana::paint::image(icon));
-            transparent(true);
-            
-            if (!cursor_hand)
-                return;
-            
-            events().mouse_move([this](const nana::arg_mouse& arg) {
-                cursor(nana::cursor::hand);
-            });
-        }
-    };
+        place.div(layout);
+    }
+};
+
+struct DeferredPanel : nana::panel<true>
+{
+    const char* const layout;
+    nana::place place;
+    
+    DeferredPanel(const char* layout) : nana::panel<true>(), layout(layout)
+    {
+        
+    }
+    
+private:
+    void _m_complete_creation() override
+    {
+        place.bind(*this);
+        place.div(layout);
+        
+        transparent(true);
+    }
+};
     
 } // ui
