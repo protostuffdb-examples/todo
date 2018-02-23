@@ -31,9 +31,12 @@ nana::listbox::oresolver& operator << (nana::listbox::oresolver& orr, const todo
     return orr;
 }
 
-static const int WIDTH = 1005,
+static const int MARGIN = 5,
+        WIDTH = 1005,
         HEIGHT = 710,
-        MARGIN = 5,
+        // page
+        PAGE_SIZE = 25,
+        MULTIPLIER = 2,
         // listbox
         LB_OUTER = MARGIN * 2,
         LB_HEIGHT = HEIGHT - LB_OUTER,
@@ -69,6 +72,20 @@ private:
         auto $selected = [this]() {
             ind_->selected(pos_);
         };
+        auto $key_press = [this](const nana::arg_keyboard& arg) {
+            bool upward = false;
+            switch(arg.key)
+            {
+                case nana::keyboard::os_arrow_up:
+                    upward = true;
+                case nana::keyboard::os_arrow_down:
+                    if (!arg.ctrl)
+                        dynamic_cast<nana::listbox&>(ind_->host()).move_select(upward);
+                    else
+                        dynamic_cast<nana::listbox&>(ind_->host()).at(0).at(upward ? 0 : PAGE_SIZE - 1).select(true);
+                    break;
+            }
+        };
         
         pnl_.create(wd);
         
@@ -77,6 +94,7 @@ private:
         lbl_.transparent(true)
             .format(true)
             .events().click($selected);
+        lbl_.events().key_press($key_press);
         pnl_.place["lbl_"] << lbl_;
         
         // textbox
@@ -90,7 +108,7 @@ private:
         btn_.events().click([this]
         {
             // TODO delete the item when button is clicked
-            //auto& lsbox = dynamic_cast<nana::listbox&>(indicator_->host());
+            //auto& lsbox = dynamic_cast<nana::listbox&>(ind->host());
             //lsbox.erase(lsbox.at(pos_));
         });
         pnl_.place["btn_"] << btn_;
@@ -150,9 +168,6 @@ private:
         return false;
     }
 };
-
-static const int PAGE_SIZE = 25,
-        MULTIPLIER = 2;
 
 struct Home : ui::Panel
 {
