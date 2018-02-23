@@ -75,9 +75,9 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         todo_items.push_back(this);
     }
     
-    void update(const todo::user::Todo* pojo)
+    void update(const todo::user::Todo* message)
     {
-        this->pojo = pojo;
+        pojo = message;
         
         auto title = pojo->title();
         std::string str(title->c_str(), title->size());
