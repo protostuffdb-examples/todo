@@ -55,7 +55,6 @@ static std::vector<TodoItem*> todo_items;
 
 struct TodoItem : nana::listbox::inline_notifier_interface
 {
-    
     inline_indicator* ind_ { nullptr };
     index_type pos_;
     
@@ -421,6 +420,8 @@ int run(int argc, char* argv[], const std::string& title)
         fprintf(stderr, "Invalid endpoint %s\n", argv[1]);
         return 1;
     }
+    
+    todo_items.reserve(PAGE_SIZE);
     
     App app(host, port, secure, title);
     
