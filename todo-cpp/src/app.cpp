@@ -152,16 +152,75 @@ private:
 
 struct Home : ui::Panel
 {
-    nana::listbox lb_{ *this, { 0, 0, LB_WIDTH, LB_HEIGHT } };
+    nana::textbox search_{ *this };
+    
+    nana::label add_{ *this,
+        "  "
+        "<bold color=0x0080FF size=11 target=\"1\">+</>"
+    };
+    nana::label sort_{ *this,
+        "  "
+        "<color=0x0080FF size=11 target=\"2\">desc</>"
+    };
+    nana::label refresh_{ *this,
+        "  "
+        "<color=0x0080FF size=11 target=\"3\">refresh</>"
+    };
+    nana::label nav_ctrls_{ *this,
+        "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
+        "     "
+        "<bold color=0x0080FF size=11 target=\"5\">\\<</>"
+        "      "
+        "<bold color=0x0080FF size=11 target=\"6\">\\></>"
+        "     "
+        "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
+    };
+    
+    nana::listbox lb_{ *this, { 0, 25, LB_WIDTH, LB_HEIGHT - 25 } };
     
     bool initialized { false };
     
     int item_offset;
     
-    Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
+    Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner,
+        "vert"
+        "<horizontal weight=25"
+          "<search_ weight=200>"
+          "<add_ weight=40>"
+          "<sort_ weight=60>"
+          "<refresh_ weight=80>"
+          "<nav_ctrls_>"
+        ">"
         "<lb_>"
     )
     {
+        place["search_"] << search_.tip_string("Todo");
+        
+        // ctrls
+        auto listener = [this](nana::label::command cmd, const std::string& target) {
+            if (nana::label::command::click == cmd)
+            {
+                
+            }
+        };
+        place["add_"] << add_
+                .text_align(nana::align::center)
+                .add_format_listener(listener)
+                .format(true);
+        place["sort_"] << sort_
+                .text_align(nana::align::center)
+                .add_format_listener(listener)
+                .format(true);
+        place["refresh_"] << refresh_
+                .text_align(nana::align::center)
+                .add_format_listener(listener)
+                .format(true);
+        place["nav_ctrls_"] << nav_ctrls_
+                .text_align(nana::align::right)
+                .add_format_listener(listener)
+                .format(true);
+        
+        // listbox
         lb_.show_header(false);
         lb_.enable_single(true, true);
         
