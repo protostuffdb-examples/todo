@@ -264,6 +264,7 @@ struct Home : ui::Panel
         
         auto slot = list_.at(0);
         
+        // lock for ui updates
         nana::internal_scope_guard lock;
         
         // 1-column inline widgets
