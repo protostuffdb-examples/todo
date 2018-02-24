@@ -83,8 +83,8 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     ui::DeferredPanel pnl_ {
         "margin=[1,10]"
         "<title_>"
-        "<ts_>"
-        "<txt_ weight=200 margin=[0,5]>"
+        "<ts_ weight=120 margin=[0,5]>"
+        "<txt_ weight=200 margin=[0,5,0,0]>"
         "<btn_ weight=25>" 
     };
     nana::label title_;
