@@ -7,7 +7,6 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 
-#include "util.h"
 #include "rpc.h"
 #include "ui.h"
 #include "app.h"
@@ -453,12 +452,13 @@ namespace todo {
 
 int run(int argc, char* argv[], const char* title)
 {
-    int port = 0;
-    bool secure = false;
-    const char* host = util::resolveEndpoint(argc > 1 ? argv[1] : nullptr, &port, &secure);
-    const char* hostname = argc > 2 ? argv[2] : nullptr;
+    const auto config = rpc::Config::parseFrom(
+        argc > 1 ? argv[1] : nullptr,
+        argc > 2 ? argv[2] : nullptr,
+        5000 // if no args provided, 127.0.0.1:5000 is the endpoint
+    );
     
-    if (host == nullptr)
+    if (config.host == nullptr)
     {
         fprintf(stderr, "Invalid endpoint %s\n", argv[1]);
         return 1;
@@ -466,7 +466,6 @@ int run(int argc, char* argv[], const char* title)
     
     todo_items.reserve(PAGE_SIZE);
     
-    rpc::Config config(host, port != 0 ? port : (secure ? 443 : 80), secure, hostname);
     App app(config, title);
     
     if (!app.parser.Parse(todo_user_schema))

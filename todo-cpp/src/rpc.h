@@ -6,6 +6,8 @@
 #include <brynet/net/http/HttpService.h>
 #include <brynet/net/http/HttpFormat.h>
 
+#include "util.h"
+
 namespace rpc {
 
 const char* const MALFORMED_MESSAGE = "Malformed message.";
@@ -116,6 +118,32 @@ struct Config
     
     Config(const char* host, const int port, const bool secure, const char* hostname = nullptr):
         host(host), port(port), secure(secure), hostname(hostname) {}
+        
+    static const Config parseFrom(char* endpoint, char* hostname = nullptr, int default_nonsecure_port = 0)
+    {
+        int port = 0;
+        bool secure = false;
+        const char* host = util::resolveEndpoint(endpoint, &port, &secure);
+        
+        if (port != 0)
+        {
+            // provided
+        }
+        else if (secure)
+        {
+            port = 443;
+        }
+        else if (default_nonsecure_port != 0 && host == util::DEFAULT_HOST)
+        {
+            port = default_nonsecure_port;
+        }
+        else
+        {
+            port = 80;
+        }
+        
+        return { host, port, secure, hostname };
+    }
 };
 
 struct Base
