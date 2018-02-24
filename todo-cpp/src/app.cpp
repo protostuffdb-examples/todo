@@ -348,7 +348,7 @@ struct App : rpc::Base
     
     bool fetched_initial{ false };
     
-    App(const char* host, int port, bool secure, const char* hostname, const char* title) : rpc::Base(host, port, secure, hostname)
+    App(const rpc::Config config, const char* title) : rpc::Base(config)
     {
         fm.caption(title ? title : "Todo App");
         
@@ -466,7 +466,8 @@ int run(int argc, char* argv[], const char* title)
     
     todo_items.reserve(PAGE_SIZE);
     
-    App app(host, port, secure, hostname, title);
+    rpc::Config config(host, port != 0 ? port : (secure ? 443 : 80), secure, hostname);
+    App app(config, title);
     
     if (!app.parser.Parse(todo_user_schema))
     {

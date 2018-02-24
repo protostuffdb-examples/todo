@@ -120,9 +120,8 @@ struct Config
 
 struct Base
 {
+    const Config config;
     const std::string host;
-    const int port;
-    const bool secure;
     flatbuffers::Parser parser;
     std::string errmsg;
 
@@ -135,25 +134,24 @@ private:
 protected:
     int fd{ SOCKET_ERROR };
     
-    Base(const char* host, int port, bool secure, const char* hostname = nullptr) :
-            host(host), port(port != 0 ? port : (secure ? 443 : 80)), secure(secure)
+    Base(const Config config) : config(config), host(config.host)
     {
-        if (port == 0)
+        if (config.port == 80 && !config.secure)
         {
-            req_host.assign(hostname ? hostname : host);
+            req_host.assign(config.hostname ? config.hostname : host);
         }
-        else if (hostname)
+        else if (config.hostname)
         {
-            req_host.assign(hostname);
+            req_host.assign(config.hostname);
         }
         else
         {
             req_host += host;
             req_host += ':';
-            req_host += std::to_string(port);
+            req_host += std::to_string(config.port);
         }
         
-        if (secure)
+        if (config.secure)
             SSL_library_init();
     }
     
@@ -233,10 +231,10 @@ protected:
     {
         bool ret = !force && SOCKET_ERROR != fd;
         
-        if (!ret && SOCKET_ERROR != (fd = brynet::net::base::Connect(false, host, port)))
+        if (!ret && SOCKET_ERROR != (fd = brynet::net::base::Connect(false, host, config.port)))
         {
             auto socket = brynet::net::TcpSocket::Create(fd, false);
-            service.addSession(std::move(socket), $onTcpSession, secure, nullptr, 1024 * 1024, false);
+            service.addSession(std::move(socket), $onTcpSession, config.secure, nullptr, 1024 * 1024, false);
             ret = true;
         }
         
