@@ -18,6 +18,7 @@ static_library("app") {
     "//deps/brynet:timer",
     "//deps/brynet:http",
     "//deps/flatbuffers:flatbuffers",
+    "//deps/asap:asap",
     "//deps/nana:base",
     "//deps/nana:gui",
   ]
