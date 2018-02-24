@@ -9,14 +9,16 @@ static_library("app") {
     "src/app.h",
     "src/app.cpp",
   ]
+  public_deps = [
+    "//deps/brynet:net",
+  ]
   deps = [
-    "//deps/nana:base",
-    "//deps/nana:gui",
-    "//deps/flatbuffers:flatbuffers",
     "//deps/brynet:utils",
     "//deps/brynet:timer",
-    "//deps/brynet:net",
     "//deps/brynet:http",
+    "//deps/flatbuffers:flatbuffers",
+    "//deps/nana:base",
+    "//deps/nana:gui",
   ]
 }
 
