@@ -7,6 +7,8 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 
+#include <asap/asap.h>
+
 #include "pstore.h"
 #include "rpc.h"
 #include "ui.h"
@@ -57,6 +59,22 @@ static const int MARGIN = 5,
 struct TodoItem;
 static std::vector<TodoItem*> todo_items;
 
+struct Todo
+{
+    std::string key;
+    std::string title;
+    uint64_t ts;
+    bool completed;
+    Todo(const todo::user::Todo* src):
+        key(src->key()->str()),
+        title(src->title()->str()),
+        ts(src->ts()),
+        completed(src->completed())
+    {
+        
+    }
+};
+
 struct TodoItem : nana::listbox::inline_notifier_interface
 {
     inline_indicator* ind_ { nullptr };
@@ -64,11 +82,13 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     
     ui::DeferredPanel pnl_ {
         "margin=[1,10]"
-        "<lbl_>"
+        "<title_>"
+        "<ts_>"
         "<txt_ weight=200 margin=[0,5]>"
         "<btn_ weight=25>" 
     };
-    nana::label lbl_;
+    nana::label title_;
+    nana::label ts_;
     nana::textbox txt_;
     nana::button btn_;
     
@@ -88,9 +108,12 @@ struct TodoItem : nana::listbox::inline_notifier_interface
             return;
         }
         
-        auto title = pojo->title();
-        std::string str(title->c_str(), title->size());
-        lbl_.caption(str);
+        title_.caption(pojo->title()->str());
+        
+        std::time_t secs(pojo->ts() / 1000);
+        asap::datetime dt(secs);
+        auto duration = asap::now() - dt;
+        ts_.caption(duration.short_str(true));
     }
 private:
     void create(nana::window wd) override
@@ -115,13 +138,20 @@ private:
         
         pnl_.create(wd);
         
-        // label
-        lbl_.create(pnl_);
-        lbl_.transparent(true)
-            .format(true)
+        // title
+        title_.create(pnl_);
+        title_.transparent(true)
             .events().click($selected);
-        lbl_.events().key_press($key_press);
-        pnl_.place["lbl_"] << lbl_;
+        title_.events().key_press($key_press);
+        pnl_.place["title_"] << title_;
+        
+        // ts
+        ts_.create(pnl_);
+        ts_.transparent(true)
+            .text_align(nana::align::right)
+            .events().click($selected);
+        ts_.events().key_press($key_press);
+        pnl_.place["ts_"] << ts_;
         
         // textbox
         txt_.create(pnl_);
