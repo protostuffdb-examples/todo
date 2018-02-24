@@ -4,6 +4,7 @@ static_library("app") {
     "g/user/fbs_schema.h",
     
     "src/util.h",
+    "src/pstore.h",
     "src/rpc.h",
     "src/ui.h",
     "src/app.h",

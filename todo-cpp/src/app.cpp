@@ -7,6 +7,7 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 
+#include "pstore.h"
 #include "rpc.h"
 #include "ui.h"
 #include "app.h"
@@ -345,15 +346,13 @@ struct App : rpc::Base
     std::string current_target{ "content_0" };
     int current_selected{ 0 };
     
+    coreds::PojoStore<todo::user::Todo> store{ "Todo", "Todo_PList" };
+    
     bool fetched_initial{ false };
     
     App(const rpc::Config config, const char* title) : rpc::Base(config)
     {
         fm.caption(title ? title : "Todo App");
-        
-        place["content_"] << content_;
-        
-        place["footer_"] << footer_.text_align(nana::align::center).format(true);
     }
 
 private:
@@ -423,8 +422,24 @@ private:
     }
 
 public:
+    bool init(coreds::Opts opts)
+    {
+        return store.init(opts, todo_user_schema) && parser.Parse(todo_user_schema);
+    }
     void show()
     {
+        store.bind(
+            [](const todo::user::Todo* message) {
+                return message->key()->c_str();
+            },
+            [this](const coreds::ParamRangeKey prk) {
+                
+            },
+            [this](const todo::user::Todo* message) {
+                
+            }
+        );
+        
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
             if (nana::label::command::click == cmd)
@@ -441,6 +456,10 @@ public:
                 .add_format_listener(listener)
                 .caption(text);
         }
+        
+        place["content_"] << content_;
+        
+        place["footer_"] << footer_.text_align(nana::align::center).format(true);
         
         place.collocate();
         fm.show();
@@ -466,9 +485,11 @@ int run(int argc, char* argv[], const char* title)
     
     todo_items.reserve(PAGE_SIZE);
     
+    coreds::Opts opts;
+    
     App app(config, title);
     
-    if (!app.parser.Parse(todo_user_schema))
+    if (!app.init(opts))
     {
         fprintf(stderr, "Could not load schema.\n");
         return 1;
