@@ -90,8 +90,8 @@ enum class EventType
 template <typename T, typename F>
 struct PojoStore
 {
-    std::string errmsg;
 private:
+    const std::function<void()> $populate = std::bind(&PojoStore::populate, this);
     std::deque<T> list;
     T* startObj{ nullptr };
     
@@ -105,12 +105,15 @@ private:
     FetchType fetchType { FetchType::NONE };
     
 public:
+    std::string errmsg;
+    
     std::function<const char*(const T& pojo)> $fnKey;
     std::function<const char*(const F* message)> $fnKeyFB;
     std::function<bool(ParamRangeKey prk)> $fnFetch;
     std::function<void(T& pojo, const F* message)> $fnUpdate;
     std::function<void(EventType type, bool on)> $fnEvent;
     std::function<void(int idx, T* pojo)> $fnPopulate;
+    std::function<void(std::function<void()> op)> $fnPrepare;
     
     PojoStore()
     {
@@ -230,9 +233,7 @@ public:
         }
         
         // TODO check if current page is affected before you populate
-        $fnEvent(EventType::VISIBLE, false);
-        populate();
-        $fnEvent(EventType::VISIBLE, true);
+        $fnPrepare($populate);
         return removed != 0;
     }
     void prependAll(const flatbuffers::Vector<flatbuffers::Offset<F>>* p, bool reversed = false)
@@ -249,9 +250,7 @@ public:
         }
         
         // TODO check if current page is affected before you populate
-        $fnEvent(EventType::VISIBLE, false);
-        populate();
-        $fnEvent(EventType::VISIBLE, true);
+        $fnPrepare($populate);
     }
     void appendAll(const flatbuffers::Vector<flatbuffers::Offset<F>>* p, bool reversed = false)
     {
@@ -267,9 +266,7 @@ public:
         }
         
         // TODO check if current page is affected before you populate
-        $fnEvent(EventType::VISIBLE, false);
-        populate();
-        $fnEvent(EventType::VISIBLE, true);
+        $fnPrepare($populate);
     }
     bool cbFetchFailed() {
         if (fetchType == FetchType::NONE)

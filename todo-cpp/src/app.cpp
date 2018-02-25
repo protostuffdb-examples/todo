@@ -524,6 +524,12 @@ public:
         store.$fnPopulate = [this](int idx, Todo* pojo) {
             home.populate(idx, pojo);
         };
+        store.$fnPrepare = [this](std::function<void()> op) {
+            nana::internal_scope_guard lock;
+            home.place.field_visible("list_", false);
+            op();
+            home.place.field_visible("list_", true);
+        };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
             switch (type)
             {
