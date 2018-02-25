@@ -439,7 +439,7 @@ private:
         {
             // some other request
         }
-        else if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
+        else if (rpc::parseJson(body, "Todo_PList", parser, store.errmsg))
         {
             //home.appendTodos(parser.builder_.GetBufferPointer());
             //fetched_initial = true;
@@ -457,7 +457,7 @@ private:
         {
             store.cbFetchFailed();
             // TODO show errmsg
-            fprintf(stdout, "Error:\n%s\n", errmsg.c_str());
+            fprintf(stdout, "Error:\n%s\n", store.errmsg.c_str());
         }
     }
     
