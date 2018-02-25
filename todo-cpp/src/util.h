@@ -109,9 +109,9 @@ static int appendTo(std::string& str, int seconds, int count,
     return static_cast<unsigned>(seconds) % count;
 }
 
-void appendTimeagoTo(std::string& str, uint64_t ts)
+void appendTimeagoTo(std::string& str, uint64_t ts,
+    int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count())
 {
-    int64_t now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     int64_t diff = now - ts;
     if (diff == 0)
     {
