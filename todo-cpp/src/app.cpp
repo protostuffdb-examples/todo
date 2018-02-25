@@ -194,6 +194,17 @@ static const char* SORT_TOGGLE[] = {
     " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
 
+static const unsigned SUCCESS_BG = 0xDEFCD5;
+static const std::string SUCCESS_PFX = "<color=52A954 target=\"8\">";
+
+static const unsigned ERROR_BG = 0xF1D7D7;
+static const std::string ERROR_PFX = "<color=A95252 target=\"8\">";
+
+static const unsigned WARNING_BG = 0xF6F3D5;
+static const std::string WARNING_PFX = "<color=96904D target=\"8\">";
+
+static const std::string MSG_SFX = "</>";
+
 struct Home : ui::Panel
 {
     nana::textbox search_{ *this };
@@ -207,6 +218,7 @@ struct Home : ui::Panel
         "  "
         "<color=0x0080FF size=11 target=\"3\">refresh</>"
     };
+    
     nana::label nav_{ *this,
         "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
         "     "
@@ -216,6 +228,8 @@ struct Home : ui::Panel
         "     "
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
+    
+    nana::label msg_{ *this, "" };
     
     nana::listbox list_{ *this, { 0, 25 + MARGIN, unsigned(LB_WIDTH), unsigned(LB_HEIGHT - (25 + MARGIN)) } };
     
@@ -232,7 +246,8 @@ struct Home : ui::Panel
           "<add_ weight=40>"
           "<sort_ weight=40>"
           "<refresh_ weight=80>"
-          "<nav_>"
+          "<msg_>"
+          "<nav_ weight=160>"
         ">"
         "<list_>"
     )
@@ -252,6 +267,9 @@ struct Home : ui::Panel
                     desc = 0 == (type ^ 1);
                     sort_.caption(SORT_TOGGLE[type ^ 1]);
                     break;
+                case 8:
+                    place.field_visible("msg_", false);
+                    break;
                 // TODO
             }
         };
@@ -259,14 +277,22 @@ struct Home : ui::Panel
                 .text_align(nana::align::center)
                 .add_format_listener(listener)
                 .format(true);
+        
         place["sort_"] << sort_
                 .text_align(nana::align::center)
                 .add_format_listener(listener)
                 .format(true);
+        
         place["refresh_"] << refresh_
                 .text_align(nana::align::center)
                 .add_format_listener(listener)
                 .format(true);
+        
+        place["msg_"] << msg_
+                .text_align(nana::align::left)
+                .add_format_listener(listener)
+                .format(true);
+        
         place["nav_"] << nav_
                 .text_align(nana::align::right)
                 .add_format_listener(listener)
@@ -286,6 +312,7 @@ struct Home : ui::Panel
         
         place["list_"] << list_;
         place.collocate();
+        place.field_visible("msg_", false);
         place.field_visible("list_", false);
         
         owner.place[field] << *this;
@@ -312,6 +339,36 @@ struct Home : ui::Panel
     void populate(int idx, Todo* pojo)
     {
         todo_items[item_offset + idx]->update(pojo);
+    }
+    
+    void show(const std::string& msg, ui::Msg type = ui::Msg::ERROR)
+    {
+        std::string buf;
+        
+        switch (type)
+        {
+            case ui::Msg::SUCCESS:
+                msg_.bgcolor(nana::color_rgb(SUCCESS_BG));
+                buf += SUCCESS_PFX;
+                buf += msg;
+                buf += MSG_SFX;
+                break;
+            case ui::Msg::ERROR:
+                msg_.bgcolor(nana::color_rgb(ERROR_BG));
+                buf += ERROR_PFX;
+                buf += msg;
+                buf += MSG_SFX;
+                break;
+            case ui::Msg::WARNING:
+                msg_.bgcolor(nana::color_rgb(WARNING_BG));
+                buf += WARNING_PFX;
+                buf += msg;
+                buf += MSG_SFX;
+                break;
+        }
+        
+        msg_.caption(buf);
+        place.field_visible("msg_", true);
     }
     
     /*void appendTodos(void* flatbuf)
@@ -456,8 +513,9 @@ private:
         else
         {
             store.cbFetchFailed();
-            // TODO show errmsg
-            fprintf(stdout, "Error:\n%s\n", store.errmsg.c_str());
+            
+            nana::internal_scope_guard lock;
+            home.show(store.errmsg);
         }
     }
     
@@ -480,6 +538,9 @@ private:
         {
             store.errmsg = "Fetch failed.";
             store.cbFetchFailed();
+            
+            nana::internal_scope_guard lock;
+            home.show(errmsg);
         }
     }
     

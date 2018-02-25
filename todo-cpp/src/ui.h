@@ -6,6 +6,13 @@
 
 namespace ui {
 
+enum class Msg
+{
+    SUCCESS,
+    ERROR,
+    WARNING
+};
+
 struct Form : nana::form
 {
     Form(nana::rectangle rect, unsigned bg, const char* title = nullptr) : nana::form(rect)
