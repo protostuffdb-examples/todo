@@ -115,7 +115,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         //auto duration = asap::now() - dt;
         //ts_.caption(duration.short_str(true));
         std::string timeago;
-        timeago.reserve(10);
+        timeago.reserve(16); // just moments ago
         util::appendTimeagoTo(timeago, pojo->ts());
         ts_.caption(timeago);
     }
