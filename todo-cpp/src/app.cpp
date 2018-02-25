@@ -477,7 +477,10 @@ private:
         //connect(true);
         
         if (store.isLoading())
+        {
+            store.errmsg = "Fetch failed.";
             store.cbFetchFailed();
+        }
     }
     
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
