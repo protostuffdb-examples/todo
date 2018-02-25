@@ -55,25 +55,29 @@ static const int MARGIN = 5,
         COMPLETED_WIDTH = 20,
         TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
 
-// hack
-struct TodoItem;
-static std::vector<TodoItem*> todo_items;
-
-struct Todo
+struct Todo// : brynet::NonCopyable
 {
     std::string key;
-    std::string title;
     uint64_t ts;
+    
+    std::string title;
     bool completed;
+    
     Todo(const todo::user::Todo* src):
         key(src->key()->str()),
-        title(src->title()->str()),
         ts(src->ts()),
+        title(src->title()->str()),
         completed(src->completed())
     {
         
     }
 };
+
+// hack
+struct TodoItem;
+static std::vector<TodoItem*> todo_items;
+
+using TodoStore = coreds::PojoStore<Todo, todo::user::Todo>;
 
 struct TodoItem : nana::listbox::inline_notifier_interface
 {
@@ -92,14 +96,15 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     nana::textbox txt_;
     nana::button btn_;
     
-    const todo::user::Todo* pojo{ nullptr };
+    Todo* pojo{ nullptr };
+    TodoStore* store{ nullptr };
     
     TodoItem()
     {
         todo_items.push_back(this);
     }
     
-    void update(const todo::user::Todo* message)
+    void update(Todo* message)
     {
         pojo = message;
         if (message == nullptr)
@@ -108,15 +113,11 @@ struct TodoItem : nana::listbox::inline_notifier_interface
             return;
         }
         
-        title_.caption(pojo->title()->str());
+        title_.caption(pojo->title);
         
-        //std::time_t secs(pojo->ts() / 1000);
-        //asap::datetime dt(secs);
-        //auto duration = asap::now() - dt;
-        //ts_.caption(duration.short_str(true));
         std::string timeago;
         timeago.reserve(16); // just moments ago
-        util::appendTimeagoTo(timeago, pojo->ts());
+        util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
     }
 private:
@@ -292,7 +293,28 @@ struct Home : ui::Panel
             owner.place.field_display(field, false);
     }
     
-    void appendTodos(void* flatbuf)
+    void init()
+    {
+        if (initialized)
+            return;
+        
+        item_offset = todo_items.size();
+        
+        auto slot = list_.at(0);
+        for (int i = 0; i < PAGE_SIZE; ++i)
+            slot.append({ "" });
+        
+        place.field_visible("list_", true);
+        initialized = true;
+        place.field_visible("list_", false);
+    }
+    
+    void populate(int idx, Todo* pojo)
+    {
+        todo_items[item_offset + idx]->update(pojo);
+    }
+    
+    /*void appendTodos(void* flatbuf)
     {
         auto wrapper = flatbuffers::GetRoot<todo::user::Todo_PList>(flatbuf);
         auto plist = wrapper->p();
@@ -325,7 +347,7 @@ struct Home : ui::Panel
         // 2-column text-only
         //for (int i = 0, len = plist->size(); i < len; i++)
         //    slot.append(plist->Get(i));
-    }
+    }*/
 };
 
 struct About : ui::Panel
@@ -380,7 +402,8 @@ struct App : rpc::Base
     std::string current_target{ "content_0" };
     int current_selected{ 0 };
     
-    coreds::PojoStore<todo::user::Todo> store{ "Todo", "Todo_PList" };
+    const brynet::net::HttpSession::PTR* session;
+    TodoStore store;
     
     bool fetched_initial{ false };
     
@@ -412,13 +435,27 @@ private:
             const brynet::net::HttpSession::PTR& session) override
     {
         auto body = httpParser.getBody();
-        if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
+        if (!store.isLoading())
         {
-            home.appendTodos(parser.builder_.GetBufferPointer());
-            fetched_initial = true;
+            // some other request
+        }
+        else if (rpc::parseJson(body, "Todo_PList", parser, errmsg))
+        {
+            //home.appendTodos(parser.builder_.GetBufferPointer());
+            //fetched_initial = true;
+            if (!fetched_initial)
+                home.init();
+            
+            if (store.cbFetchSuccess(
+                flatbuffers::GetRoot<todo::user::Todo_PList>(parser.builder_.GetBufferPointer())->p()
+            ))
+            {
+                fetched_initial = true;
+            }
         }
         else
         {
+            store.cbFetchFailed();
             // TODO show errmsg
             fprintf(stdout, "Error:\n%s\n", errmsg.c_str());
         }
@@ -426,14 +463,21 @@ private:
     
     void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
+        this->session = &session;
         if (!fetched_initial)
-            post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
+            store.fetchNewer();
+        //if (!fetched_initial)
+        //    post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
     {
+        this->session = nullptr;
         fd = SOCKET_ERROR;
         //connect(true);
+        
+        if (store.isLoading())
+            store.cbFetchFailed();
     }
     
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
@@ -458,21 +502,42 @@ private:
 public:
     bool init(coreds::Opts opts)
     {
-        return store.init(opts, todo_user_schema) && parser.Parse(todo_user_schema);
+        store.init(opts);
+        return parser.Parse(todo_user_schema);
     }
     void show()
     {
-        store.bind(
-            [](const todo::user::Todo* message) {
-                return message->key()->c_str();
-            },
-            [this](const coreds::ParamRangeKey prk) {
-                
-            },
-            [this](const todo::user::Todo* message) {
-                
+        store.$fnKey = [](const Todo& pojo) {
+            return pojo.key.c_str();
+        };
+        store.$fnKeyFB = [](const todo::user::Todo* message) {
+            return message->key()->c_str();
+        };
+        store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
+            // TODO conditional assign on strings
+            pojo.title = message->title()->str();
+            pojo.completed = message->completed();
+        };
+        store.$fnPopulate = [this](int idx, Todo* pojo) {
+            home.populate(idx, pojo);
+        };
+        store.$fnEvent = [this](coreds::EventType type, bool on) {
+            switch (type)
+            {
+                case coreds::EventType::VISIBLE:
+                    home.place.field_visible("list_", on);
+                    break;
             }
-        );
+        };
+        store.$fnFetch = [this](coreds::ParamRangeKey prk) {
+            if (session == nullptr)
+                return false;
+            
+            std::string buf;
+            prk.stringifyTo(buf);
+            post(*session, "/todo/user/Todo/list", buf.c_str());
+            return true;
+        };
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
@@ -520,6 +585,8 @@ int run(int argc, char* argv[], const char* title)
     todo_items.reserve(PAGE_SIZE);
     
     coreds::Opts opts;
+    opts.pageSize = PAGE_SIZE;
+    opts.multiplier = MULTIPLIER;
     
     App app(config, title);
     
