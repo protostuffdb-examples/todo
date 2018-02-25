@@ -113,7 +113,7 @@ public:
     std::function<void(T& pojo, const F* message)> $fnUpdate;
     std::function<void(EventType type, bool on)> $fnEvent;
     std::function<void(int idx, T* pojo)> $fnPopulate;
-    std::function<void(std::function<void()> op)> $fnPrepare;
+    std::function<void(std::function<void()> op)> $fnCall;
     
     PojoStore()
     {
@@ -233,7 +233,7 @@ public:
         }
         
         // TODO check if current page is affected before you populate
-        $fnPrepare($populate);
+        $fnCall($populate);
         return removed != 0;
     }
     void prependAll(const flatbuffers::Vector<flatbuffers::Offset<F>>* p, bool reversed = false)
@@ -250,7 +250,7 @@ public:
         }
         
         // TODO check if current page is affected before you populate
-        $fnPrepare($populate);
+        $fnCall($populate);
     }
     void appendAll(const flatbuffers::Vector<flatbuffers::Offset<F>>* p, bool reversed = false)
     {
@@ -266,7 +266,7 @@ public:
         }
         
         // TODO check if current page is affected before you populate
-        $fnPrepare($populate);
+        $fnCall($populate);
     }
     bool cbFetchFailed() {
         if (fetchType == FetchType::NONE)

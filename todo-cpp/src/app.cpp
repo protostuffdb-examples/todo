@@ -524,7 +524,7 @@ public:
         store.$fnPopulate = [this](int idx, Todo* pojo) {
             home.populate(idx, pojo);
         };
-        store.$fnPrepare = [this](std::function<void()> op) {
+        store.$fnCall = [this](std::function<void()> op) {
             nana::internal_scope_guard lock;
             home.place.field_visible("list_", false);
             op();
