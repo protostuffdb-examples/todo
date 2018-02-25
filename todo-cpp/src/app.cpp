@@ -7,7 +7,7 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 
-#include <asap/asap.h>
+//#include <asap/asap.h>
 
 #include "pstore.h"
 #include "rpc.h"
@@ -110,10 +110,14 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         
         title_.caption(pojo->title()->str());
         
-        std::time_t secs(pojo->ts() / 1000);
-        asap::datetime dt(secs);
-        auto duration = asap::now() - dt;
-        ts_.caption(duration.short_str(true));
+        //std::time_t secs(pojo->ts() / 1000);
+        //asap::datetime dt(secs);
+        //auto duration = asap::now() - dt;
+        //ts_.caption(duration.short_str(true));
+        std::string timeago;
+        timeago.reserve(10);
+        util::appendTimeagoTo(timeago, pojo->ts());
+        ts_.caption(timeago);
     }
 private:
     void create(nana::window wd) override

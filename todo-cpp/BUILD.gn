@@ -18,7 +18,8 @@ static_library("app") {
     "//deps/brynet:timer",
     "//deps/brynet:http",
     "//deps/flatbuffers:flatbuffers",
-    "//deps/asap:asap",
+    # doesn't compile on msvc 2015 
+    #"//deps/asap:asap",
     "//deps/nana:base",
     "//deps/nana:gui",
   ]
