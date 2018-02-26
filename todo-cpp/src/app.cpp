@@ -346,25 +346,25 @@ private:
     }
     
 public:
-    void show(const std::string& msg, ui::Msg type = ui::Msg::ERROR)
+    void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
     {
         std::string buf;
         
         switch (type)
         {
-            case ui::Msg::SUCCESS:
+            case ui::Msg::$SUCCESS:
                 msg_.bgcolor(nana::color_rgb(SUCCESS_BG));
                 buf += SUCCESS_PFX;
                 buf += msg;
                 buf += MSG_SFX;
                 break;
-            case ui::Msg::ERROR:
+            case ui::Msg::$ERROR:
                 msg_.bgcolor(nana::color_rgb(ERROR_BG));
                 buf += ERROR_PFX;
                 buf += msg;
                 buf += MSG_SFX;
                 break;
-            case ui::Msg::WARNING:
+            case ui::Msg::$WARNING:
                 msg_.bgcolor(nana::color_rgb(WARNING_BG));
                 buf += WARNING_PFX;
                 buf += msg;

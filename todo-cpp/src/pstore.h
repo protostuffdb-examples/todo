@@ -322,10 +322,12 @@ public:
             $fnEvent(EventType::DESC, true);
         }
         
-        int limit = empty ? pageSize * multiplier + 1 : (desc_ ? pageSize : pageSize * multiplier);
-        const char* startKey = empty ? nullptr : $fnKey(latest());
+        ParamRangeKey prk;
+        prk.desc = empty;
+        prk.limit = empty ? pageSize * multiplier + 1 : (desc_ ? pageSize : pageSize * multiplier);
+        prk.start_key = empty ? nullptr : $fnKey(latest());
         
-        if (!$fnFetch({ empty, limit, startKey }))
+        if (!$fnFetch(prk))
             return false;
         
         fetchType = FetchType::NEWER;
@@ -338,10 +340,12 @@ public:
         if (loading_ || list.empty())
             return false;
         
-        int limit = desc_ ? pageSize * multiplier : pageSize;
-        const char* startKey = $fnKey(desc_ ? list.back() : list.front());
+        ParamRangeKey prk;
+        prk.desc = true;
+        prk.limit = desc_ ? pageSize * multiplier : pageSize;
+        prk.start_key = $fnKey(desc_ ? list.back() : list.front());
         
-        if (!$fnFetch({ true, limit, startKey }))
+        if (!$fnFetch(prk))
             return false;
         
         fetchType = FetchType::OLDER;
@@ -362,11 +366,13 @@ public:
         // the first item in the visible list
         auto& pojo = list[page * pageSize];
         
-        int limit = std::min(pageSize, static_cast<int>(list.size()));
+        ParamRangeKey prk;
+        prk.desc = desc_;
+        prk.limit = std::min(pageSize, static_cast<int>(list.size()));
         // TODO implement base64 decode and increment key and encode again
-        const char* startKey = nullptr;
+        prk.start_key = nullptr;
         
-        if (!$fnFetch({ desc_, limit, startKey }))
+        if (!$fnFetch(prk))
             return false;
         
         fetchType = FetchType::UPDATE;

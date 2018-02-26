@@ -6,11 +6,20 @@
 
 namespace ui {
 
+/* msvc2015 fails to compile this -> C3805
 enum class Msg
 {
     SUCCESS,
     ERROR,
     WARNING
+};
+*/
+
+enum class Msg
+{
+    $SUCCESS,
+    $ERROR,
+    $WARNING
 };
 
 struct Form : nana::form
