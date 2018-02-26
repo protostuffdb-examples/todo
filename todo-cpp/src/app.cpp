@@ -592,6 +592,7 @@ public:
             home.place.field_visible("list_", true);
         };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
+            nana::internal_scope_guard lock;
             switch (type)
             {
                 case coreds::EventType::VISIBLE:
