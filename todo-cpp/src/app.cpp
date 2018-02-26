@@ -207,6 +207,8 @@ static const std::string MSG_SFX = "</>";
 
 struct Home : ui::Panel
 {
+    TodoStore store;
+private:
     nana::textbox search_{ *this };
     
     nana::label add_{ *this,
@@ -239,6 +241,7 @@ struct Home : ui::Panel
     
     int item_offset;
     
+public:
     Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner,
         "vert"
         "<horizontal weight=25"
@@ -320,11 +323,9 @@ struct Home : ui::Panel
             owner.place.field_display(field, false);
     }
     
-    void init()
+private:
+    void lazyInit()
     {
-        if (initialized)
-            return;
-        
         item_offset = todo_items.size();
         
         auto slot = list_.at(0);
@@ -332,15 +333,19 @@ struct Home : ui::Panel
             slot.append({ "" });
         
         place.field_visible("list_", true);
-        initialized = true;
         place.field_visible("list_", false);
     }
-    
     void populate(int idx, Todo* pojo)
     {
+        if (!initialized)
+        {
+            lazyInit();
+            initialized = true;
+        }
         todo_items[item_offset + idx]->update(pojo);
     }
     
+public:
     void show(const std::string& msg, ui::Msg type = ui::Msg::ERROR)
     {
         std::string buf;
@@ -369,6 +374,40 @@ struct Home : ui::Panel
         
         msg_.caption(buf);
         place.field_visible("msg_", true);
+    }
+    
+    void init(coreds::Opts opts)
+    {
+        store.init(opts);
+        store.$fnKey = [](const Todo& pojo) {
+            return pojo.key.c_str();
+        };
+        store.$fnKeyFB = [](const todo::user::Todo* message) {
+            return message->key()->c_str();
+        };
+        store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
+            // TODO conditional assign on strings
+            pojo.title = message->title()->str();
+            pojo.completed = message->completed();
+        };
+        store.$fnPopulate = [this](int idx, Todo* pojo) {
+            populate(idx, pojo);
+        };
+        store.$fnCall = [this](std::function<void()> op) {
+            nana::internal_scope_guard lock;
+            place.field_visible("list_", false);
+            op();
+            place.field_visible("list_", true);
+        };
+        store.$fnEvent = [this](coreds::EventType type, bool on) {
+            nana::internal_scope_guard lock;
+            switch (type)
+            {
+                case coreds::EventType::VISIBLE:
+                    place.field_visible("list_", on);
+                    break;
+            }
+        };
     }
     
     /*void appendTodos(void* flatbuf)
@@ -460,7 +499,6 @@ struct App : rpc::Base
     int current_selected{ 0 };
     
     const brynet::net::HttpSession::PTR* session;
-    TodoStore store;
     
     bool fetched_initial{ false };
     
@@ -492,30 +530,21 @@ private:
             const brynet::net::HttpSession::PTR& session) override
     {
         auto body = httpParser.getBody();
-        if (!store.isLoading())
+        if (!home.store.isLoading())
         {
             // some other request
         }
-        else if (rpc::parseJson(body, "Todo_PList", parser, store.errmsg))
+        else if (!rpc::parseJson(body, "Todo_PList", parser, home.store.errmsg))
         {
-            //home.appendTodos(parser.builder_.GetBufferPointer());
-            //fetched_initial = true;
-            if (!fetched_initial)
-                home.init();
-            
-            if (store.cbFetchSuccess(
-                flatbuffers::GetRoot<todo::user::Todo_PList>(parser.builder_.GetBufferPointer())->p()
-            ))
-            {
-                fetched_initial = true;
-            }
-        }
-        else
-        {
-            store.cbFetchFailed();
+            home.store.cbFetchFailed();
             
             nana::internal_scope_guard lock;
-            home.show(store.errmsg);
+            home.show(home.store.errmsg);
+        }
+        else if (home.store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(
+                parser.builder_.GetBufferPointer())->p()))
+        {
+            fetched_initial = true;
         }
     }
     
@@ -523,7 +552,7 @@ private:
     {
         this->session = &session;
         if (!fetched_initial)
-            store.fetchNewer();
+            home.store.fetchNewer();
         //if (!fetched_initial)
         //    post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
     }
@@ -534,13 +563,13 @@ private:
         fd = SOCKET_ERROR;
         //connect(true);
         
-        if (store.isLoading())
+        if (home.store.isLoading())
         {
-            store.errmsg = "Fetch failed.";
-            store.cbFetchFailed();
+            home.store.errmsg = "Fetch failed.";
+            home.store.cbFetchFailed();
             
             nana::internal_scope_guard lock;
-            home.show(errmsg);
+            home.show(home.store.errmsg);
         }
     }
     
@@ -564,43 +593,11 @@ private:
     }
 
 public:
-    bool init(coreds::Opts opts)
+    void show(coreds::Opts opts)
     {
-        store.init(opts);
-        return parser.Parse(todo_user_schema);
-    }
-    void show()
-    {
-        store.$fnKey = [](const Todo& pojo) {
-            return pojo.key.c_str();
-        };
-        store.$fnKeyFB = [](const todo::user::Todo* message) {
-            return message->key()->c_str();
-        };
-        store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
-            // TODO conditional assign on strings
-            pojo.title = message->title()->str();
-            pojo.completed = message->completed();
-        };
-        store.$fnPopulate = [this](int idx, Todo* pojo) {
-            home.populate(idx, pojo);
-        };
-        store.$fnCall = [this](std::function<void()> op) {
-            nana::internal_scope_guard lock;
-            home.place.field_visible("list_", false);
-            op();
-            home.place.field_visible("list_", true);
-        };
-        store.$fnEvent = [this](coreds::EventType type, bool on) {
-            nana::internal_scope_guard lock;
-            switch (type)
-            {
-                case coreds::EventType::VISIBLE:
-                    home.place.field_visible("list_", on);
-                    break;
-            }
-        };
-        store.$fnFetch = [this](coreds::ParamRangeKey prk) {
+        home.init(opts);
+        
+        home.store.$fnFetch = [this](coreds::ParamRangeKey prk) {
             if (session == nullptr)
                 return false;
             
@@ -653,21 +650,21 @@ int run(int argc, char* argv[], const char* title)
         return 1;
     }
     
+    App app(config, title);
+    
+    if (!app.parser.Parse(todo_user_schema))
+    {
+        fprintf(stderr, "Could not load schema.\n");
+        return 1;
+    }
+    
     todo_items.reserve(PAGE_SIZE);
     
     coreds::Opts opts;
     opts.pageSize = PAGE_SIZE;
     opts.multiplier = MULTIPLIER;
     
-    App app(config, title);
-    
-    if (!app.init(opts))
-    {
-        fprintf(stderr, "Could not load schema.\n");
-        return 1;
-    }
-    
-    app.show();
+    app.show(opts);
     nana::exec();
     return 0;
 }
