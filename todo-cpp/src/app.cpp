@@ -195,13 +195,13 @@ static const char* SORT_TOGGLE[] = {
 };
 
 static const unsigned SUCCESS_BG = 0xDEFCD5;
-static const std::string SUCCESS_PFX = "<color=52A954 target=\"8\">";
+static const std::string SUCCESS_PFX = "<color=0x52A954 target=\"8\">";
 
 static const unsigned ERROR_BG = 0xF1D7D7;
-static const std::string ERROR_PFX = "<color=A95252 target=\"8\">";
+static const std::string ERROR_PFX = "<color=0xA95252 target=\"8\">";
 
 static const unsigned WARNING_BG = 0xF6F3D5;
-static const std::string WARNING_PFX = "<color=96904D target=\"8\">";
+static const std::string WARNING_PFX = "<color=0x96904D target=\"8\">";
 
 static const std::string MSG_SFX = "</>";
 
@@ -271,7 +271,7 @@ public:
                     sort_.caption(SORT_TOGGLE[type ^ 1]);
                     break;
                 case 8:
-                    place.field_visible("msg_", false);
+                    ui::visible(msg_, false);
                     break;
                 // TODO
             }
@@ -315,7 +315,7 @@ public:
         
         place["list_"] << list_;
         place.collocate();
-        place.field_visible("msg_", false);
+        ui::visible(msg_, false);
         place.field_visible("list_", false);
         
         owner.place[field] << *this;
@@ -373,7 +373,7 @@ public:
         }
         
         msg_.caption(buf);
-        place.field_visible("msg_", true);
+        ui::visible(msg_, true);
     }
     
     void init(coreds::Opts opts)

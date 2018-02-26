@@ -85,5 +85,11 @@ private:
         //transparent(true);
     }
 };
+
+// not in the widget api
+inline void visible(nana::widget& w, bool on)
+{
+    nana::API::show_window(w.handle(), on);
+}
     
 } // ui
