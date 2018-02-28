@@ -101,6 +101,8 @@ private:
     int page{ 0 };
     int page_count { 0 };
     int page_vcount { 0 };
+    int selected_idx { -1 };
+    //int selected_offset { -1 };
     
     int pageSize{ 10 };
     int multiplier { 3 };
@@ -172,10 +174,6 @@ public:
         $fnEvent(EventType::VISIBLE, true);
         return true;
     }
-    void select(int idx, SelectionFlags flags)
-    {
-        // TODO
-    }
     void populate()
     {
         int size = list.size(),
@@ -231,7 +229,7 @@ public:
         {
             auto update = updateList->Get(i);
             auto& existing = list[idx];
-            if (0 == memcmp($fnKeyFB(update), $fnKey(existing), 9))
+            if (0 == memcmp($fnKeyFB(update), $fnKey(existing), 12))
             {
                 i++;
                 
@@ -478,6 +476,11 @@ public:
     bool pageToLast(std::string* pageInfo = nullptr)
     {
         return !isPageToLastDisabled() && paginate(page_count, pageInfo);
+    }
+    void select(int idx)
+    {
+        selected_idx = idx;
+        //selected_offset = (page * pageSize) + idx;
     }
     // from ts verson
     /*int populate(SelectionType type, SelectionFlags flags,
