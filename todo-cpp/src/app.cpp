@@ -221,6 +221,10 @@ private:
         "<color=0x0080FF size=11 target=\"3\">refresh</>"
     };
     
+    nana::label msg_{ *this, "" };
+    
+    nana::label page_info_{ *this, "" };
+    
     nana::label nav_{ *this,
         "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
         "     "
@@ -231,9 +235,9 @@ private:
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
     
-    nana::label msg_{ *this, "" };
-    
     nana::listbox list_{ *this, { 0, 25 + MARGIN, unsigned(LB_WIDTH), unsigned(LB_HEIGHT - (25 + MARGIN)) } };
+    
+    std::string page_str;
     
     bool desc{ true };
     
@@ -250,6 +254,7 @@ public:
           "<sort_ weight=40>"
           "<refresh_ weight=80>"
           "<msg_>"
+          "<page_info_ weight=160>"
           "<nav_ weight=160>"
         ">"
         "<list_>"
@@ -295,6 +300,9 @@ public:
                 .text_align(nana::align::left)
                 .add_format_listener(listener)
                 .format(true);
+        
+        place["page_info_"] << page_info_
+                .text_align(nana::align::right);
         
         place["nav_"] << nav_
                 .text_align(nana::align::right)
@@ -398,6 +406,10 @@ public:
             place.field_visible("list_", false);
             op();
             place.field_visible("list_", true);
+            
+            if (!store.appendPageInfoTo(page_str))
+                page_str.clear();
+            page_info_.caption(page_str);
         };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
             nana::internal_scope_guard lock;
@@ -405,6 +417,9 @@ public:
             {
                 case coreds::EventType::VISIBLE:
                     place.field_visible("list_", on);
+                    if (!store.appendPageInfoTo(page_str))
+                        page_str.clear();
+                    page_info_.caption(page_str);
                     break;
             }
         };
