@@ -407,8 +407,8 @@ public:
             op();
             place.field_visible("list_", true);
             
-            if (!store.appendPageInfoTo(page_str))
-                page_str.clear();
+            page_str.clear();
+            store.appendPageInfoTo(page_str);
             page_info_.caption(page_str);
         };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
@@ -417,8 +417,8 @@ public:
             {
                 case coreds::EventType::VISIBLE:
                     place.field_visible("list_", on);
-                    if (!store.appendPageInfoTo(page_str))
-                        page_str.clear();
+                    page_str.clear();
+                    store.appendPageInfoTo(page_str);
                     page_info_.caption(page_str);
                     break;
             }
