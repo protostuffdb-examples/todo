@@ -189,7 +189,7 @@ private:
     bool whether_to_draw() const override { return false; }
 };
 
-static const char* SORT_TOGGLE[] = {
+static const std::string SORT_TOGGLE[] = {
     " <color=0x0080FF size=11 target=\"0\"> dsc </>",
     " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
