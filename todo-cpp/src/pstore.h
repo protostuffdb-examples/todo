@@ -99,6 +99,9 @@ private:
     bool desc_{ true };
     
     int page{ 0 };
+    int page_count { 0 };
+    int page_vcount { 0 };
+    
     int pageSize{ 10 };
     int multiplier { 3 };
     
@@ -123,19 +126,35 @@ public:
     {
         return loading_;
     }
+    bool isDesc()
+    {
+        return desc_;
+    }
+    int getPage()
+    {
+        return page;
+    }
+    int getVisibleCount()
+    {
+        return page_vcount;
+    }
     void init(Opts opts)
     {
         pageSize = opts.pageSize;
         multiplier = opts.multiplier;
     }
-    const T& latest()
-    {
-        return desc_ ? list.front() : list.back();
-    }
     bool isVisible(int idx)
     {
         int pageStart = page * pageSize;
         return pageStart == idx || (idx > pageStart && idx < (pageStart + pageSize));
+    }
+    bool isPageToFirstDisabled()
+    {
+        return loading_ || 0 == page;
+    }
+    bool isPageToLastDisabled()
+    {
+        return loading_ || 0 == list.size() || page_count == page;
     }
     bool toggleDesc()
     {
@@ -159,10 +178,25 @@ public:
     }
     void populate()
     {
-        int i = 0;
-        int offset = page * pageSize;
-        int len = std::min(pageSize, static_cast<int>(list.size()));
-        for (; i < len; i++) $fnPopulate(i, &list[offset + i]);
+        int size = list.size(),
+            pages = (page * pageSize) + pageSize,
+            remaining = pages > size ? pages - size : 0,
+            populatePages = page * pageSize,
+            len = std::min(pageSize, size - populatePages),
+            start = desc_ ? populatePages : -populatePages,
+            i = 0;
+        
+        page_vcount = len;
+        page_count = (size - 1) / pageSize;
+        
+        if (desc_)
+        {
+            for (; i < len; i++) $fnPopulate(i, &list[start + i]);
+        }
+        else
+        {
+            for (; i < len; i++) $fnPopulate(i, &list[start + size - i - 1]);
+        }
         for (; i < pageSize; i++) $fnPopulate(i, nullptr);
     }
     /*
@@ -325,7 +359,7 @@ public:
         ParamRangeKey prk;
         prk.desc = empty;
         prk.limit = empty ? pageSize * multiplier + 1 : (desc_ ? pageSize : pageSize * multiplier);
-        prk.start_key = empty ? nullptr : $fnKey(latest());
+        prk.start_key = empty ? nullptr : $fnKey(list.front());
         
         if (!$fnFetch(prk))
             return false;
@@ -415,6 +449,35 @@ public:
         }
         
         return size != 0;
+    }
+private:
+    bool paginate(int idx, std::string* pageInfo)
+    {
+        page = idx;
+        if (pageInfo == nullptr)
+        {
+            $fnCall($populate);
+        }
+        else
+        {
+            populate();
+            pageInfo->clear();
+            appendPageInfoTo(*pageInfo);
+        }
+        return true;
+    }
+public:
+    bool pageTo(int idx, std::string* pageInfo = nullptr)
+    {
+        return !loading_ && idx != page && idx >= 0 && idx <= page_count && paginate(idx, pageInfo);
+    }
+    bool pageToFirst(std::string* pageInfo = nullptr)
+    {
+        return !isPageToFirstDisabled() && paginate(0, pageInfo);
+    }
+    bool pageToLast(std::string* pageInfo = nullptr)
+    {
+        return !isPageToLastDisabled() && paginate(page_count, pageInfo);
     }
     // from ts verson
     /*int populate(SelectionType type, SelectionFlags flags,

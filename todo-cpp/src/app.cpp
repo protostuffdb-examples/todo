@@ -119,6 +119,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         timeago.reserve(16); // just moments ago
         util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
+        pnl_.show();
     }
 private:
     void create(nana::window wd) override
@@ -142,6 +143,7 @@ private:
         };
         
         pnl_.create(wd);
+        pnl_.hide();
         
         // title
         title_.create(pnl_);
@@ -274,6 +276,22 @@ public:
                 case 1:
                     desc = 0 == (type ^ 1);
                     sort_.caption(SORT_TOGGLE[type ^ 1]);
+                    break;
+                case 4:
+                    if (store.pageToFirst(&page_str))
+                        page_info_.caption(page_str);
+                    break;
+                case 5:
+                    if (store.pageTo(store.getPage() - 1, &page_str))
+                        page_info_.caption(page_str);
+                    break;
+                case 6:
+                    if (store.pageTo(store.getPage() + 1, &page_str))
+                        page_info_.caption(page_str);
+                    break;
+                case 7:
+                    if (store.pageToLast(&page_str))
+                        page_info_.caption(page_str);
                     break;
                 case 8:
                     ui::visible(msg_, false);
@@ -417,6 +435,7 @@ public:
             {
                 case coreds::EventType::VISIBLE:
                     place.field_visible("list_", on);
+                    
                     page_str.clear();
                     store.appendPageInfoTo(page_str);
                     page_info_.caption(page_str);
