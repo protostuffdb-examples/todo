@@ -419,7 +419,7 @@ private:
                 }
                 else if (!up)
                 {
-                    if (store.getVisibleCount() != ++idx)
+                    if (++idx != store.getVisibleCount())
                     {
                         select(idx);
                     }
