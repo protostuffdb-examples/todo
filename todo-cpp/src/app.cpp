@@ -513,7 +513,6 @@ public:
             return message->key()->c_str();
         };
         store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
-            // TODO conditional assign on strings
             message->title()->assign_to(pojo.title);
             pojo.completed = message->completed();
         };
