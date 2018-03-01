@@ -86,6 +86,20 @@ private:
     }
 };
 
+struct BgPanel : nana::panel<true>
+{
+    nana::place place{ *this };
+    
+    BgPanel(nana::widget& owner, const char* layout, unsigned bg = 0, unsigned fg = 0) : nana::panel<true>(owner)
+    {
+        place.div(layout);
+        if (bg)
+            bgcolor(nana::color_rgb(bg));
+        if (fg)
+            fgcolor(nana::color_rgb(fg));
+    }
+};
+
 // not in the widget api
 inline void visible(nana::widget& w, bool on)
 {
