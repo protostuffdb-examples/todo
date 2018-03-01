@@ -370,41 +370,42 @@ private:
         if (nana::label::command::click != cmd)
             return;
         
-        int type = std::atoi(target.c_str());
-        int page = -1;
-        switch (type)
+        int i = std::atoi(target.c_str());
+        switch (i)
         {
             case 0:
             case 1:
-                desc = 0 == (type ^ 1);
-                sort_.caption(SORT_TOGGLE[type ^ 1]);
+                desc = 0 == (i ^ 1);
+                sort_.caption(SORT_TOGGLE[i ^ 1]);
                 break;
             case 4:
-                page = 0;
+                store.pageTo(0);
                 break;
             case 5:
-                page = store.getPage() - 1;
+                if (0 == (i = store.getPage()))
+                    store.fetchNewer();
+                else
+                    store.pageTo(i - 1);
                 break;
             case 6:
-                page = store.getPage() + 1;
+                if (store.getPageCount() == (i = store.getPage()))
+                    store.fetchOlder();
+                else
+                    store.pageTo(i + 1);
                 break;
             case 7:
-                page = store.getPageCount();
+                store.pageTo(store.getPageCount());
                 break;
             case 8:
                 ui::visible(msg_, false);
                 break;
-            // TODO
         }
-        
-        if (page != -1 && store.pageTo(page, $beforePopulate))
-            afterPopulate();
     }
     void navigate(const nana::arg_keyboard& arg)
     {
         bool up = false;
         int idx = store.getSelectedIdx();
-        switch(arg.key)
+        switch (arg.key)
         {
             case nana::keyboard::os_arrow_up:
                 up = true;
