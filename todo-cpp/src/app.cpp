@@ -462,6 +462,12 @@ private:
                 else
                     store.pageTo(store.getPage() + 1);
                 break;
+            case nana::keyboard::space:
+                if (arg.ctrl)
+                    store.fetchUpdate();
+                else if (arg.shift)
+                    store.toggleDesc();
+                break;
         }
     }
     
