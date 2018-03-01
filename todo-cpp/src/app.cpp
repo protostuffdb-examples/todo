@@ -527,17 +527,27 @@ public:
             afterPopulate();
         };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
-            nana::internal_scope_guard lock;
             switch (type)
             {
                 case coreds::EventType::DESC:
+                {
+                    nana::internal_scope_guard lock;
                     desc = on;
                     sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
                     break;
+                }
                 case coreds::EventType::LOADING:
-                    // TODO
+                    // hide errmsg when loading
+                    if (on)
+                    {
+                        nana::internal_scope_guard lock;
+                        ui::visible(msg_, false);
+                        ui::visible(msg_close_, false);
+                    }
                     break;
                 case coreds::EventType::VISIBLE:
+                {
+                    nana::internal_scope_guard lock;
                     if (on)
                         select(store.getSelectedIdx());
                     
@@ -547,6 +557,7 @@ public:
                     store.appendPageInfoTo(page_str);
                     page_info_.caption(page_str);
                     break;
+                }
             }
         };
     }
