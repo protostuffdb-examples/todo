@@ -273,7 +273,9 @@ protected:
         
         return ret;
     }
-    std::function<void ()> $connect = std::bind(&Base::connect, this, false);
+    std::function<void ()> $connect{
+        std::bind(&Base::connect, this, false)
+    };
     
 public:
     bool isConnected()
