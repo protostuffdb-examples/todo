@@ -217,10 +217,8 @@ public:
         {
             auto& pojo = desc_ ? list[start + i] : list[start + size - i - 1];
             $fnPopulate(i, &pojo);
-            if (selected && selected == &pojo)
-            {
+            if (selected_idx == -1 && selected && selected == &pojo)
                 selected_idx = i;
-            }
         }
         
         this->selected_idx = selected_idx;
