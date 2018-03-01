@@ -150,12 +150,16 @@ private:
                 case nana::keyboard::os_arrow_left:
                     if (arg.ctrl)
                         store->pageTo(0);
+                    else if (0 == store->getPage())
+                        store->fetchNewer();
                     else
                         store->pageTo(store->getPage() - 1);
                     break;
                 case nana::keyboard::os_arrow_right:
                     if (arg.ctrl)
                         store->pageTo(store->getPageCount());
+                    else if (store->getPageCount() == store->getPage())
+                        store->fetchOlder();
                     else
                         store->pageTo(store->getPage() + 1);
                     break;
