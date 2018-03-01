@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <flatbuffers/flatbuffers.h>
+#include "b64.h"
 
 namespace coreds {
 
@@ -109,6 +110,7 @@ private:
     
     FetchType fetchType { FetchType::NONE };
     
+    std::string key_buf;
 public:
     std::string errmsg;
     
@@ -122,7 +124,7 @@ public:
     
     PojoStore()
     {
-        
+        key_buf.reserve(13); // + 1 for the null char
     }
     int size()
     {
@@ -410,22 +412,26 @@ public:
     }
     bool fetchUpdate()
     {
-        return false;
-        /*
         if (list.empty())
             return fetchNewer();
         
         if (loading_)
             return false;
         
+        int idx = page * pageSize;
+        
         // the first item in the visible list
-        auto& pojo = list[page * pageSize];
+        auto& pojo = desc_ ? list[idx] : list[list.size() - idx - 1];
+        
+        if (desc_)
+            b64::incAndWriteKeyTo(key_buf, $fnKey(pojo));
+        else
+            b64::decAndWriteKeyTo(key_buf, $fnKey(pojo));
         
         ParamRangeKey prk;
         prk.desc = desc_;
         prk.limit = std::min(pageSize, static_cast<int>(list.size()));
-        // TODO implement base64 decode and increment key and encode again
-        prk.start_key = nullptr;
+        prk.start_key = key_buf.c_str();
         
         if (!$fnFetch(prk))
             return false;
@@ -433,7 +439,7 @@ public:
         fetchType = FetchType::UPDATE;
         loading_ = true;
         $fnEvent(EventType::LOADING, true);
-        return true;*/
+        return true;
     }
     bool appendPageInfoTo(std::string& buf)
     {

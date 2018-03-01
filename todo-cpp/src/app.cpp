@@ -378,6 +378,9 @@ private:
                 desc = 0 == (i ^ 1);
                 sort_.caption(SORT_TOGGLE[i ^ 1]);
                 break;
+            case 3: // refresh
+                store.fetchUpdate();
+                break;
             case 4:
                 store.pageTo(0);
                 break;
