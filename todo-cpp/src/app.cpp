@@ -142,10 +142,22 @@ private:
                 case nana::keyboard::os_arrow_up:
                     upward = true;
                 case nana::keyboard::os_arrow_down:
-                    if (!arg.ctrl)
-                        dynamic_cast<nana::listbox&>(ind_->host()).move_select(upward);
-                    else
+                    if (arg.ctrl)
                         dynamic_cast<nana::listbox&>(ind_->host()).at(0).at(upward ? 0 : PAGE_SIZE - 1).select(true);
+                    else
+                        dynamic_cast<nana::listbox&>(ind_->host()).move_select(upward);
+                    break;
+                case nana::keyboard::os_arrow_left:
+                    if (arg.ctrl)
+                        store->pageTo(0);
+                    else
+                        store->pageTo(store->getPage() - 1);
+                    break;
+                case nana::keyboard::os_arrow_right:
+                    if (arg.ctrl)
+                        store->pageTo(store->getPageCount());
+                    else
+                        store->pageTo(store->getPage() + 1);
                     break;
             }
         };
