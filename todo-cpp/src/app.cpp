@@ -106,10 +106,13 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     {
         todo_items.push_back(this);
     }
-    void init(int idx, TodoStore* store)
+    void init(int idx, TodoStore* store, std::function<void(const nana::arg_keyboard& arg)> $navigate)
     {
         this->idx = idx;
         this->store = store;
+        
+        title_.events().key_press($navigate);
+        ts_.events().key_press($navigate);
     }
     void selected()
     {
@@ -135,37 +138,6 @@ struct TodoItem : nana::listbox::inline_notifier_interface
 private:
     void create(nana::window wd) override
     {
-        auto $key_press = [this](const nana::arg_keyboard& arg) {
-            bool upward = false;
-            switch(arg.key)
-            {
-                case nana::keyboard::os_arrow_up:
-                    upward = true;
-                case nana::keyboard::os_arrow_down:
-                    if (arg.ctrl)
-                        dynamic_cast<nana::listbox&>(ind_->host()).at(0).at(upward ? 0 : PAGE_SIZE - 1).select(true);
-                    else
-                        dynamic_cast<nana::listbox&>(ind_->host()).move_select(upward);
-                    break;
-                case nana::keyboard::os_arrow_left:
-                    if (arg.ctrl)
-                        store->pageTo(0);
-                    else if (0 == store->getPage())
-                        store->fetchNewer();
-                    else
-                        store->pageTo(store->getPage() - 1);
-                    break;
-                case nana::keyboard::os_arrow_right:
-                    if (arg.ctrl)
-                        store->pageTo(store->getPageCount());
-                    else if (store->getPageCount() == store->getPage())
-                        store->fetchOlder();
-                    else
-                        store->pageTo(store->getPage() + 1);
-                    break;
-            }
-        };
-        
         pnl_.create(wd);
         pnl_.hide();
         
@@ -173,7 +145,6 @@ private:
         title_.create(pnl_);
         title_.transparent(true)
             .events().click($selected);
-        title_.events().key_press($key_press);
         pnl_.place["title_"] << title_;
         
         // ts
@@ -181,7 +152,6 @@ private:
         ts_.transparent(true)
             .text_align(nana::align::right)
             .events().click($selected);
-        ts_.events().key_press($key_press);
         pnl_.place["ts_"] << ts_;
         
         // textbox
@@ -192,7 +162,6 @@ private:
         // button
         btn_.create(pnl_);
         btn_.caption("x");
-        //btn_.events().key_press($key_press);
         btn_.events().click([this]
         {
             ind_->selected(pos_);
@@ -234,6 +203,7 @@ struct Home : ui::Panel
     TodoStore store;
 private:
     std::function<void()> $beforePopulate{ std::bind(&Home::beforePopulate, this) };
+    std::function<void(const nana::arg_keyboard& arg)> $navigate{ std::bind(&Home::navigate, this, std::placeholders::_1) };
     
     nana::textbox search_{ *this };
     
@@ -387,7 +357,7 @@ private:
         place.field_visible("list_", false);
         
         for (int i = 0; i < PAGE_SIZE; ++i)
-            todo_items[item_offset + i]->init(i, &store);
+            todo_items[item_offset + i]->init(i, &store, $navigate);
     }
     void beforePopulate()
     {
@@ -411,6 +381,42 @@ private:
             initialized = true;
         }
         todo_items[item_offset + idx]->update(pojo);
+    }
+    void navigate(const nana::arg_keyboard& arg)
+    {
+        bool up = false;
+        int idx = store.getSelectedIdx();
+        switch(arg.key)
+        {
+            case nana::keyboard::os_arrow_up:
+                up = true;
+            case nana::keyboard::os_arrow_down:
+                if (arg.ctrl)
+                    select(up ? 0 : store.getVisibleCount() - 1);
+                else if (idx == -1)
+                    select(!up ? 0 : store.getVisibleCount() - 1);
+                else if (up && idx != 0)
+                    select(idx - 1);
+                else if (!up && ++idx != store.getVisibleCount())
+                    select(idx);
+                break;
+            case nana::keyboard::os_arrow_left:
+                if (arg.ctrl)
+                    store.pageTo(0);
+                else if (0 == store.getPage())
+                    store.fetchNewer();
+                else
+                    store.pageTo(store.getPage() - 1);
+                break;
+            case nana::keyboard::os_arrow_right:
+                if (arg.ctrl)
+                    store.pageTo(store.getPageCount());
+                else if (store.getPageCount() == store.getPage())
+                    store.fetchOlder();
+                else
+                    store.pageTo(store.getPage() + 1);
+                break;
+        }
     }
     
 public:
