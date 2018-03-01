@@ -346,7 +346,8 @@ public:
         if (fetchType == FetchType::NONE)
             return false;
         
-        switch (fetchType) {
+        switch (fetchType)
+        {
             case FetchType::NEWER:
                 if (p == nullptr || 0 == p->size())
                     break;
