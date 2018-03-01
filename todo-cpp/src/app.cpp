@@ -7,8 +7,6 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 
-//#include <asap/asap.h>
-
 #include "pstore.h"
 #include "rpc.h"
 #include "ui.h"
