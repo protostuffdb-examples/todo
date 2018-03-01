@@ -280,6 +280,11 @@ public:
     {
         return SOCKET_ERROR != fd;
     }
+    
+    void queue(std::function<void()> fn)
+    {
+        service.getService()->getRandomEventLoop()->pushAsyncProc(fn);
+    }
 };
 
 } // rpc

@@ -595,6 +595,14 @@ static const int IDLE_INTERVAL = 10000,
 
 struct App : rpc::Base
 {
+    std::string buf;
+    std::function<bool(coreds::ParamRangeKey prk)> $fetch{
+        std::bind(&App::fetch, this, std::placeholders::_1)
+    };
+    std::function<void()> $send{
+        std::bind(&App::send, this)
+    };
+    
     ui::Form fm{ {273, 0, unsigned(WIDTH), unsigned(HEIGHT)}, 0xFFFFFF };
     
     ui::Place place{ fm, 
@@ -711,21 +719,29 @@ private:
             fprintf(stdout, "connected\n");
         }*/
     }
-
+    void send()
+    {
+        if (session)
+            post(*session, "/todo/user/Todo/list", buf);
+    }
+    bool fetch(coreds::ParamRangeKey prk)
+    {
+        if (session)
+        {
+            buf.clear();
+            prk.stringifyTo(buf);
+            queue($send);
+        }
+        
+        return session != nullptr;
+    }
+    
 public:
     void show(coreds::Opts opts)
     {
         home.init(opts);
         
-        home.store.$fnFetch = [this](coreds::ParamRangeKey prk) {
-            if (session == nullptr)
-                return false;
-            
-            std::string buf;
-            prk.stringifyTo(buf);
-            post(*session, "/todo/user/Todo/list", buf.c_str());
-            return true;
-        };
+        home.store.$fnFetch = $fetch;
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
