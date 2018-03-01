@@ -409,7 +409,8 @@ public:
         ParamRangeKey prk;
         prk.desc = true;
         prk.limit = desc_ ? pageSize * multiplier : pageSize;
-        prk.start_key = $fnKey(desc_ ? list.back() : list.front());
+        //prk.start_key = $fnKey(desc_ ? list.back() : list.front());
+        prk.start_key = $fnKey(list.back());
         
         if (!$fnFetch(prk))
             return false;
@@ -418,6 +419,10 @@ public:
         loading_ = true;
         $fnEvent(EventType::LOADING, true);
         return true;
+    }
+    bool fetch(bool newer)
+    {
+        return newer ? fetchNewer() : fetchOlder();
     }
     bool fetchUpdate()
     {

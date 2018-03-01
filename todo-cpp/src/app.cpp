@@ -238,8 +238,6 @@ private:
     
     std::string page_str;
     
-    bool desc{ true };
-    
     bool initialized{ false };
     
     int item_offset;
@@ -415,13 +413,13 @@ private:
                 break;
             case 5:
                 if (0 == (i = store.getPage()))
-                    store.fetchNewer();
+                    store.fetch(store.isDesc());
                 else
                     store.pageTo(i - 1);
                 break;
             case 6:
                 if (store.getPageCount() == (i = store.getPage()))
-                    store.fetchOlder();
+                    store.fetch(!store.isDesc());
                 else
                     store.pageTo(i + 1);
                 break;
@@ -481,7 +479,7 @@ private:
                 if (arg.ctrl)
                     store.pageTo(0);
                 else if (0 == store.getPage())
-                    store.fetchNewer();
+                    store.fetch(store.isDesc());
                 else
                     store.pageTo(store.getPage() - 1);
                 break;
@@ -489,7 +487,7 @@ private:
                 if (arg.ctrl)
                     store.pageTo(store.getPageCount());
                 else if (store.getPageCount() == store.getPage())
-                    store.fetchOlder();
+                    store.fetch(!store.isDesc());
                 else
                     store.pageTo(store.getPage() + 1);
                 break;
@@ -531,7 +529,6 @@ public:
                 case coreds::EventType::DESC:
                 {
                     nana::internal_scope_guard lock;
-                    desc = on;
                     sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
                     break;
                 }
