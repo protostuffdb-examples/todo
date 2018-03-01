@@ -629,6 +629,7 @@ struct App : rpc::Base
     brynet::net::EventLoop::PTR loop{ nullptr };
     brynet::net::HttpSession::PTR session{ nullptr };
     
+    //int disconnect_count{ 0 };
     bool fetched_initial{ false };
     
     App(const rpc::Config config, const char* title) : rpc::Base(config)
@@ -680,10 +681,11 @@ private:
     void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
         this->session = session;
+        
         if (!fetched_initial)
             home.store.fetchNewer();
-        //if (!fetched_initial)
-        //    post(session, "/todo/user/Todo/list", R"({"1":true,"2":31})");
+        else if (!buf.empty())
+            send();
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
@@ -692,14 +694,19 @@ private:
         fd = SOCKET_ERROR;
         //connect(true);
         
-        /*if (home.store.isLoading())
+        /*
+        if (home.store.isLoading() && 2 == ++disconnect_count)
         {
+            disconnect_count = 0;
+            buf.clear();
+            
             home.store.errmsg = "Fetch failed.";
             home.store.cbFetchFailed();
             
             nana::internal_scope_guard lock;
             home.show(home.store.errmsg);
-        }*/
+        }
+        */
     }
     
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
@@ -709,9 +716,6 @@ private:
         
         if (isConnected())
         {
-            if (!buf.empty())
-                send();
-            
             // wait for epoll
             loop->loop(IDLE_INTERVAL);
         }
