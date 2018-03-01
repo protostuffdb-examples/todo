@@ -102,7 +102,7 @@ private:
     int page_count { 0 };
     int page_vcount { 0 };
     int selected_idx { -1 };
-    //int selected_offset { -1 };
+    T* selected { nullptr };
     
     int pageSize{ 10 };
     int multiplier { 3 };
@@ -136,9 +136,25 @@ public:
     {
         return page;
     }
+    int getPageSize()
+    {
+        return pageSize;
+    }
+    int getPageCount()
+    {
+        return page_count;
+    }
     int getVisibleCount()
     {
         return page_vcount;
+    }
+    T* getSelected()
+    {
+        return selected;
+    }
+    int getSelectedIdx()
+    {
+        return selected_idx;
     }
     void init(Opts opts)
     {
@@ -177,24 +193,27 @@ public:
     void populate()
     {
         int size = list.size(),
-            pages = (page * pageSize) + pageSize,
-            remaining = pages > size ? pages - size : 0,
             populatePages = page * pageSize,
             len = std::min(pageSize, size - populatePages),
             start = desc_ ? populatePages : -populatePages,
-            i = 0;
+            i = 0,
+            selected_idx = -1;
         
         page_vcount = len;
         page_count = (size - 1) / pageSize;
         
-        if (desc_)
+        for (; i < len; i++)
         {
-            for (; i < len; i++) $fnPopulate(i, &list[start + i]);
+            auto& pojo = desc_ ? list[start + i] : list[start + size - i - 1];
+            $fnPopulate(i, &pojo);
+            if (selected && selected == &pojo)
+            {
+                selected_idx = i;
+            }
         }
-        else
-        {
-            for (; i < len; i++) $fnPopulate(i, &list[start + size - i - 1]);
-        }
+        
+        this->selected_idx = selected_idx;
+        
         for (; i < pageSize; i++) $fnPopulate(i, nullptr);
     }
     /*
@@ -247,7 +266,7 @@ public:
                 list.erase(list.begin() + idx);
                 removed++;
                 size--;
-
+                
                 break;
             }
             
@@ -480,7 +499,8 @@ public:
     void select(int idx)
     {
         selected_idx = idx;
-        //selected_offset = (page * pageSize) + idx;
+        if (idx != -1)
+            selected = &list[(page * pageSize) + idx];
     }
     // from ts verson
     /*int populate(SelectionType type, SelectionFlags flags,

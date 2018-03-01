@@ -81,6 +81,8 @@ using TodoStore = coreds::PojoStore<Todo, todo::user::Todo>;
 
 struct TodoItem : nana::listbox::inline_notifier_interface
 {
+    std::function<void()> $selected{ std::bind(&TodoItem::selected, this) };
+    
     inline_indicator* ind_ { nullptr };
     index_type pos_;
     
@@ -98,12 +100,21 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     
     Todo* pojo{ nullptr };
     TodoStore* store{ nullptr };
+    int idx;
     
     TodoItem()
     {
         todo_items.push_back(this);
     }
-    
+    void init(int idx, TodoStore* store)
+    {
+        this->idx = idx;
+        this->store = store;
+    }
+    void selected()
+    {
+        ind_->selected(pos_);
+    }
     void update(Todo* message)
     {
         pojo = message;
@@ -124,9 +135,6 @@ struct TodoItem : nana::listbox::inline_notifier_interface
 private:
     void create(nana::window wd) override
     {
-        auto $selected = [this]() {
-            ind_->selected(pos_);
-        };
         auto $key_press = [this](const nana::arg_keyboard& arg) {
             bool upward = false;
             switch(arg.key)
@@ -180,10 +188,8 @@ private:
     }
     void notify_status(status_type status, bool on) override
     {
-        /*if (pojo && on && status == status_type::selecting)
-        {
-            fprintf(stderr, "selected %s\n", pojo->title()->c_str());
-        }*/
+        if (pojo && on && status == status_type::selecting)
+            store->select(idx);
     }
     void activate(inline_indicator& ind, index_type pos) override { ind_ = &ind; pos_ = pos; }
     void resize(const nana::size& d) override { pnl_.size(d); }
@@ -270,6 +276,7 @@ public:
                 return;
             
             int type = std::atoi(target.c_str());
+            int page = -1;
             switch (type)
             {
                 case 0:
@@ -278,25 +285,28 @@ public:
                     sort_.caption(SORT_TOGGLE[type ^ 1]);
                     break;
                 case 4:
-                    if (store.pageToFirst(&page_str))
-                        page_info_.caption(page_str);
+                    page = 0;
                     break;
                 case 5:
-                    if (store.pageTo(store.getPage() - 1, &page_str))
-                        page_info_.caption(page_str);
+                    page = store.getPage() - 1;
                     break;
                 case 6:
-                    if (store.pageTo(store.getPage() + 1, &page_str))
-                        page_info_.caption(page_str);
+                    page = store.getPage() + 1;
                     break;
                 case 7:
-                    if (store.pageToLast(&page_str))
-                        page_info_.caption(page_str);
+                    page = store.getPageCount();
                     break;
                 case 8:
                     ui::visible(msg_, false);
                     break;
                 // TODO
+            }
+            
+            if (page != -1 && store.pageTo(page, &page_str))
+            {
+                page_info_.caption(page_str);
+                if (nullptr != store.getSelected())
+                    select(store.getSelectedIdx());
             }
         };
         place["add_"] << add_
@@ -358,8 +368,12 @@ private:
         for (int i = 0; i < PAGE_SIZE; ++i)
             slot.append({ "" });
         
+        // the stmt below creates the items
         place.field_visible("list_", true);
         place.field_visible("list_", false);
+        
+        for (int i = 0; i < PAGE_SIZE; ++i)
+            todo_items[item_offset + i]->init(i, &store);
     }
     void populate(int idx, Todo* pojo)
     {
@@ -372,6 +386,13 @@ private:
     }
     
 public:
+    void select(int idx)
+    {
+        if (idx == -1)
+            list_.at(0).select(false);
+        else
+            todo_items[item_offset + idx]->selected();
+    }
     void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
     {
         std::string buf;
@@ -428,6 +449,9 @@ public:
             page_str.clear();
             store.appendPageInfoTo(page_str);
             page_info_.caption(page_str);
+            
+            if (nullptr != store.getSelected())
+                select(store.getSelectedIdx());
         };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
             nana::internal_scope_guard lock;
