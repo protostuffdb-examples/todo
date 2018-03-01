@@ -626,7 +626,8 @@ struct App : rpc::Base
     std::string current_target{ "content_0" };
     int current_selected{ 0 };
     
-    const brynet::net::HttpSession::PTR* session;
+    brynet::net::EventLoop::PTR loop{ nullptr };
+    brynet::net::HttpSession::PTR session{ nullptr };
     
     bool fetched_initial{ false };
     
@@ -678,7 +679,7 @@ private:
     
     void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
-        this->session = &session;
+        this->session = session;
         if (!fetched_initial)
             home.store.fetchNewer();
         //if (!fetched_initial)
@@ -691,20 +692,26 @@ private:
         fd = SOCKET_ERROR;
         //connect(true);
         
-        if (home.store.isLoading())
+        /*if (home.store.isLoading())
         {
             home.store.errmsg = "Fetch failed.";
             home.store.cbFetchFailed();
             
             nana::internal_scope_guard lock;
             home.show(home.store.errmsg);
-        }
+        }*/
     }
     
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
     {
+        if (this->loop == nullptr)
+            this->loop = loop;
+        
         if (isConnected())
         {
+            if (!buf.empty())
+                send();
+            
             // wait for epoll
             loop->loop(IDLE_INTERVAL);
         }
@@ -721,19 +728,22 @@ private:
     }
     void send()
     {
-        if (session)
-            post(*session, "/todo/user/Todo/list", buf);
+        if (session != nullptr)
+        {
+            post(session, "/todo/user/Todo/list", buf);
+            buf.clear();
+        }
     }
     bool fetch(coreds::ParamRangeKey prk)
     {
-        if (session)
-        {
-            buf.clear();
-            prk.stringifyTo(buf);
-            queue($send);
-        }
+        bool send = session != nullptr;
         
-        return session != nullptr;
+        prk.stringifyTo(buf);
+        
+        if (send)
+            loop->pushAsyncProc($send);
+        
+        return send;
     }
     
 public:
