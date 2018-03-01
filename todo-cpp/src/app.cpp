@@ -514,7 +514,7 @@ public:
         };
         store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
             // TODO conditional assign on strings
-            pojo.title = message->title()->str();
+            message->title()->assign_to(pojo.title);
             pojo.completed = message->completed();
         };
         store.$fnPopulate = [this](int idx, Todo* pojo) {
