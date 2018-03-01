@@ -209,15 +209,19 @@ public:
             len = std::min(pageSize, size - populatePages),
             start = desc_ ? populatePages : -populatePages,
             i = 0,
-            selected_idx = -1;
+            selected_idx = -1,
+            offset;
         
         page_vcount = len;
         page_count = (size - 1) / pageSize;
         
         for (; i < len; i++)
         {
-            pojo = desc_ ? &list[start + i] : &list[start + size - i - 1];
+            offset = desc_ ? start + i : start + size - i - 1;
+            pojo = &list[offset];
+            
             $fnPopulate(i, pojo);
+            
             if (selected_idx == -1 && selected && selected == pojo)
                 selected_idx = i;
         }
@@ -423,9 +427,11 @@ public:
             return false;
         
         int idx = page * pageSize;
+        if (!desc_)
+            idx = list.size() - idx - 1;
         
         // the first item in the visible list
-        auto& pojo = desc_ ? list[idx] : list[list.size() - idx - 1];
+        auto& pojo = list[idx];
         
         if (desc_)
             b64::incAndWriteKeyTo(key_buf, $fnKey(pojo));
