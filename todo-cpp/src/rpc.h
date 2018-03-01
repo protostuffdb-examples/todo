@@ -212,8 +212,9 @@ protected:
     }
     
     virtual void onLoop(const brynet::net::EventLoop::PTR& loop) = 0;
-    std::function<void (const brynet::net::EventLoop::PTR& loop)> $onLoop =
-            std::bind(&Base::onLoop, this, std::placeholders::_1);
+    std::function<void (const brynet::net::EventLoop::PTR& loop)> $onLoop{
+        std::bind(&Base::onLoop, this, std::placeholders::_1)
+    };
     
     void start()
     {
@@ -225,12 +226,14 @@ protected:
     }
     
     virtual void onHttpData(const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session) = 0;
-    std::function<void (const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session)> $onHttpData =
-            std::bind(&Base::onHttpData, this, std::placeholders::_1, std::placeholders::_2);
+    std::function<void (const brynet::net::HTTPParser& httpParser, const brynet::net::HttpSession::PTR& session)> $onHttpData{
+        std::bind(&Base::onHttpData, this, std::placeholders::_1, std::placeholders::_2)
+    };
     
     virtual void onHttpClose(const brynet::net::HttpSession::PTR& httpSession) = 0;
-    std::function<void (const brynet::net::HttpSession::PTR& httpSession)> $onHttpClose =
-            std::bind(&Base::onHttpClose, this, std::placeholders::_1);
+    std::function<void (const brynet::net::HttpSession::PTR& httpSession)> $onHttpClose{
+        std::bind(&Base::onHttpClose, this, std::placeholders::_1)
+    };
     
     virtual void onHttpOpen(const brynet::net::HttpSession::PTR& httpSession) = 0;
     
@@ -241,15 +244,17 @@ private:
         httpSession->setHttpCallback($onHttpData);
         onHttpOpen(httpSession);
     }
-    std::function<void (const brynet::net::HttpSession::PTR& httpSession)> $setupHttp =
-            std::bind(&Base::setupHttp, this, std::placeholders::_1);
+    std::function<void (const brynet::net::HttpSession::PTR& httpSession)> $setupHttp{
+        std::bind(&Base::setupHttp, this, std::placeholders::_1)
+    };
     
     void onTcpSession(const brynet::net::TCPSession::PTR& tcpSession)
     {
         brynet::net::HttpService::setup(tcpSession, $setupHttp);
     }
-    std::function<void (const brynet::net::TCPSession::PTR& tcpSession)> $onTcpSession =
-            std::bind(&Base::onTcpSession, this, std::placeholders::_1);
+    std::function<void (const brynet::net::TCPSession::PTR& tcpSession)> $onTcpSession{
+        std::bind(&Base::onTcpSession, this, std::placeholders::_1)
+    };
     
 protected:
     /**
