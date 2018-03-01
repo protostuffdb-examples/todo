@@ -124,6 +124,10 @@ public:
     {
         
     }
+    int size()
+    {
+        return list.size();
+    }
     bool isLoading()
     {
         return loading_;

@@ -202,8 +202,15 @@ struct Home : ui::Panel
 {
     TodoStore store;
 private:
-    std::function<void()> $beforePopulate{ std::bind(&Home::beforePopulate, this) };
-    std::function<void(const nana::arg_keyboard& arg)> $navigate{ std::bind(&Home::navigate, this, std::placeholders::_1) };
+    std::function<void()> $beforePopulate{
+        std::bind(&Home::beforePopulate, this)
+    };
+    std::function<void(const nana::arg_keyboard& arg)> $navigate{
+        std::bind(&Home::navigate, this, std::placeholders::_1)
+    };
+    std::function<void(nana::label::command cmd, const std::string& target)> $onLabelEvent{
+        std::bind(&Home::onLabelEvent, this, std::placeholders::_1, std::placeholders::_2)
+    };
     
     nana::textbox search_{ *this };
     
@@ -259,58 +266,24 @@ public:
         place["search_"] << search_.tip_string("Todo");
         
         // ctrls
-        auto listener = [this](nana::label::command cmd, const std::string& target) {
-            if (nana::label::command::click != cmd)
-                return;
-            
-            int type = std::atoi(target.c_str());
-            int page = -1;
-            switch (type)
-            {
-                case 0:
-                case 1:
-                    desc = 0 == (type ^ 1);
-                    sort_.caption(SORT_TOGGLE[type ^ 1]);
-                    break;
-                case 4:
-                    page = 0;
-                    break;
-                case 5:
-                    page = store.getPage() - 1;
-                    break;
-                case 6:
-                    page = store.getPage() + 1;
-                    break;
-                case 7:
-                    page = store.getPageCount();
-                    break;
-                case 8:
-                    ui::visible(msg_, false);
-                    break;
-                // TODO
-            }
-            
-            if (page != -1 && store.pageTo(page, $beforePopulate))
-                afterPopulate();
-        };
         place["add_"] << add_
                 .text_align(nana::align::center)
-                .add_format_listener(listener)
+                .add_format_listener($onLabelEvent)
                 .format(true);
         
         place["sort_"] << sort_
                 .text_align(nana::align::center)
-                .add_format_listener(listener)
+                .add_format_listener($onLabelEvent)
                 .format(true);
         
         place["refresh_"] << refresh_
                 .text_align(nana::align::center)
-                .add_format_listener(listener)
+                .add_format_listener($onLabelEvent)
                 .format(true);
         
         place["msg_"] << msg_
                 .text_align(nana::align::left)
-                .add_format_listener(listener)
+                .add_format_listener($onLabelEvent)
                 .format(true);
         
         place["page_info_"] << page_info_
@@ -318,7 +291,7 @@ public:
         
         place["nav_"] << nav_
                 .text_align(nana::align::right)
-                .add_format_listener(listener)
+                .add_format_listener($onLabelEvent)
                 .format(true);
         
         // listbox
@@ -359,20 +332,6 @@ private:
         for (int i = 0; i < PAGE_SIZE; ++i)
             todo_items[item_offset + i]->init(i, &store, $navigate);
     }
-    void beforePopulate()
-    {
-        place.field_visible("list_", false);
-    }
-    void afterPopulate()
-    {
-        if (nullptr != store.getSelected())
-            select(store.getSelectedIdx());
-        place.field_visible("list_", true);
-        
-        page_str.clear();
-        store.appendPageInfoTo(page_str);
-        page_info_.caption(page_str);
-    }
     void populate(int idx, Todo* pojo)
     {
         if (!initialized)
@@ -381,6 +340,65 @@ private:
             initialized = true;
         }
         todo_items[item_offset + idx]->update(pojo);
+    }
+    void select(int idx)
+    {
+        if (idx != -1)
+            todo_items[item_offset + idx]->selected();
+        else if (nullptr != store.getSelected())
+            list_.at(0).select(false);
+    }
+    void beforePopulate()
+    {
+        place.field_visible("list_", false);
+    }
+    void afterPopulate(int selectedIdx)
+    {
+        select(selectedIdx);
+        place.field_visible("list_", true);
+        
+        page_str.clear();
+        store.appendPageInfoTo(page_str);
+        page_info_.caption(page_str);
+    }
+    void afterPopulate()
+    {
+        afterPopulate(store.getSelectedIdx());
+    }
+    void onLabelEvent(nana::label::command cmd, const std::string& target)
+    {
+        if (nana::label::command::click != cmd)
+            return;
+        
+        int type = std::atoi(target.c_str());
+        int page = -1;
+        switch (type)
+        {
+            case 0:
+            case 1:
+                desc = 0 == (type ^ 1);
+                sort_.caption(SORT_TOGGLE[type ^ 1]);
+                break;
+            case 4:
+                page = 0;
+                break;
+            case 5:
+                page = store.getPage() - 1;
+                break;
+            case 6:
+                page = store.getPage() + 1;
+                break;
+            case 7:
+                page = store.getPageCount();
+                break;
+            case 8:
+                ui::visible(msg_, false);
+                break;
+            // TODO
+        }
+        
+        if (page != -1 && store.pageTo(page, $beforePopulate))
+            afterPopulate();
     }
     void navigate(const nana::arg_keyboard& arg)
     {
@@ -392,13 +410,34 @@ private:
                 up = true;
             case nana::keyboard::os_arrow_down:
                 if (arg.ctrl)
+                {
                     select(up ? 0 : store.getVisibleCount() - 1);
+                }
                 else if (idx == -1)
+                {
                     select(!up ? 0 : store.getVisibleCount() - 1);
-                else if (up && idx != 0)
+                }
+                else if (!up)
+                {
+                    if (store.getVisibleCount() != ++idx)
+                    {
+                        select(idx);
+                    }
+                    else if (idx < store.size())
+                    {
+                        store.pageTo(store.getPage() + 1, $beforePopulate);
+                        afterPopulate(0);
+                    }
+                }
+                else if (0 != idx)
+                {
                     select(idx - 1);
-                else if (!up && ++idx != store.getVisibleCount())
-                    select(idx);
+                }
+                else if (0 != store.getPage())
+                {
+                    store.pageTo(store.getPage() - 1, $beforePopulate);
+                    afterPopulate(store.getVisibleCount() - 1);
+                }
                 break;
             case nana::keyboard::os_arrow_left:
                 if (arg.ctrl)
@@ -420,13 +459,6 @@ private:
     }
     
 public:
-    void select(int idx)
-    {
-        if (idx == -1)
-            list_.at(0).select(false);
-        else
-            todo_items[item_offset + idx]->selected();
-    }
     void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
     {
         std::string buf;
