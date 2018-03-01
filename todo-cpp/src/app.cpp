@@ -375,8 +375,7 @@ private:
         {
             case 0:
             case 1:
-                desc = 0 == (i ^ 1);
-                sort_.caption(SORT_TOGGLE[i ^ 1]);
+                store.toggleDesc();
                 break;
             case 3: // refresh
                 store.fetchUpdate();
@@ -524,8 +523,15 @@ public:
             nana::internal_scope_guard lock;
             switch (type)
             {
+                case coreds::EventType::DESC:
+                    desc = on;
+                    sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
+                    break;
+                case coreds::EventType::LOADING:
+                    // TODO
+                    break;
                 case coreds::EventType::VISIBLE:
-                    if (on && nullptr != store.getSelected())
+                    if (on)
                         select(store.getSelectedIdx());
                     
                     place.field_visible("list_", on);

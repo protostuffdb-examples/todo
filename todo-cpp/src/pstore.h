@@ -180,20 +180,26 @@ public:
     {
         return loading_ || 0 == list.size() || page_count == page;
     }
-    bool toggleDesc()
+    bool toggleDesc(std::function<void()> beforePopulate = nullptr)
     {
         if (loading_)
             return false;
         
         desc_ = !desc_;
         
-        $fnEvent(EventType::VISIBLE, false);
         
-        // TODO iterate backwards and repaint
+        if (beforePopulate == nullptr)
+        {
+            $fnCall($populate);
+        }
+        else
+        {
+            beforePopulate();
+            populate();
+        }
         
         $fnEvent(EventType::DESC, desc_);
         
-        $fnEvent(EventType::VISIBLE, true);
         return true;
     }
     void populate()
