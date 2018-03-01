@@ -406,32 +406,17 @@ private:
     }
     void navigate(const nana::arg_keyboard& arg)
     {
-        bool up = false;
         int idx = store.getSelectedIdx();
         switch (arg.key)
         {
             case nana::keyboard::os_arrow_up:
-                up = true;
-            case nana::keyboard::os_arrow_down:
                 if (arg.ctrl)
                 {
-                    select(up ? 0 : store.getVisibleCount() - 1);
+                    select(0);
                 }
-                else if (idx == -1)
+                else if (-1 == idx)
                 {
-                    select(!up ? 0 : store.getVisibleCount() - 1);
-                }
-                else if (!up)
-                {
-                    if (++idx != store.getVisibleCount())
-                    {
-                        select(idx);
-                    }
-                    else if (idx < store.size())
-                    {
-                        store.pageTo(store.getPage() + 1, $beforePopulate);
-                        afterPopulate(0);
-                    }
+                    select(store.getVisibleCount() - 1);
                 }
                 else if (0 != idx)
                 {
@@ -441,6 +426,25 @@ private:
                 {
                     store.pageTo(store.getPage() - 1, $beforePopulate);
                     afterPopulate(store.getVisibleCount() - 1);
+                }
+                break;
+            case nana::keyboard::os_arrow_down:
+                if (arg.ctrl)
+                {
+                    select(store.getVisibleCount() - 1);
+                }
+                else if (-1 == idx)
+                {
+                    select(0);
+                }
+                else if (++idx != store.getVisibleCount())
+                {
+                    select(idx);
+                }
+                else if (store.getPageCount() != store.getPage())
+                {
+                    store.pageTo(store.getPage() + 1, $beforePopulate);
+                    afterPopulate(0);
                 }
                 break;
             case nana::keyboard::os_arrow_left:
