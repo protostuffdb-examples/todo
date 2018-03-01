@@ -682,10 +682,10 @@ private:
     {
         this->session = session;
         
-        if (!fetched_initial)
-            home.store.fetchNewer();
-        else if (!buf.empty())
+        if (!buf.empty())
             send();
+        else if (!fetched_initial)
+            home.store.fetchNewer();
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
