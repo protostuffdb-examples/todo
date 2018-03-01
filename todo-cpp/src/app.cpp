@@ -131,6 +131,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         timeago.reserve(16); // just moments ago
         util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
+        
         pnl_.show();
     }
 private:
