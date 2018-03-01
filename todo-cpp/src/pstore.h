@@ -187,7 +187,6 @@ public:
         
         desc_ = !desc_;
         
-        
         if (beforePopulate == nullptr)
         {
             $fnCall($populate);
