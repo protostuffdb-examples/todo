@@ -203,6 +203,7 @@ public:
     }
     void populate()
     {
+        T* pojo;
         int size = list.size(),
             populatePages = page * pageSize,
             len = std::min(pageSize, size - populatePages),
@@ -215,7 +216,7 @@ public:
         
         for (; i < len; i++)
         {
-            T* pojo = desc_ ? &list[start + i] : &list[start + size - i - 1];
+            pojo = desc_ ? &list[start + i] : &list[start + size - i - 1];
             $fnPopulate(i, pojo);
             if (selected_idx == -1 && selected && selected == pojo)
                 selected_idx = i;
