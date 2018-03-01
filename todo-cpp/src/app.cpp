@@ -187,16 +187,10 @@ static const std::string SORT_TOGGLE[] = {
     " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
 
-static const unsigned SUCCESS_BG = 0xDEFCD5;
-static const std::string SUCCESS_PFX = "<color=0x52A954 target=\"8\">";
-
-static const unsigned ERROR_BG = 0xF1D7D7;
-static const std::string ERROR_PFX = "<color=0xA95252 target=\"8\">";
-
-static const unsigned WARNING_BG = 0xF6F3D5;
-static const std::string WARNING_PFX = "<color=0x96904D target=\"8\">";
-
-static const std::string MSG_SFX = "</>";
+static const unsigned CLOSE_FG = 0x777777,
+        SUCCESS_BG = 0xDEFCD5, SUCCESS_FG = 0x52A954,
+        ERROR_BG = 0xF1D7D7, ERROR_FG = 0xA95252,
+        WARNING_BG = 0xF6F3D5, WARNING_FG = 0x96904D;
 
 struct Home : ui::Panel
 {
@@ -225,6 +219,8 @@ private:
     };
     
     nana::label msg_{ *this, "" };
+    
+    nana::label msg_close_{ *this, "<target=\"8\" size=12> x </>" };
     
     nana::label page_info_{ *this, "" };
     
@@ -257,6 +253,7 @@ public:
           "<sort_ weight=40>"
           "<refresh_ weight=80>"
           "<msg_>"
+          "<msg_close_ weight=20>"
           "<page_info_ weight=160>"
           "<nav_ weight=160>"
         ">"
@@ -283,6 +280,9 @@ public:
         
         place["msg_"] << msg_
                 .text_align(nana::align::left)
+                .add_format_listener($onLabelEvent);
+        place["msg_close_"] << msg_close_
+                .text_align(nana::align::right)
                 .add_format_listener($onLabelEvent)
                 .format(true);
         
@@ -309,11 +309,41 @@ public:
         place["list_"] << list_;
         place.collocate();
         ui::visible(msg_, false);
+        ui::visible(msg_close_, false);
         place.field_visible("list_", false);
         
         owner.place[field] << *this;
         if (!display)
             owner.place.field_display(field, false);
+    }
+    void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
+    {
+        msg_.caption(msg);
+        
+        switch (type)
+        {
+            case ui::Msg::$SUCCESS:
+                msg_.fgcolor(nana::color_rgb(SUCCESS_FG));
+                msg_.bgcolor(nana::color_rgb(SUCCESS_BG));
+                msg_close_.fgcolor(nana::color_rgb(CLOSE_FG));
+                msg_close_.bgcolor(nana::color_rgb(SUCCESS_BG));
+                break;
+            case ui::Msg::$ERROR:
+                msg_.fgcolor(nana::color_rgb(ERROR_FG));
+                msg_.bgcolor(nana::color_rgb(ERROR_BG));
+                msg_close_.fgcolor(nana::color_rgb(CLOSE_FG));
+                msg_close_.bgcolor(nana::color_rgb(ERROR_BG));
+                break;
+            case ui::Msg::$WARNING:
+                msg_.fgcolor(nana::color_rgb(WARNING_FG));
+                msg_.bgcolor(nana::color_rgb(WARNING_BG));
+                msg_close_.fgcolor(nana::color_rgb(CLOSE_FG));
+                msg_close_.bgcolor(nana::color_rgb(WARNING_BG));
+                break;
+        }
+        
+        ui::visible(msg_, true);
+        ui::visible(msg_close_, true);
     }
     
 private:
@@ -400,6 +430,7 @@ private:
                 break;
             case 8:
                 ui::visible(msg_, false);
+                ui::visible(msg_close_, false);
                 break;
         }
     }
@@ -472,36 +503,6 @@ private:
     }
     
 public:
-    void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
-    {
-        std::string buf;
-        
-        switch (type)
-        {
-            case ui::Msg::$SUCCESS:
-                msg_.bgcolor(nana::color_rgb(SUCCESS_BG));
-                buf += SUCCESS_PFX;
-                buf += msg;
-                buf += MSG_SFX;
-                break;
-            case ui::Msg::$ERROR:
-                msg_.bgcolor(nana::color_rgb(ERROR_BG));
-                buf += ERROR_PFX;
-                buf += msg;
-                buf += MSG_SFX;
-                break;
-            case ui::Msg::$WARNING:
-                msg_.bgcolor(nana::color_rgb(WARNING_BG));
-                buf += WARNING_PFX;
-                buf += msg;
-                buf += MSG_SFX;
-                break;
-        }
-        
-        msg_.caption(buf);
-        ui::visible(msg_, true);
-    }
-    
     void init(coreds::Opts opts)
     {
         store.init(opts);
