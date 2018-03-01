@@ -146,7 +146,7 @@ struct Config
     }
 };
 
-struct Base
+struct Base : brynet::NonCopyable
 {
     const Config config;
     const std::string host;
