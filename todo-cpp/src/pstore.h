@@ -215,9 +215,9 @@ public:
         
         for (; i < len; i++)
         {
-            auto& pojo = desc_ ? list[start + i] : list[start + size - i - 1];
-            $fnPopulate(i, &pojo);
-            if (selected_idx == -1 && selected && selected == &pojo)
+            T* pojo = desc_ ? &list[start + i] : &list[start + size - i - 1];
+            $fnPopulate(i, pojo);
+            if (selected_idx == -1 && selected && selected == pojo)
                 selected_idx = i;
         }
         
