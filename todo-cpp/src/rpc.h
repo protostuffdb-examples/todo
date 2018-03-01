@@ -187,7 +187,7 @@ protected:
             const std::string& uri, const std::string& body)
     {
         /*
-        brynet::net::HttpRequest req, 
+        brynet::net::HttpRequest req;
         
         req.setMethod(brynet::net::HttpRequest::HTTP_METHOD::HTTP_METHOD_POST);
         req.setUrl(uri);
