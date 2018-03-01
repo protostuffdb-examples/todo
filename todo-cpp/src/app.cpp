@@ -217,6 +217,8 @@ struct Home : ui::Panel
 {
     TodoStore store;
 private:
+    std::function<void()> $beforePopulate{ std::bind(&Home::beforePopulate, this) };
+    
     nana::textbox search_{ *this };
     
     nana::label add_{ *this,
@@ -302,12 +304,8 @@ public:
                 // TODO
             }
             
-            if (page != -1 && store.pageTo(page, &page_str))
-            {
-                page_info_.caption(page_str);
-                if (nullptr != store.getSelected())
-                    select(store.getSelectedIdx());
-            }
+            if (page != -1 && store.pageTo(page, $beforePopulate))
+                afterPopulate();
         };
         place["add_"] << add_
                 .text_align(nana::align::center)
@@ -374,6 +372,20 @@ private:
         
         for (int i = 0; i < PAGE_SIZE; ++i)
             todo_items[item_offset + i]->init(i, &store);
+    }
+    void beforePopulate()
+    {
+        place.field_visible("list_", false);
+    }
+    void afterPopulate()
+    {
+        if (nullptr != store.getSelected())
+            select(store.getSelectedIdx());
+        place.field_visible("list_", true);
+        
+        page_str.clear();
+        store.appendPageInfoTo(page_str);
+        page_info_.caption(page_str);
     }
     void populate(int idx, Todo* pojo)
     {
@@ -442,22 +454,18 @@ public:
         };
         store.$fnCall = [this](std::function<void()> op) {
             nana::internal_scope_guard lock;
-            place.field_visible("list_", false);
+            beforePopulate();
             op();
-            place.field_visible("list_", true);
-            
-            page_str.clear();
-            store.appendPageInfoTo(page_str);
-            page_info_.caption(page_str);
-            
-            if (nullptr != store.getSelected())
-                select(store.getSelectedIdx());
+            afterPopulate();
         };
         store.$fnEvent = [this](coreds::EventType type, bool on) {
             nana::internal_scope_guard lock;
             switch (type)
             {
                 case coreds::EventType::VISIBLE:
+                    if (on && nullptr != store.getSelected())
+                        select(store.getSelectedIdx());
+                    
                     place.field_visible("list_", on);
                     
                     page_str.clear();

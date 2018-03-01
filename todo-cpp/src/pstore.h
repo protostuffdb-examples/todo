@@ -468,33 +468,32 @@ public:
         return size != 0;
     }
 private:
-    bool paginate(int idx, std::string* pageInfo)
+    bool paginate(int idx, std::function<void()> beforePopulate)
     {
         page = idx;
-        if (pageInfo == nullptr)
+        if (beforePopulate == nullptr)
         {
             $fnCall($populate);
         }
         else
         {
+            beforePopulate();
             populate();
-            pageInfo->clear();
-            appendPageInfoTo(*pageInfo);
         }
         return true;
     }
 public:
-    bool pageTo(int idx, std::string* pageInfo = nullptr)
+    bool pageTo(int idx, std::function<void()> beforePopulate = nullptr)
     {
-        return !loading_ && idx != page && idx >= 0 && idx <= page_count && paginate(idx, pageInfo);
+        return !loading_ && idx != page && idx >= 0 && idx <= page_count && paginate(idx, beforePopulate);
     }
-    bool pageToFirst(std::string* pageInfo = nullptr)
+    bool pageToFirst(std::function<void()> beforePopulate = nullptr)
     {
-        return !isPageToFirstDisabled() && paginate(0, pageInfo);
+        return !isPageToFirstDisabled() && paginate(0, beforePopulate);
     }
-    bool pageToLast(std::string* pageInfo = nullptr)
+    bool pageToLast(std::function<void()> beforePopulate = nullptr)
     {
-        return !isPageToLastDisabled() && paginate(page_count, pageInfo);
+        return !isPageToLastDisabled() && paginate(page_count, beforePopulate);
     }
     void select(int idx)
     {
