@@ -765,7 +765,15 @@ private:
         }
         else if (!connect(false))
         {
-            // TODO show error
+            {
+                std::string msg;
+                nana::internal_scope_guard lock;
+                
+                msg += "Could not connect to ";
+                msg += req_host;
+                
+                home.show(msg);
+            }
             
             loop->loop(RECONNECT_INTERVAL);
         }
