@@ -190,10 +190,12 @@ static const std::string SORT_TOGGLE[] = {
     " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
 
-static const unsigned CLOSE_FG = 0x777777,
-        SUCCESS_BG = 0xDEFCD5, SUCCESS_FG = 0x52A954,
-        ERROR_BG = 0xF1D7D7, ERROR_FG = 0xA95252,
-        WARNING_BG = 0xF6F3D5, WARNING_FG = 0x96904D;
+static const ui::MsgColors MSG_COLORS {
+    0x52A954, 0xDEFCD5,
+    0xA95252, 0xF1D7D7,
+    0x96904D, 0xF6F3D5,
+    0x777777
+};
 
 struct Home : ui::Panel
 {
@@ -286,6 +288,7 @@ public:
                 .text_align(nana::align::right)
                 .add_format_listener($onLabelEvent)
                 .format(true);
+        msg_close_.fgcolor(MSG_COLORS.close_fg);
         
         place["page_info_"] << page_info_
                 .text_align(nana::align::right);
@@ -324,22 +327,19 @@ public:
         switch (type)
         {
             case ui::Msg::$SUCCESS:
-                msg_.fgcolor(nana::color_rgb(SUCCESS_FG));
-                msg_.bgcolor(nana::color_rgb(SUCCESS_BG));
-                msg_close_.fgcolor(nana::color_rgb(CLOSE_FG));
-                msg_close_.bgcolor(nana::color_rgb(SUCCESS_BG));
+                msg_.fgcolor(MSG_COLORS.success_fg);
+                msg_.bgcolor(MSG_COLORS.success_bg);
+                msg_close_.bgcolor(MSG_COLORS.success_bg);
                 break;
             case ui::Msg::$ERROR:
-                msg_.fgcolor(nana::color_rgb(ERROR_FG));
-                msg_.bgcolor(nana::color_rgb(ERROR_BG));
-                msg_close_.fgcolor(nana::color_rgb(CLOSE_FG));
-                msg_close_.bgcolor(nana::color_rgb(ERROR_BG));
+                msg_.fgcolor(MSG_COLORS.error_fg);
+                msg_.bgcolor(MSG_COLORS.error_bg);
+                msg_close_.bgcolor(MSG_COLORS.error_bg);
                 break;
             case ui::Msg::$WARNING:
-                msg_.fgcolor(nana::color_rgb(WARNING_FG));
-                msg_.bgcolor(nana::color_rgb(WARNING_BG));
-                msg_close_.fgcolor(nana::color_rgb(CLOSE_FG));
-                msg_close_.bgcolor(nana::color_rgb(WARNING_BG));
+                msg_.fgcolor(MSG_COLORS.warning_fg);
+                msg_.bgcolor(MSG_COLORS.warning_bg);
+                msg_close_.bgcolor(MSG_COLORS.warning_bg);
                 break;
         }
         

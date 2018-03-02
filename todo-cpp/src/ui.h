@@ -22,6 +22,33 @@ enum class Msg
     $WARNING
 };
 
+struct MsgColors
+{
+    const nana::color success_fg;
+    const nana::color success_bg;
+    const nana::color error_fg;
+    const nana::color error_bg;
+    const nana::color warning_fg;
+    const nana::color warning_bg;
+    const nana::color close_fg;
+    
+    MsgColors(
+            unsigned success_fg, unsigned success_bg,
+            unsigned error_fg, unsigned error_bg,
+            unsigned warning_fg, unsigned warning_bg,
+            unsigned close_fg):
+        success_fg(nana::color_rgb(success_fg)),
+        success_bg(nana::color_rgb(success_bg)),
+        error_fg(nana::color_rgb(error_fg)),
+        error_bg(nana::color_rgb(error_bg)),
+        warning_fg(nana::color_rgb(warning_fg)),
+        warning_bg(nana::color_rgb(warning_bg)),
+        close_fg(nana::color_rgb(close_fg))
+    {
+        
+    }
+};
+
 struct Form : nana::form
 {
     Form(nana::rectangle rect, unsigned bg, const char* title = nullptr) : nana::form(rect)
