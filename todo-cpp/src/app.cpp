@@ -223,9 +223,14 @@ private:
         "<color=0x0080FF size=11 target=\"3\">refresh</>"
     };
     
-    nana::label msg_{ *this, "" };
-    
-    nana::label msg_close_{ *this, "<target=\"8\" size=12> x </>" };
+    ui::BgPanel msg_panel_{ *this,
+        "margin=[3,2,1,3]"
+        "<msg_>"
+        "<msg_close_ weight=20>",
+        0xFFFFFF
+    };
+    nana::label msg_{ msg_panel_, "" };
+    nana::label msg_close_{ msg_panel_, "<bold target=\"8\"> x </>" };
     
     nana::label page_info_{ *this, "" };
     
@@ -255,8 +260,7 @@ public:
           "<add_ weight=40>"
           "<sort_ weight=40>"
           "<refresh_ weight=80>"
-          "<msg_>"
-          "<msg_close_ weight=20>"
+          "<msg_panel_>"
           "<page_info_ weight=160>"
           "<nav_ weight=160>"
         ">"
@@ -281,14 +285,25 @@ public:
                 .add_format_listener($onLabelEvent)
                 .format(true);
         
-        place["msg_"] << msg_
+        // =====================================
+        // msg
+        
+        place["msg_panel_"] << msg_panel_;
+        
+        msg_panel_.place["msg_"] << msg_
                 .text_align(nana::align::left)
-                .add_format_listener($onLabelEvent);
-        place["msg_close_"] << msg_close_
+                .add_format_listener($onLabelEvent)
+                .transparent(true);
+        msg_panel_.place["msg_close_"] << msg_close_
                 .text_align(nana::align::right)
                 .add_format_listener($onLabelEvent)
-                .format(true);
+                .format(true)
+                .transparent(true);
         msg_close_.fgcolor(MSG_COLORS.close_fg);
+        
+        msg_panel_.place.collocate();
+        
+        // =====================================
         
         place["page_info_"] << page_info_
                 .text_align(nana::align::right);
@@ -312,8 +327,9 @@ public:
         
         place["list_"] << list_;
         place.collocate();
-        ui::visible(msg_, false);
-        ui::visible(msg_close_, false);
+        
+        // initially hidden
+        msg_panel_.hide();
         place.field_visible("list_", false);
         
         owner.place[field] << *this;
@@ -328,23 +344,21 @@ public:
         {
             case ui::Msg::$SUCCESS:
                 msg_.fgcolor(MSG_COLORS.success_fg);
-                msg_.bgcolor(MSG_COLORS.success_bg);
-                msg_close_.bgcolor(MSG_COLORS.success_bg);
+                msg_panel_.bgcolor(MSG_COLORS.success_bg);
                 break;
             case ui::Msg::$ERROR:
                 msg_.fgcolor(MSG_COLORS.error_fg);
-                msg_.bgcolor(MSG_COLORS.error_bg);
-                msg_close_.bgcolor(MSG_COLORS.error_bg);
+                msg_panel_.bgcolor(MSG_COLORS.error_bg);
                 break;
             case ui::Msg::$WARNING:
                 msg_.fgcolor(MSG_COLORS.warning_fg);
-                msg_.bgcolor(MSG_COLORS.warning_bg);
-                msg_close_.bgcolor(MSG_COLORS.warning_bg);
+                msg_panel_.bgcolor(MSG_COLORS.warning_bg);
                 break;
         }
         
         ui::visible(msg_, true);
         ui::visible(msg_close_, true);
+        msg_panel_.show();
     }
     
 private:
@@ -430,8 +444,7 @@ private:
                 store.pageTo(store.getPageCount());
                 break;
             case 8:
-                ui::visible(msg_, false);
-                ui::visible(msg_close_, false);
+                msg_panel_.hide();
                 break;
         }
     }
