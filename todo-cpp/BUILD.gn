@@ -3,9 +3,6 @@ static_library("app") {
     "g/user/index_generated.h",
     "g/user/fbs_schema.h",
     
-    "src/util.h",
-    "src/pstore.h",
-    "src/rpc.h",
     "src/ui.h",
     "src/app.h",
     "src/app.cpp",
@@ -14,6 +11,7 @@ static_library("app") {
     "//deps/brynet:net",
   ]
   deps = [
+    "//deps/coreds:coreds",
     "//deps/brynet:utils",
     "//deps/brynet:timer",
     "//deps/brynet:http",

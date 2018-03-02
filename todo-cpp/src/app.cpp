@@ -7,13 +7,17 @@
 #include <nana/gui/widgets/textbox.hpp>
 #include <nana/gui/widgets/button.hpp>
 
-#include "pstore.h"
-#include "rpc.h"
+#include <coreds/rpc.h>
+#include <coreds/pstore.h>
+
 #include "ui.h"
 #include "app.h"
 
 #include "../g/user/fbs_schema.h"
 #include "../g/user/index_generated.h"
+
+namespace util = coreds::util;
+namespace rpc = coreds::rpc;
 
 static void printTodos(void* flatbuf)
 {

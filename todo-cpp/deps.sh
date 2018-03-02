@@ -21,5 +21,5 @@ GIT_CLONE='git clone --depth 1 --single-branch -b'
 [ -e flatbuffers ] || $GIT_CLONE gn https://github.com/fbsgen/flatbuffers.git
 [ -e nana ] || $GIT_CLONE gn https://github.com/dyu/nana.git
 [ -e brynet ] || $GIT_CLONE gn https://github.com/dyu/brynet.git
-# doesn't compile on msvc 2015
-#[ -e asap ] || $GIT_CLONE gn https://github.com/dyu/asap.git
+[ -e coreds ] || $GIT_CLONE master https://github.com/fbsgen/coreds.git
+
