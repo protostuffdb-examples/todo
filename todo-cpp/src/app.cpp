@@ -763,7 +763,7 @@ private:
             // wait for epoll
             loop->loop(IDLE_INTERVAL);
         }
-        else if (!connect(false))
+        else if (!connect())
         {
             {
                 std::string msg;
