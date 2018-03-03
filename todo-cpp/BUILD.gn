@@ -16,8 +16,6 @@ static_library("app") {
     "//deps/brynet:timer",
     "//deps/brynet:http",
     "//deps/flatbuffers:flatbuffers",
-    # doesn't compile on msvc 2015 
-    #"//deps/asap:asap",
     "//deps/nana:base",
     "//deps/nana:gui",
   ]
@@ -26,4 +24,9 @@ static_library("app") {
 executable("todo") {
   sources = [ "src/main.cpp" ]
   deps = [ ":app" ]
+}
+
+executable("todo-pdb") {
+  sources = [ "src/pdb-main.cpp" ]
+  deps = [ ":app", "//deps/tiny-process-library:tpl" ]
 }
