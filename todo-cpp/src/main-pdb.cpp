@@ -168,7 +168,7 @@ int main(int argc, char* argv[])
         relative_jre = false;
         target_dir.clear(); // cwd
         #else
-        fprintf(stderr, "target/%s not found.\n", );
+        fprintf(stderr, "target/%s not found.\n", PDB_TRY_BIN);
         return 1;
         #endif
     }
