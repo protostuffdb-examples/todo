@@ -103,6 +103,13 @@ private:
     const Signal& operator=(const Signal&) = delete;
 };
 
+#ifndef WIN32
+const char PDB_TRY_BIN[] = "protostuffdb-rjre";
+#else
+const char PDB_TRY_BIN[] = "protostuffdb.exe";
+const char EXEC_CWD[] = "C:\\opt\\jre\\bin\\server";
+#endif
+
 static const char FMT_STR[] = "%.*s";
 static const char FMT_STR_LN[] = "%.*s\n";
 
@@ -132,34 +139,65 @@ int main(int argc, char* argv[])
         return 1;
     }
     
+    std::string target_dir;
+    target_dir += pwd;
+    target_dir += SEPARATOR;
+    target_dir += "target";
+    target_dir += SEPARATOR;
+    
     std::string pdb_bin;
-    pdb_bin += pwd;
+    pdb_bin += target_dir;
     pdb_bin += SEPARATOR;
-    pdb_bin += "target";
-    pdb_bin += SEPARATOR;
+    pdb_bin += PDB_TRY_BIN;
     
     #ifndef WIN32
-    pdb_bin += "protostuffdb-rjre";
-    #else
-    pdb_bin += "protostuffdb-rjre.exe";
+    bool relative_jre = true;
     #endif
     
     if (!exists(pdb_bin.c_str()))
     {
-        // remove -rjre prefix
         #ifndef WIN32
+        // remove -rjre prefix
         pdb_bin.erase(pdb_bin.size() - 5, 5);
-        #else
-        pdb_bin.erase(pdb_bin.size() - 9, 9);
-        pdb_bin += ".exe";
-        #endif
-        
         if (!exists(pdb_bin.c_str()))
         {
-            fprintf(stderr, "target/protostuffdb not found.\n");
+            fprintf(stderr, "target/%s not found.\n", PDB_TRY_BIN);
             return 1;
         }
+        
+        relative_jre = false;
+        target_dir.clear(); // cwd
+        #else
+        fprintf(stderr, "target/%s not found.\n", );
+        return 1;
+        #endif
     }
+    
+    #ifndef WIN32
+    if (relative_jre)
+    #else
+    if (!exists(EXEC_CWD))
+    #endif
+    {
+        target_dir += SEPARATOR;
+        target_dir += "jre";
+        if (!exists(target_dir.c_str()))
+        {
+            fprintf(stderr, "target/jre not found.\n");
+            return 1;
+        }
+        #ifndef WIN32
+        target_dir.clear();
+        #else
+        target_dir += "\\bin\\server";
+        #endif
+    }
+    #ifdef WIN32
+    else
+    {
+        target_dir.assign(EXEC_CWD);
+    }
+    #endif
     
     // ==================================================
     
@@ -248,7 +286,7 @@ int main(int argc, char* argv[])
     cmd += pwd;
     
     Signal signal(1);
-    TinyProcessLib::Process p(cmd, "", [&signal](const char* bytes, size_t n) {
+    TinyProcessLib::Process p(cmd, target_dir, [&signal](const char* bytes, size_t n) {
         if (n > sizeof(IDENTIFIER) && 0 == memcmp(bytes, IDENTIFIER, sizeof(IDENTIFIER) - 1))
             signal.notify();
         else
