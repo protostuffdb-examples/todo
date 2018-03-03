@@ -131,6 +131,35 @@ int main(int argc, char* argv[])
         return 1;
     }
     
+    std::string pdb_bin;
+    pdb_bin += pwd;
+    pdb_bin += SEPARATOR;
+    pdb_bin += "target";
+    pdb_bin += SEPARATOR;
+    
+    #ifndef WIN32
+    pdb_bin += "protostuffdb-rjre";
+    #else
+    pdb_bin += "protostuffdb-rjre.exe";
+    #endif
+    
+    if (!exists(pdb_bin.c_str()))
+    {
+        // remove -rjre prefix
+        #ifndef WIN32
+        pdb_bin.erase(pdb_bin.size() - 5, 5);
+        #else
+        pdb_bin.erase(pdb_bin.size() - 9, 9);
+        pdb_bin += ".exe";
+        #endif
+        
+        if (!exists(pdb_bin.c_str()))
+        {
+            fprintf(stderr, "target/protostuffdb not found.\n");
+            return 1;
+        }
+    }
+    
     // ==================================================
     
     std::string ip_port;
@@ -169,13 +198,8 @@ int main(int argc, char* argv[])
     
     std::string cmd;
     
-    cmd += pwd;
-    #ifndef WIN32
-    cmd += "/target/protostuffdb ";
-    #else
-    cmd += "\\target\\protostuffdb.exe ";
-    #endif
-    
+    cmd += pdb_bin;
+    cmd += ' ';
     cmd += ip_port;
     
     // ==================================================
@@ -196,7 +220,8 @@ int main(int argc, char* argv[])
     // ==================================================
     // jvm args
     
-    cmd += ' ';
+    // child reads from stdin for eof
+    cmd += " -Dprotostuffdb.rt_flags=8 ";
     cmd += jvm_args;
     
     // ==================================================
