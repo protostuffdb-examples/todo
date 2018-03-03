@@ -27,6 +27,6 @@ executable("todo") {
 }
 
 executable("todo-pdb") {
-  sources = [ "src/pdb-main.cpp" ]
+  sources = [ "src/main-pdb.cpp" ]
   deps = [ ":app", "//deps/tiny-process-library:tpl" ]
 }
