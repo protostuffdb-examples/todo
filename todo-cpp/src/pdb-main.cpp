@@ -4,6 +4,7 @@
 #include <process.hpp>
 #include <fstream>
 #include <condition_variable>
+#include <signal.h>
 
 extern "C" {
 #include <sys/stat.h>
