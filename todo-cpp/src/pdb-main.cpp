@@ -133,13 +133,24 @@ int main(int argc, char* argv[])
     
     // ==================================================
     
+    std::string ip_port;
     std::string port;
     std::string port_path;
     port_path += pwd;
     port_path += SEPARATOR;
     port_path += "PORT.txt";
     if (!LoadFile(port_path.c_str(), false, &port, true))
-        port = "5000";
+    {
+        ip_port = "127.0.0.1:5000";
+    }
+    else if (std::string::npos == port.find(':'))
+    {
+        ip_port = "127.0.0.1:" + port;
+    }
+    else
+    {
+        ip_port = port;
+    }
     
     // ==================================================
     
@@ -165,10 +176,7 @@ int main(int argc, char* argv[])
     cmd += "\\target\\protostuffdb.exe ";
     #endif
     
-    if (std::string::npos == port.find(':'))
-        cmd += "127.0.0.1:";
-    
-    cmd += port;
+    cmd += ip_port;
     
     // ==================================================
     // todo-ts/g/user/UserServices.json
@@ -202,7 +210,10 @@ int main(int argc, char* argv[])
     cmd += SEPARATOR;
     cmd += "target";
     cmd += SEPARATOR;
-    cmd += "todo-all-jarjar.jar todo.all.Main";
+    cmd += name;
+    cmd += "-all-jarjar.jar ";
+    cmd += name;
+    cmd +=".all.Main";
     
     // ==================================================
     // app args
@@ -222,7 +233,16 @@ int main(int argc, char* argv[])
     
     signal.wait();
     
-    int ret = todo::run(1, argv);
+    int ret = 0;
+    char* args[]{ argv[1], const_cast<char*>(ip_port.c_str()), nullptr };
+    try
+    {
+        ret = todo::run(2, args);
+    }
+    catch (...)
+    {
+        ret = 1;
+    }
     
     p.kill();
     
