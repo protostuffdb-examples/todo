@@ -21,18 +21,12 @@ static const char SEPARATOR = '/';
 
 extern "C" {
 #include <direct.h>
-#include <tchar.h>
 #include <windows.h>
 #pragma comment(lib, "user32.lib")
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 }
 #define GetCurrentDir _getcwd
 static const char SEPARATOR = '\\';
-
-static std::string absolute_path(const std::string &filepath) {
-    char abs_path[MAX_PATH];
-    return GetFullPathNameA(filepath.c_str(), MAX_PATH, abs_path, nullptr) ? abs_path : filepath;
-}
 
 #endif
 
