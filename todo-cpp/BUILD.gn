@@ -30,3 +30,9 @@ executable("todo-pdb") {
   sources = [ "src/main-pdb.cpp" ]
   deps = [ ":app", "//deps/tiny-process-library:tpl" ]
 }
+
+executable("todo-uv") {
+  sources = [ "src/main-uv.cpp" ]
+  deps = [ ":app", "//gn-deps/libuv:libuv", ]
+}
+

@@ -14,9 +14,13 @@ fi
 
 cd $SCRIPT_DIR
 
-mkdir -p deps && cd deps
-
 GIT_CLONE='git clone --depth 1 --single-branch -b'
+
+[ -e gn-deps ] || $GIT_CLONE master https://github.com/dyu/gn-deps.git
+
+./gn-deps/fetch.sh libuv
+
+mkdir -p deps && cd deps
 
 [ -e coreds ] || $GIT_CLONE master https://github.com/fbsgen/coreds.git
 [ -e flatbuffers ] || $GIT_CLONE gn https://github.com/fbsgen/flatbuffers.git
