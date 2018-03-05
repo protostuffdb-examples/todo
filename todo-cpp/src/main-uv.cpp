@@ -62,7 +62,7 @@ static bool LoadFile(const char *name, bool binary, std::string *buf, bool strip
 #ifndef WIN32
 const char PDB_TRY_BIN[] = "protostuffdb-rjre";
 #else
-const char PDB_TRY_BIN[] = "protostuffdb.exe";
+const char PDB_TRY_BIN[] = "protostuffdb-sp.exe";
 const char EXEC_CWD[] = "C:\\opt\\jre\\bin\\server";
 #endif
 
