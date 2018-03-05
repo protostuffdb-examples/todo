@@ -143,7 +143,6 @@ int main(int argc, char* argv[])
     target_dir += pwd;
     target_dir += SEPARATOR;
     target_dir += "target";
-    target_dir += SEPARATOR;
     
     std::string pdb_bin;
     pdb_bin += target_dir;
@@ -298,7 +297,7 @@ int main(int argc, char* argv[])
     signal.wait();
     
     int ret = 0;
-    char* args[]{ argv[1], const_cast<char*>(ip_port.c_str()), nullptr };
+    char* args[]{ argv[0], const_cast<char*>(ip_port.c_str()), nullptr };
     try
     {
         ret = todo::run(2, args);
