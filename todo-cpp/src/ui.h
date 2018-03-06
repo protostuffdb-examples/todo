@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+#include <forward_list>
 #include <nana/gui/wvl.hpp>
 #include <nana/gui/widgets/panel.hpp>
 #include <nana/gui/widgets/picture.hpp>
@@ -48,6 +50,12 @@ struct MsgColors
         
     }
 };
+
+// not in the widget api
+inline void visible(nana::widget& w, bool on)
+{
+    nana::API::show_window(w.handle(), on);
+}
 
 struct Form : nana::form
 {
@@ -127,10 +135,49 @@ struct BgPanel : nana::panel<true>
     }
 };
 
-// not in the widget api
-inline void visible(nana::widget& w, bool on)
+template <typename T, typename W>
+struct List : Panel
 {
-    nana::API::show_window(w.handle(), on);
-}
+private:
+    std::forward_list<W> items;
+    std::vector<W*> array;
+    nana::color selected_bg;
+    int selected_idx{ -1 };
+    
+public:    
+    List(nana::widget& owner, const char* layout = nullptr, unsigned selected_bg = 0xF3F3F3, int pageSize = 10):
+        Panel(owner, layout ? layout : "margin=[5,0] <items_ vert>"),
+        selected_bg(nana::color_rgb(selected_bg))
+    {
+        for (int i = 0; i < pageSize; i++)
+        {
+            items.emplace_front(*this);
+            place["items_"] << items.front();
+            array.push_back(&items.front());
+        }
+        
+        place.collocate();
+    }
+    
+    int size()
+    {
+        return array.size();
+    }
+    
+    bool select(int idx)
+    {
+        int prev_idx = selected_idx;
+        if (idx == prev_idx || idx < 0 || idx >= array.size())
+            return false;
+        
+        selected_idx = idx;
+        
+        if (prev_idx != -1)
+            array[prev_idx]->bgcolor(nana::colors::white);
+        
+        array[idx]->bgcolor(selected_bg);
+        return true;
+    }
+};
     
 } // ui
