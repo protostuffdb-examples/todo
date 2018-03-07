@@ -1,4 +1,5 @@
 #include <forward_list>
+#include <queue>
 #include <thread>
 
 #include <nana/gui/wvl.hpp>
@@ -11,6 +12,7 @@
 #include <coreds/pstore.h>
 
 #include "ui.h"
+#include "pager.h"
 #include "app.h"
 
 #include "../g/user/fbs_schema.h"
@@ -18,6 +20,32 @@
 
 namespace util = coreds::util;
 namespace rpc = coreds::rpc;
+
+struct Request
+{
+    const char* uri;
+    const std::string body;
+    const char* res_type;
+    std::string* errmsg;
+    std::function<void(void* res)> cb;
+    
+    Request(const char* uri, const std::string body,
+            const char* res_type, std::string* errmsg, std::function<void(void* res)> cb):
+        uri(uri),
+        body(body),
+        res_type(res_type),
+        errmsg(errmsg),
+        cb(cb)
+    {
+        
+    }
+};
+
+struct RequestQueue
+{
+    std::queue<Request> queue;
+    std::function<void()> send;
+};
 
 static void printTodos(void* flatbuf)
 {
@@ -43,7 +71,7 @@ static const int MARGIN = 5,
         HEIGHT = 710,
         #endif
         // page
-        PAGE_SIZE = 25,
+        PAGE_SIZE = 20,
         MULTIPLIER = 2,
         // listbox
         LB_OUTER = MARGIN * 2,
@@ -199,8 +227,13 @@ static const ui::MsgColors MSG_COLORS {
 
 struct Home : ui::Panel
 {
+    bool fetched_initial{ false };
+    
     TodoStore store;
 private:
+    std::function<void(void* res)> $onResponse{
+        std::bind(&Home::onResponse, this, std::placeholders::_1)
+    };
     std::function<void()> $beforePopulate{
         std::bind(&Home::beforePopulate, this)
     };
@@ -515,9 +548,20 @@ private:
                 break;
         }
     }
-    
+    void onResponse(void* res)
+    {
+        if (res == nullptr)
+        {
+            store.cbFetchFailed();
+        }
+        else
+        {
+            store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
+            fetched_initial = true;
+        }
+    }
 public:
-    void init(coreds::Opts opts)
+    void init(coreds::Opts opts, RequestQueue& rq)
     {
         store.init(opts);
         store.$fnKey = [](const Todo& pojo) {
@@ -572,6 +616,15 @@ public:
                 }
             }
         };
+        store.$fnFetch = [this, &rq](coreds::ParamRangeKey prk) {
+            std::string buf;
+            prk.stringifyTo(buf);
+            
+            rq.queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $onResponse);
+            rq.send();
+            return true;
+        };
+        //store.fetchNewer();
     }
     
     /*void appendTodos(void* flatbuf)
@@ -610,17 +663,232 @@ public:
     }*/
 };
 
+struct TodoItemPanel;
+
+struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
+{
+    bool fetched_initial{ false };
+    
+    ui::MsgPanel msg_ { *this, MSG_COLORS };
+private:
+    nana::label sort_{ *this, SORT_TOGGLE[0] };
+    
+    nana::label page_info_{ *this, "" };
+    std::string page_str;
+    
+    std::function<void(void* res)> $onResponse{
+        std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
+    };
+    
+public:
+    TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
+        "vert margin=[5,0]"
+        "<weight=40"
+          "<sort_ weight=40>"
+          "<msg_>"
+          "<page_info_ weight=160>"
+        ">"
+        "<items_ vert>"
+    )
+    {
+        place["sort_"] << sort_
+                .text_align(nana::align::center)
+                .add_format_listener($onLabelEvent)
+                .format(true);
+        
+        place["msg_"] << msg_;
+        
+        place["page_info_"] << page_info_
+                .text_align(nana::align::right);
+    }
+    void beforePopulate() override
+    {
+        ui::visible(*this, false);
+    }
+    void afterPopulate(int selectedIdx) override
+    {
+        select(selectedIdx);
+        
+        page_str.clear();
+        store.appendPageInfoTo(page_str);
+        page_info_.caption(page_str);
+        
+        ui::visible(*this, true);
+    }
+    void afterPopulate()
+    {
+        afterPopulate(store.getSelectedIdx());
+    }
+    void onResponse(void* res)
+    {
+        if (res == nullptr)
+        {
+            store.cbFetchFailed();
+        }
+        else
+        {
+            store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
+            fetched_initial = true;
+        }
+    }
+    void init(coreds::Opts opts, RequestQueue& rq)
+    {
+        store.init(opts);
+        store.$fnKey = [](const Todo& pojo) {
+            return pojo.key.c_str();
+        };
+        store.$fnKeyFB = [](const todo::user::Todo* message) {
+            return message->key()->c_str();
+        };
+        store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
+            message->title()->assign_to(pojo.title);
+            pojo.completed = message->completed();
+        };
+        store.$fnPopulate = [this](int idx, Todo* pojo) {
+            populate(idx, pojo);
+        };
+        store.$fnCall = [this](std::function<void()> op) {
+            nana::internal_scope_guard lock;
+            beforePopulate();
+            op();
+            afterPopulate();
+        };
+        store.$fnEvent = [this](coreds::EventType type, bool on) {
+            switch (type)
+            {
+                case coreds::EventType::DESC:
+                {
+                    nana::internal_scope_guard lock;
+                    sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
+                    break;
+                }
+                case coreds::EventType::LOADING:
+                    // hide errmsg when loading
+                    if (on)
+                    {
+                        nana::internal_scope_guard lock;
+                        ui::visible(msg_, false);
+                    }
+                    break;
+                case coreds::EventType::VISIBLE:
+                {
+                    nana::internal_scope_guard lock;
+                    if (on)
+                        select(store.getSelectedIdx());
+                    
+                    page_str.clear();
+                    store.appendPageInfoTo(page_str);
+                    page_info_.caption(page_str);
+                    
+                    ui::visible(*this, on);
+                    break;
+                }
+            }
+        };
+        store.$fnFetch = [this, &rq](coreds::ParamRangeKey prk) {
+            std::string buf;
+            prk.stringifyTo(buf);
+            
+            rq.queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $onResponse);
+            rq.send();
+            return true;
+        };
+        
+        collocate(opts.pageSize);
+        
+        //store.fetchNewer();
+    }
+};
+
+struct TodoItemPanel : ui::BgPanel
+{
+    TodoPager& pager;
+    const int idx;
+    nana::label title_{ *this, "" };
+    nana::label ts_{ *this, "" };
+    
+    Todo* pojo{ nullptr };
+    
+    TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
+        "margin=[5,10]"
+        "<title_>"
+        "<ts_>"
+        ),
+        pager(static_cast<TodoPager&>(owner)),
+        idx(pager.size())
+    {
+        auto $selected = [this]() {
+            pager.select(idx);
+        };
+        
+        place["title_"] << title_
+            .text_align(nana::align::left)
+            .transparent(true);
+        title_.events().click($selected);
+        title_.events().key_press(pager.$navigate);
+        
+        place["ts_"] << ts_
+            .text_align(nana::align::right)
+            .transparent(true);
+        ts_.events().click($selected);
+        ts_.events().key_press(pager.$navigate);
+        
+        place.collocate();
+        hide();
+    }
+    
+    void update(Todo* message)
+    {
+        pojo = message;
+        if (message == nullptr)
+        {
+            hide();
+            return;
+        }
+        
+        title_.caption(pojo->title);
+        
+        std::string timeago;
+        timeago.reserve(16); // just moments ago
+        util::appendTimeagoTo(timeago, pojo->ts);
+        ts_.caption(timeago);
+        
+        show();
+    }
+};
+
 struct About : ui::Panel
 {
     nana::label text_{ *this, "about" };
+    /*ui::BgPanel pnl_{ *this,
+        "vert margin=[5,10]"
+        "<hello_>"
+        "<world_>",
+        0xF6F3D5
+    };
+    nana::label hello_{ pnl_, "hello" };
+    nana::label world_{ pnl_, "world" };*/
+    TodoPager pager_{ *this };
     
     About(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
-        "<text_>"
+        "vert"
+        "<text_ weight=25>"
+        //"<pnl_ weight=50>"
+        "<pager_>"
     )
     {
         //text.bgcolor(nana::color_rgb(0xFCFCFC));
         
         place["text_"] << text_;
+        
+        /*pnl_.place["hello_"] << hello_;
+        pnl_.place["world_"] << world_;
+        pnl_.place.collocate();
+        
+        place["pnl_"] << pnl_;*/
+        
+        place["pager_"] << pager_;
+        
         place.collocate();
         
         owner.place[field] << *this;
@@ -639,10 +907,8 @@ static const int IDLE_INTERVAL = 10000,
 
 struct App : rpc::Base
 {
+    RequestQueue rq;
     std::string buf;
-    std::function<bool(coreds::ParamRangeKey prk)> $fetch{
-        std::bind(&App::fetch, this, std::placeholders::_1)
-    };
     std::function<void()> $send{
         std::bind(&App::send, this)
     };
@@ -674,11 +940,14 @@ struct App : rpc::Base
     brynet::net::HttpSession::PTR session{ nullptr };
     
     //int disconnect_count{ 0 };
-    bool fetched_initial{ false };
     
     App(const rpc::Config config, const char* title) : rpc::Base(config)
     {
         fm.caption(title ? title : "Todo App");
+        rq.send = [this]() {
+            if (session != nullptr)
+                loop->pushAsyncProc($send);
+        };
     }
 
 private:
@@ -704,32 +973,29 @@ private:
             const brynet::net::HttpSession::PTR& session) override
     {
         auto body = httpParser.getBody();
-        if (!home.store.isLoading())
-        {
-            // some other request
-        }
-        else if (!rpc::parseJson(body, "Todo_PList", parser, home.store.errmsg))
-        {
-            home.store.cbFetchFailed();
-            
-            nana::internal_scope_guard lock;
-            home.show(home.store.errmsg);
-        }
-        else if (home.store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(
-                parser.builder_.GetBufferPointer())->p()))
-        {
-            fetched_initial = true;
-        }
+        auto& req = rq.queue.front();
+        auto ok = rpc::parseJson(body, req.res_type, parser, *req.errmsg);
+        req.cb(ok ? parser.builder_.GetBufferPointer() : nullptr);
+        rq.queue.pop();
+        if (!rq.queue.empty())
+            send();
     }
     
     void onHttpOpen(const brynet::net::HttpSession::PTR& session) override
     {
         this->session = session;
         
-        if (!buf.empty())
+        if (!rq.queue.empty())
+        {
             send();
-        else if (!fetched_initial)
+            return;
+        }
+        
+        if (!home.fetched_initial)
             home.store.fetchNewer();
+        
+        if (!about.pager_.fetched_initial)
+            about.pager_.store.fetchNewer();
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
@@ -772,7 +1038,7 @@ private:
                 msg += "Could not connect to ";
                 msg += req_host;
                 
-                home.show(msg);
+                about.pager_.msg_.$show(msg);
             }
             
             loop->loop(RECONNECT_INTERVAL);
@@ -786,28 +1052,16 @@ private:
     {
         if (session != nullptr)
         {
-            post(session, "/todo/user/Todo/list", buf);
-            buf.clear();
+            auto& req = rq.queue.front();
+            post(session, req.uri, req.body);
         }
-    }
-    bool fetch(coreds::ParamRangeKey prk)
-    {
-        bool send = session != nullptr;
-        
-        prk.stringifyTo(buf);
-        
-        if (send)
-            loop->pushAsyncProc($send);
-        
-        return send;
     }
     
 public:
     void show(coreds::Opts opts)
     {
-        home.init(opts);
-        
-        home.store.$fnFetch = $fetch;
+        home.init(opts, rq);
+        about.pager_.init(opts, rq);
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
