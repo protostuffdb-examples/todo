@@ -135,6 +135,65 @@ struct BgPanel : nana::panel<true>
     }
 };
 
+struct MsgPanel : BgPanel
+{
+    const MsgColors colors;
+    nana::label msg_{ *this, "" };
+    nana::label close_{ *this, "<bold target=\"0\"> x </>" };
+    
+    MsgPanel(nana::widget& owner, const MsgColors& colors) : BgPanel(owner,
+        "margin=[3,2,1,3]"
+        "<msg_>"
+        "<close_ weight=20>"
+    ),  colors(colors)
+    {
+        auto listener = [this](nana::label::command cmd, const std::string& target) {
+            if (nana::label::command::click == cmd)
+                hide();
+        };
+        
+        place["msg_"] << msg_
+                .text_align(nana::align::left)
+                .transparent(true);
+        
+        place["close_"] << close_
+                .text_align(nana::align::right)
+                .add_format_listener(listener)
+                .format(true)
+                .transparent(true);
+        
+        close_.fgcolor(colors.close_fg);
+        
+        place.collocate();
+        
+        // initially hidden
+        hide();
+    }
+    
+    void $show(const std::string& msg, Msg type = ui::Msg::$ERROR)
+    {
+        msg_.caption(msg);
+        
+        switch (type)
+        {
+            case ui::Msg::$SUCCESS:
+                msg_.fgcolor(colors.success_fg);
+                bgcolor(colors.success_bg);
+                break;
+            case ui::Msg::$ERROR:
+                msg_.fgcolor(colors.error_fg);
+                bgcolor(colors.error_bg);
+                break;
+            case ui::Msg::$WARNING:
+                msg_.fgcolor(colors.warning_fg);
+                bgcolor(colors.warning_bg);
+                break;
+        }
+        
+        show();
+    }
+};
+
 template <typename T, typename W>
 struct List : Panel
 {
@@ -145,9 +204,14 @@ private:
     int selected_idx{ -1 };
     
 public:    
-    List(nana::widget& owner, const char* layout = nullptr, unsigned selected_bg = 0xF3F3F3, int pageSize = 10):
+    List(nana::widget& owner, const char* layout = nullptr, unsigned selected_bg = 0xF3F3F3):
         Panel(owner, layout ? layout : "margin=[5,0] <items_ vert>"),
         selected_bg(nana::color_rgb(selected_bg))
+    {
+        
+    }
+    
+    void collocate(int pageSize = 10)
     {
         for (int i = 0; i < pageSize; i++)
         {
@@ -164,10 +228,26 @@ public:
         return array.size();
     }
     
-    bool select(int idx)
+    void populate(int idx, T* pojo)
+    {
+        array[idx]->update(pojo);
+    }
+    
+    bool trySelect(int idx)
     {
         int prev_idx = selected_idx;
-        if (idx == prev_idx || idx < 0 || idx >= array.size())
+        if (idx == prev_idx)
+            return false;
+        
+        if (idx == -1)
+        {
+            // deselect
+            selected_idx = idx;
+            array[prev_idx]->bgcolor(nana::colors::white);
+            return true;
+        }
+        
+        if (idx < 0 || idx >= array.size())
             return false;
         
         selected_idx = idx;
