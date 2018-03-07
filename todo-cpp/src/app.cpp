@@ -1038,7 +1038,10 @@ private:
                 msg += "Could not connect to ";
                 msg += req_host;
                 
-                about.pager_.msg_.$show(msg);
+                if (place.field_display("about_"))
+                    about.pager_.msg_.$show(msg);
+                else
+                    home.show(msg);
             }
             
             loop->loop(RECONNECT_INTERVAL);
