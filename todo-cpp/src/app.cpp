@@ -695,6 +695,7 @@ struct App : rpc::Base
     About about{ content_, "content_2", false };
     
     std::forward_list<nana::label> links;
+    std::vector<nana::label*> link_array;
     std::string current_target{ "content_0" };
     int current_selected{ 0 };
     
@@ -718,6 +719,9 @@ private:
         int selected = target.back() - 48;
         if (selected == current_selected)
             return;
+        
+        link_array[current_selected]->bgcolor(nana::colors::white);
+        link_array[selected]->bgcolor(nana::color_rgb(0xF3F3F3));
         
         // hide current
         content_.place.field_display(current_target.c_str(), false);
@@ -837,13 +841,18 @@ public:
         for (auto text : LINKS)
         {
             links.emplace_front(fm.handle());
+            link_array.push_back(&links.front());
             
             place["header_"] << links.front()
                 .text_align(nana::align::center)
                 .format(true)
                 .add_format_listener(listener)
                 .caption(text);
+            
+            links.front().bgcolor(nana::colors::white);
         }
+        
+        link_array[0]->bgcolor(nana::color_rgb(0xF3F3F3));
         
         place["content_"] << content_;
         
