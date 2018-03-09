@@ -18,7 +18,6 @@
 #include "../g/user/fbs_schema.h"
 #include "../g/user/index_generated.h"
 
-namespace util = coreds::util;
 namespace rpc = coreds::rpc;
 
 struct Request
@@ -161,7 +160,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         
         std::string timeago;
         timeago.reserve(16); // just moments ago
-        util::appendTimeagoTo(timeago, pojo->ts);
+        coreds::util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
         
         pnl_.show();
@@ -850,7 +849,7 @@ struct TodoItemPanel : ui::BgPanel
         
         std::string timeago;
         timeago.reserve(16); // just moments ago
-        util::appendTimeagoTo(timeago, pojo->ts);
+        coreds::util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
         
         show();
