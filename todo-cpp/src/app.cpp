@@ -659,9 +659,9 @@ struct About : ui::Panel
 };
 
 static const char* LINKS[] = {
-    "<color=0x0080FF size=11 target=\"content_0\">Home</>",
-    "<color=0x0080FF size=11 target=\"content_1\">Todos</>",
-    "<color=0x0080FF size=11 target=\"content_2\">About</>"
+    "<color=0x0080FF size=11 target=\"content_0\">    Home    </>",
+    "<color=0x0080FF size=11 target=\"content_1\">    Todos    </>",
+    "<color=0x0080FF size=11 target=\"content_2\">    About    </>"
 };
 
 static const int IDLE_INTERVAL = 10000,
