@@ -63,12 +63,12 @@ public:
             store.fetchUpdate();
         };
         
+        place["sort_"] << sort_;
         sort_.on_.events().click($sort);
         sort_.off_.events().click($sort);
-        place["sort_"] << sort_;
         
-        refresh_.events().click($refresh);
         place["refresh_"] << refresh_;
+        refresh_.events().click($refresh);
         
         place["msg_"] << msg_;
         
