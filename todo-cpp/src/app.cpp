@@ -17,7 +17,6 @@
 #include "app.h"
 
 #include "../g/user/fbs_schema.h"
-#include "../g/user/index_generated.h"
 
 #include "user/index.h"
 #include "exp.h"
