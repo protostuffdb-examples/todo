@@ -798,7 +798,7 @@ private:
                 msg += req_host;
                 
                 if (place.field_display("about_"))
-                    about.pager_.msg_.$show(msg);
+                    about.pager_.msg_.update(msg);
                 else
                     home.show(msg);
             }

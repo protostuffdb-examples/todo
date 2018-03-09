@@ -203,7 +203,7 @@ struct MsgPanel : BgPanel
         hide();
     }
     
-    void $show(const std::string& msg, Msg type = ui::Msg::$ERROR)
+    void update(const std::string& msg, Msg type = ui::Msg::$ERROR)
     {
         msg_.caption(msg);
         
