@@ -53,19 +53,18 @@ public:
     TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
         "vert margin=[5,0]"
         "<weight=40"
-          "<page_info_ weight=160>"
           "<msg_>"
-          "<sort_ weight=25>"
-          "<weight=5>"
-          "<refresh_ weight=25>"
+          "<sort_ weight=20>"
           "<weight=15>"
-          "<goto_first_ weight=25>"
-          "<weight=5>"
-          "<goto_left_ weight=25>"
-          "<weight=5>"
-          "<goto_right_ weight=25>"
-          "<weight=5>"
-          "<goto_last_ weight=25>"
+          "<refresh_ weight=20>"
+          "<page_info_ weight=160>"
+          "<goto_first_ weight=20>"
+          "<weight=10>"
+          "<goto_left_ weight=20>"
+          "<weight=10>"
+          "<goto_right_ weight=20>"
+          "<weight=10>"
+          "<goto_last_ weight=20>"
         ">"
         "<items_ vert>"
     )
@@ -88,7 +87,7 @@ public:
         };
         
         place["page_info_"] << page_info_
-                .text_align(nana::align::left);
+                .text_align(nana::align::center);
         
         place["msg_"] << msg_;
         
