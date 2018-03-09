@@ -31,7 +31,6 @@ struct About : ui::Panel
     About(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
         "vert"
         "<text_ weight=25>"
-        "<pager_>"
     )
     {
         place["text_"] << text_;
