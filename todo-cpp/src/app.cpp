@@ -658,7 +658,8 @@ struct About : ui::Panel
 
 static const char* LINKS[] = {
     "<color=0x0080FF size=11 target=\"content_0\">Home</>",
-    "<color=0x0080FF size=11 target=\"content_1\">About</>"
+    "<color=0x0080FF size=11 target=\"content_1\">Todos</>",
+    "<color=0x0080FF size=11 target=\"content_2\">About</>"
 };
 
 static const int IDLE_INTERVAL = 10000,
@@ -687,9 +688,11 @@ struct App : rpc::Base
         "vert"
         "<content_0>"
         "<content_1>"
+        "<content_2>"
     };
     Home home{ content_, "content_0" };
-    todo::user::Index about{ content_, "content_1", false };
+    todo::user::Index todos{ content_, "content_1", false };
+    About about{ content_, "content_2", false };
     
     std::forward_list<nana::label> links;
     std::string current_target{ "content_0" };
@@ -753,8 +756,8 @@ private:
         if (!home.fetched_initial)
             home.store.fetchNewer();
         
-        if (!about.pager_.fetched_initial)
-            about.pager_.store.fetchNewer();
+        if (!todos.pager_.fetched_initial)
+            todos.pager_.store.fetchNewer();
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
@@ -797,8 +800,8 @@ private:
                 msg += "Could not connect to ";
                 msg += req_host;
                 
-                if (place.field_display("about_"))
-                    about.pager_.msg_.update(msg);
+                if (todos.visible())
+                    todos.pager_.msg_.update(msg);
                 else
                     home.show(msg);
             }
@@ -823,7 +826,7 @@ public:
     void show(coreds::Opts opts)
     {
         home.init(opts, rq);
-        about.pager_.init(opts, rq);
+        todos.pager_.init(opts, rq);
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
