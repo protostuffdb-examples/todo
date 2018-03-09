@@ -718,7 +718,7 @@ struct App : rpc::Base
 private:
     void links$$(const std::string& target)
     {
-        int selected = target.back() - 48;
+        int selected = std::atoi(target.c_str() + 8); // exclude the prefix: content_
         if (selected == current_selected)
             return;
         
@@ -730,7 +730,7 @@ private:
         
         // set current
         current_selected = selected;
-        current_target[current_target.size() - 1] = target.back();
+        current_target.assign(target);
         
         // show
         content_.place.field_display(target.c_str(), true);
