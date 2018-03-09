@@ -29,8 +29,6 @@ struct TodoItemPanel;
 
 struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
 {
-    bool fetched_initial{ false };
-    
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
     ui::ToggleIcon sort_{ *this, "assets/png/arrow-down.png", "assets/png/arrow-up.png" };
@@ -140,7 +138,6 @@ public:
         else
         {
             store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
-            fetched_initial = true;
         }
     }
     void init(coreds::Opts opts, util::RequestQueue& rq)

@@ -23,24 +23,33 @@
 
 namespace rpc = coreds::rpc;
 
-struct About : ui::Panel
+struct About : ui::Panel, util::HasState<bool>
 {
     nana::label text_{ *this, "about" };
     
-    About(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
+    About(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
+            const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
         "<text_ weight=25>"
     )
     {
+        container.push_back(this);
+        
         place["text_"] << text_;
         
         place.collocate();
         
         owner.place[field] << *this;
-        if (!display)
-            owner.place.field_display(field, false);
+        owner.place.field_display(field, active);
+    }
+    void update(bool on) override
+    {
+        
     }
 };
+
+static const int IDLE_INTERVAL = 10000,
+        RECONNECT_INTERVAL = 5000;
 
 static const char* LINKS[] = {
     "<color=0x0080FF size=12 target=\"content_0\">    Home    </>",
@@ -48,17 +57,8 @@ static const char* LINKS[] = {
     "<color=0x0080FF size=12 target=\"content_2\">    About    </>"
 };
 
-static const int IDLE_INTERVAL = 10000,
-        RECONNECT_INTERVAL = 5000;
-
 struct App : rpc::Base
 {
-    util::RequestQueue rq;
-    std::string buf;
-    std::function<void()> $send{
-        std::bind(&App::send, this)
-    };
-    
     ui::Form fm{ {273, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0xFFFFFF };
     
     ui::Place place{ fm, 
@@ -76,17 +76,24 @@ struct App : rpc::Base
         "<content_1>"
         "<content_2>"
     };
-    Home home{ content_, "content_0" };
-    todo::user::Index todos{ content_, "content_1", false };
-    About about{ content_, "content_2", false };
+    std::vector<util::HasState<bool>*> content_array;
+    Home home{ content_, content_array, "content_0", true };
+    todo::user::Index todos{ content_, content_array, "content_1" };
+    About about{ content_, content_array, "content_2" };
     
-    std::forward_list<nana::label> links;
     std::vector<nana::label*> link_array;
+    std::forward_list<nana::label> links;
     std::string current_target{ "content_0" };
     int current_selected{ 0 };
     
     brynet::net::EventLoop::PTR loop{ nullptr };
     brynet::net::HttpSession::PTR session{ nullptr };
+    
+    util::RequestQueue rq;
+    std::string buf;
+    std::function<void()> $send{
+        std::bind(&App::send, this)
+    };
     
     //int disconnect_count{ 0 };
     
@@ -111,6 +118,7 @@ private:
         
         // hide current
         content_.place.field_display(current_target.c_str(), false);
+        content_array[current_selected]->update(false);
         
         // set current
         current_selected = selected;
@@ -119,6 +127,7 @@ private:
         // show
         content_.place.field_display(target.c_str(), true);
         content_.place.collocate();
+        content_array[selected]->update(true);
     }
     
     void onHttpData(const brynet::net::HTTPParser& httpParser,
@@ -138,16 +147,7 @@ private:
         this->session = session;
         
         if (!rq.queue.empty())
-        {
             send();
-            return;
-        }
-        
-        if (!home.fetched_initial)
-            home.store.fetchNewer();
-        
-        if (!todos.pager_.fetched_initial)
-            todos.pager_.store.fetchNewer();
     }
     
     void onHttpClose(const brynet::net::HttpSession::PTR& session) override
@@ -160,7 +160,13 @@ private:
     void onLoop(const brynet::net::EventLoop::PTR& loop) override
     {
         if (this->loop == nullptr)
+        {
             this->loop = loop;
+            
+            nana::internal_scope_guard lock;
+            link_array[current_selected]->bgcolor(nana::color_rgb(0xF3F3F3));
+            content_array[current_selected]->update(true);
+        }
         
         if (isConnected())
         {
@@ -213,6 +219,7 @@ public:
         for (auto text : LINKS)
         {
             links.emplace_front(fm.handle());
+            
             link_array.push_back(&links.front());
             
             place["header_"] << links.front()
@@ -223,8 +230,6 @@ public:
             
             links.front().bgcolor(nana::colors::white);
         }
-        
-        link_array[0]->bgcolor(nana::color_rgb(0xF3F3F3));
         
         /*
         nana::drawing dw(*link_array[0]);

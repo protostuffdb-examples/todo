@@ -153,10 +153,8 @@ static const std::string SORT_TOGGLE[] = {
     " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
 
-struct Home : ui::Panel
+struct Home : ui::Panel, util::HasState<bool>
 {
-    bool fetched_initial{ false };
-    
     TodoStore store;
 private:
     std::function<void(void* res)> $onResponse{
@@ -214,7 +212,8 @@ private:
     int item_offset;
     
 public:
-    Home(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner,
+    Home(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
+            const char* field, bool active = false) : ui::Panel(owner,
         "vert"
         "<horizontal weight=25"
           "<search_ weight=200>"
@@ -228,6 +227,7 @@ public:
         "<list_>"
     )
     {
+        container.push_back(this);
         place["search_"] << search_.tip_string("Todo");
         
         // ctrls
@@ -294,8 +294,22 @@ public:
         place.field_visible("list_", false);
         
         owner.place[field] << *this;
-        if (!display)
-            owner.place.field_display(field, false);
+        owner.place.field_display(field, active);
+    }
+    void update(bool on) override
+    {
+        if (!on)
+        {
+            // noop
+        }
+        else if (0 == store.size())
+        {
+            store.fetchNewer();
+        }
+        else
+        {
+            store.fetchUpdate();
+        }
     }
     void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
     {
@@ -487,7 +501,6 @@ private:
         else
         {
             store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
-            fetched_initial = true;
         }
     }
 public:

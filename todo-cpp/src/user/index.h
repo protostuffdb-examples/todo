@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../util.h"
 #include "../ui.h"
 
 #include "todo.h"
@@ -7,22 +8,39 @@
 namespace todo {
 namespace user {
 
-struct Index : ui::Panel
+struct Index : ui::Panel, util::HasState<bool>
 {
     todo::TodoPager pager_{ *this };
     
-    Index(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
+    Index(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
+        const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
         "<pager_>"
     )
     {
+        container.push_back(this);
+        
         place["pager_"] << pager_;
         
         place.collocate();
         
         owner.place[field] << *this;
-        if (!display)
-            owner.place.field_display(field, false);
+        owner.place.field_display(field, active);
+    }
+    void update(bool on) override
+    {
+        if (!on)
+        {
+            // noop
+        }
+        else if (0 == pager_.store.size())
+        {
+            pager_.store.fetchNewer();
+        }
+        else
+        {
+            pager_.store.fetchUpdate();
+        }
     }
 };
 

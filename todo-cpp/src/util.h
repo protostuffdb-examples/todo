@@ -36,4 +36,10 @@ struct RequestQueue
     std::function<void()> send;
 };
 
+template <typename T>
+struct HasState
+{
+    virtual void update(T state) = 0;
+};
+
 } // util
