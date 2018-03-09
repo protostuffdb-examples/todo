@@ -40,6 +40,11 @@ private:
     nana::label page_info_{ *this, "" };
     std::string page_str;
     
+    ui::Icon goto_first_{ *this, "assets/png/angle-double-left.png", true };
+    ui::Icon goto_left_{ *this, "assets/png/angle-left.png", true };
+    ui::Icon goto_right_{ *this, "assets/png/angle-right.png", true };
+    ui::Icon goto_last_{ *this, "assets/png/angle-double-right.png", true };
+    
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
     };
@@ -48,20 +53,44 @@ public:
     TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
         "vert margin=[5,0]"
         "<weight=40"
-          "<sort_ weight=25>"
-          "<refresh_ weight=25>"
-          "<msg_>"
           "<page_info_ weight=160>"
+          "<msg_>"
+          "<sort_ weight=25>"
+          "<weight=5>"
+          "<refresh_ weight=25>"
+          "<weight=15>"
+          "<goto_first_ weight=25>"
+          "<weight=5>"
+          "<goto_left_ weight=25>"
+          "<weight=5>"
+          "<goto_right_ weight=25>"
+          "<weight=5>"
+          "<goto_last_ weight=25>"
         ">"
         "<items_ vert>"
     )
     {
-        auto $sort = [this]() {
-            store.toggleDesc();
+        auto $sort = [this]() { store.toggleDesc(); };
+        auto $refresh = [this]() { store.fetchUpdate(); };
+        auto $first = [this]() { store.pageTo(0); };
+        auto $last = [this]() { store.pageTo(store.getPageCount()); };
+        auto $left = [this]() {
+            if (0 != store.getPage())
+                store.pageTo(store.getPage() - 1);
+            else
+                store.fetchNewer();
         };
-        auto $refresh = [this]() {
-            store.fetchUpdate();
+        auto $right = [this]() {
+            if (store.getPageCount() != store.getPage())
+                store.pageTo(store.getPage() + 1);
+            else
+                store.fetchOlder();
         };
+        
+        place["page_info_"] << page_info_
+                .text_align(nana::align::left);
+        
+        place["msg_"] << msg_;
         
         place["sort_"] << sort_;
         sort_.on_.events().click($sort);
@@ -70,10 +99,17 @@ public:
         place["refresh_"] << refresh_;
         refresh_.events().click($refresh);
         
-        place["msg_"] << msg_;
+        place["goto_first_"] << goto_first_;
+        goto_first_.events().click($first);
         
-        place["page_info_"] << page_info_
-                .text_align(nana::align::right);
+        place["goto_left_"] << goto_left_;
+        goto_left_.events().click($left);
+        
+        place["goto_right_"] << goto_right_;
+        goto_right_.events().click($right);
+        
+        place["goto_last_"] << goto_last_;
+        goto_last_.events().click($last);
     }
     void beforePopulate() override
     {
