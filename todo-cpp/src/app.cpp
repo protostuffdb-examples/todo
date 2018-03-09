@@ -659,9 +659,9 @@ struct About : ui::Panel
 };
 
 static const char* LINKS[] = {
-    "<color=0x0080FF size=11 target=\"content_0\">    Home    </>",
-    "<color=0x0080FF size=11 target=\"content_1\">    Todos    </>",
-    "<color=0x0080FF size=11 target=\"content_2\">    About    </>"
+    "<color=0x0080FF size=12 target=\"content_0\">    Home    </>",
+    "<color=0x0080FF size=12 target=\"content_1\">    Todos    </>",
+    "<color=0x0080FF size=12 target=\"content_2\">    About    </>"
 };
 
 static const int IDLE_INTERVAL = 10000,
@@ -680,7 +680,7 @@ struct App : rpc::Base
     ui::Place place{ fm, 
         "vert margin=5"
         "<header_ weight=20 margin=[0,30%]>"
-        "<content_>"
+        "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
     };
     
