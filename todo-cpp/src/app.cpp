@@ -854,6 +854,13 @@ public:
         
         link_array[0]->bgcolor(nana::color_rgb(0xF3F3F3));
         
+        /*
+        nana::drawing dw(*link_array[0]);
+        dw.draw([](nana::paint::graphics& graph) {
+            graph.rectangle(false, nana::colors::gray_border);
+        });
+        */
+        
         place["content_"] << content_;
         
         place["footer_"] << footer_.text_align(nana::align::center).format(true);
