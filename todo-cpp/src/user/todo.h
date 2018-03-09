@@ -52,7 +52,7 @@ private:
 public:
     TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
         "vert margin=[5,0]"
-        "<weight=40"
+        "<weight=25"
           "<msg_>"
           "<sort_ weight=20>"
           "<weight=15>"
