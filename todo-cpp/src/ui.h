@@ -110,6 +110,30 @@ struct Panel : nana::panel<false>
     }
 };
 
+struct ToggleIcon : Panel
+{
+    Icon on_;
+    Icon off_;
+    
+    ToggleIcon(nana::widget& owner, const char* icon_on, const char* icon_off):
+        Panel(owner, "<on_><off_>"),
+        on_(*this, icon_on, true),
+        off_(*this, icon_off, true)
+    {
+        place["on_"] << on_;
+        place["off_"] << off_;
+        place.collocate();
+        place.field_display("off_", false);
+    }
+    
+    void update(bool on)
+    {
+        place.field_display("on_", on);
+        place.field_display("off_", !on);
+        place.collocate();
+    }
+};
+
 struct DeferredPanel : nana::panel<false>
 {
     const char* const layout;

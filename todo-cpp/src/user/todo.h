@@ -33,7 +33,7 @@ struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
     
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
-    //nana::label sort_{ *this, SORT_TOGGLE[0] };
+    ui::ToggleIcon sort_{ *this, "assets/png/arrow-down.png", "assets/png/arrow-up.png" };
     
     nana::label page_info_{ *this, "" };
     std::string page_str;
@@ -46,17 +46,20 @@ public:
     TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
         "vert margin=[5,0]"
         "<weight=40"
-          //"<sort_ weight=40>"
+          "<sort_ weight=16>"
           "<msg_>"
           "<page_info_ weight=160>"
         ">"
         "<items_ vert>"
     )
     {
-        //place["sort_"] << sort_
-        //        .text_align(nana::align::center)
-        //        .add_format_listener($onLabelEvent)
-        //        .format(true);
+        auto $sort = [this]() {
+            store.toggleDesc();
+        };
+        
+        sort_.on_.events().click($sort);
+        sort_.off_.events().click($sort);
+        place["sort_"] << sort_;
         
         place["msg_"] << msg_;
         
@@ -121,7 +124,7 @@ public:
                 case coreds::EventType::DESC:
                 {
                     nana::internal_scope_guard lock;
-                    //sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
+                    sort_.update(on);
                     break;
                 }
                 case coreds::EventType::LOADING:
