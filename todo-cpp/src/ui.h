@@ -49,6 +49,15 @@ struct MsgColors
     {
         
     }
+    
+    static const MsgColors DEFAULT;
+};
+
+const MsgColors MsgColors::DEFAULT {
+    0x52A954, 0xDEFCD5,
+    0xA95252, 0xF1D7D7,
+    0x96904D, 0xF6F3D5,
+    0x777777
 };
 
 // not in the widget api

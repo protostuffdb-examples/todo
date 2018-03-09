@@ -19,7 +19,11 @@
 #include "../g/user/fbs_schema.h"
 #include "../g/user/index_generated.h"
 
+#include "user/index.h"
+
 namespace rpc = coreds::rpc;
+
+using Todo = todo::Todo;
 
 static void printTodos(void* flatbuf)
 {
@@ -58,24 +62,6 @@ static const int MARGIN = 5,
         LB_INNER = MARGIN * 3 * LB_FIELDS,
         COMPLETED_WIDTH = 20,
         TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
-
-struct Todo// : brynet::NonCopyable
-{
-    std::string key;
-    uint64_t ts;
-    
-    std::string title;
-    bool completed;
-    
-    Todo(const todo::user::Todo* src):
-        key(src->key()->str()),
-        ts(src->ts()),
-        title(src->title()->str()),
-        completed(src->completed())
-    {
-        
-    }
-};
 
 // hack
 struct TodoItem;
@@ -192,13 +178,6 @@ static const std::string SORT_TOGGLE[] = {
     " <color=0x0080FF size=11 target=\"1\"> asc </>",
 };
 
-static const ui::MsgColors MSG_COLORS {
-    0x52A954, 0xDEFCD5,
-    0xA95252, 0xF1D7D7,
-    0x96904D, 0xF6F3D5,
-    0x777777
-};
-
 struct Home : ui::Panel
 {
     bool fetched_initial{ false };
@@ -306,7 +285,7 @@ public:
                 .add_format_listener($onLabelEvent)
                 .format(true)
                 .transparent(true);
-        msg_close_.fgcolor(MSG_COLORS.close_fg);
+        msg_close_.fgcolor(ui::MsgColors::DEFAULT.close_fg);
         
         msg_panel_.place.collocate();
         
@@ -350,16 +329,16 @@ public:
         switch (type)
         {
             case ui::Msg::$SUCCESS:
-                msg_.fgcolor(MSG_COLORS.success_fg);
-                msg_panel_.bgcolor(MSG_COLORS.success_bg);
+                msg_.fgcolor(ui::MsgColors::DEFAULT.success_fg);
+                msg_panel_.bgcolor(ui::MsgColors::DEFAULT.success_bg);
                 break;
             case ui::Msg::$ERROR:
-                msg_.fgcolor(MSG_COLORS.error_fg);
-                msg_panel_.bgcolor(MSG_COLORS.error_bg);
+                msg_.fgcolor(ui::MsgColors::DEFAULT.error_fg);
+                msg_panel_.bgcolor(ui::MsgColors::DEFAULT.error_bg);
                 break;
             case ui::Msg::$WARNING:
-                msg_.fgcolor(MSG_COLORS.warning_fg);
-                msg_panel_.bgcolor(MSG_COLORS.warning_bg);
+                msg_.fgcolor(ui::MsgColors::DEFAULT.warning_fg);
+                msg_panel_.bgcolor(ui::MsgColors::DEFAULT.warning_bg);
                 break;
         }
         
@@ -535,7 +514,7 @@ private:
         }
     }
 public:
-    void init(coreds::Opts opts, RequestQueue& rq)
+    void init(coreds::Opts opts, util::RequestQueue& rq)
     {
         store.init(opts);
         store.$fnKey = [](const Todo& pojo) {
@@ -637,200 +616,6 @@ public:
     }*/
 };
 
-struct TodoItemPanel;
-
-struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
-{
-    bool fetched_initial{ false };
-    
-    ui::MsgPanel msg_ { *this, MSG_COLORS };
-private:
-    nana::label sort_{ *this, SORT_TOGGLE[0] };
-    
-    nana::label page_info_{ *this, "" };
-    std::string page_str;
-    
-    std::function<void(void* res)> $onResponse{
-        std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
-    };
-    
-public:
-    TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
-        "vert margin=[5,0]"
-        "<weight=40"
-          "<sort_ weight=40>"
-          "<msg_>"
-          "<page_info_ weight=160>"
-        ">"
-        "<items_ vert>"
-    )
-    {
-        place["sort_"] << sort_
-                .text_align(nana::align::center)
-                .add_format_listener($onLabelEvent)
-                .format(true);
-        
-        place["msg_"] << msg_;
-        
-        place["page_info_"] << page_info_
-                .text_align(nana::align::right);
-    }
-    void beforePopulate() override
-    {
-        ui::visible(*this, false);
-    }
-    void afterPopulate(int selectedIdx) override
-    {
-        select(selectedIdx);
-        
-        page_str.clear();
-        store.appendPageInfoTo(page_str);
-        page_info_.caption(page_str);
-        
-        ui::visible(*this, true);
-    }
-    void afterPopulate()
-    {
-        afterPopulate(store.getSelectedIdx());
-    }
-    void onResponse(void* res)
-    {
-        if (res == nullptr)
-        {
-            store.cbFetchFailed();
-        }
-        else
-        {
-            store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
-            fetched_initial = true;
-        }
-    }
-    void init(coreds::Opts opts, RequestQueue& rq)
-    {
-        store.init(opts);
-        store.$fnKey = [](const Todo& pojo) {
-            return pojo.key.c_str();
-        };
-        store.$fnKeyFB = [](const todo::user::Todo* message) {
-            return message->key()->c_str();
-        };
-        store.$fnUpdate = [](Todo& pojo, const todo::user::Todo* message) {
-            message->title()->assign_to(pojo.title);
-            pojo.completed = message->completed();
-        };
-        store.$fnPopulate = [this](int idx, Todo* pojo) {
-            populate(idx, pojo);
-        };
-        store.$fnCall = [this](std::function<void()> op) {
-            nana::internal_scope_guard lock;
-            beforePopulate();
-            op();
-            afterPopulate();
-        };
-        store.$fnEvent = [this](coreds::EventType type, bool on) {
-            switch (type)
-            {
-                case coreds::EventType::DESC:
-                {
-                    nana::internal_scope_guard lock;
-                    sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
-                    break;
-                }
-                case coreds::EventType::LOADING:
-                    // hide errmsg when loading
-                    if (on)
-                    {
-                        nana::internal_scope_guard lock;
-                        ui::visible(msg_, false);
-                    }
-                    break;
-                case coreds::EventType::VISIBLE:
-                {
-                    nana::internal_scope_guard lock;
-                    if (on)
-                        select(store.getSelectedIdx());
-                    
-                    page_str.clear();
-                    store.appendPageInfoTo(page_str);
-                    page_info_.caption(page_str);
-                    
-                    ui::visible(*this, on);
-                    break;
-                }
-            }
-        };
-        store.$fnFetch = [this, &rq](coreds::ParamRangeKey prk) {
-            std::string buf;
-            prk.stringifyTo(buf);
-            
-            rq.queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $onResponse);
-            rq.send();
-            return true;
-        };
-        
-        collocate(opts.pageSize);
-        
-        //store.fetchNewer();
-    }
-};
-
-struct TodoItemPanel : ui::BgPanel
-{
-    TodoPager& pager;
-    const int idx;
-    nana::label title_{ *this, "" };
-    nana::label ts_{ *this, "" };
-    
-    Todo* pojo{ nullptr };
-    
-    TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
-        "margin=[5,10]"
-        "<title_>"
-        "<ts_>"
-        ),
-        pager(static_cast<TodoPager&>(owner)),
-        idx(pager.size())
-    {
-        auto $selected = [this]() {
-            pager.select(idx);
-        };
-        
-        place["title_"] << title_
-            .text_align(nana::align::left)
-            .transparent(true);
-        title_.events().click($selected);
-        title_.events().key_press(pager.$navigate);
-        
-        place["ts_"] << ts_
-            .text_align(nana::align::right)
-            .transparent(true);
-        ts_.events().click($selected);
-        ts_.events().key_press(pager.$navigate);
-        
-        place.collocate();
-        hide();
-    }
-    
-    void update(Todo* message)
-    {
-        pojo = message;
-        if (message == nullptr)
-        {
-            hide();
-            return;
-        }
-        
-        title_.caption(pojo->title);
-        
-        std::string timeago;
-        timeago.reserve(16); // just moments ago
-        coreds::util::appendTimeagoTo(timeago, pojo->ts);
-        ts_.caption(timeago);
-        
-        show();
-    }
-};
-
 struct About : ui::Panel
 {
     nana::label text_{ *this, "about" };
@@ -842,7 +627,7 @@ struct About : ui::Panel
     };
     nana::label hello_{ pnl_, "hello" };
     nana::label world_{ pnl_, "world" };*/
-    TodoPager pager_{ *this };
+    //TodoPager pager_{ *this };
     
     About(ui::Panel& owner, const char* field, const bool display = true) : ui::Panel(owner, 
         "vert"
@@ -861,7 +646,7 @@ struct About : ui::Panel
         
         place["pnl_"] << pnl_;*/
         
-        place["pager_"] << pager_;
+        //place["pager_"] << pager_;
         
         place.collocate();
         
@@ -881,7 +666,7 @@ static const int IDLE_INTERVAL = 10000,
 
 struct App : rpc::Base
 {
-    RequestQueue rq;
+    util::RequestQueue rq;
     std::string buf;
     std::function<void()> $send{
         std::bind(&App::send, this)
@@ -904,7 +689,7 @@ struct App : rpc::Base
         "<content_1>"
     };
     Home home{ content_, "content_0" };
-    About about{ content_, "content_1", false };
+    todo::user::Index about{ content_, "content_1", false };
     
     std::forward_list<nana::label> links;
     std::string current_target{ "content_0" };

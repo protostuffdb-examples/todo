@@ -3,6 +3,9 @@ static_library("app") {
     "g/user/index_generated.h",
     "g/user/fbs_schema.h",
     
+    "src/user/todo.h",
+    "src/user/index.h",
+    
     "src/util.h",
     "src/ui.h",
     "src/pager.h",
