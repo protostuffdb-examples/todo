@@ -298,18 +298,8 @@ public:
     }
     void update(bool on) override
     {
-        if (!on)
-        {
-            // noop
-        }
-        else if (0 == store.size())
-        {
-            store.fetchNewer();
-        }
-        else
-        {
+        if (on)
             store.fetchUpdate();
-        }
     }
     void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)
     {

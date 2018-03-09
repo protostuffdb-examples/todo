@@ -29,18 +29,8 @@ struct Index : ui::Panel, util::HasState<bool>
     }
     void update(bool on) override
     {
-        if (!on)
-        {
-            // noop
-        }
-        else if (0 == pager_.store.size())
-        {
-            pager_.store.fetchNewer();
-        }
-        else
-        {
+        if (on)
             pager_.store.fetchUpdate();
-        }
     }
 };
 
