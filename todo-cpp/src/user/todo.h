@@ -35,6 +35,8 @@ struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
 private:
     ui::ToggleIcon sort_{ *this, "assets/png/arrow-down.png", "assets/png/arrow-up.png" };
     
+    ui::Icon refresh_{ *this, "assets/png/cw.png", true };
+    
     nana::label page_info_{ *this, "" };
     std::string page_str;
     
@@ -46,7 +48,8 @@ public:
     TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
         "vert margin=[5,0]"
         "<weight=40"
-          "<sort_ weight=16>"
+          "<sort_ weight=25>"
+          "<refresh_ weight=25>"
           "<msg_>"
           "<page_info_ weight=160>"
         ">"
@@ -56,10 +59,16 @@ public:
         auto $sort = [this]() {
             store.toggleDesc();
         };
+        auto $refresh = [this]() {
+            store.fetchUpdate();
+        };
         
         sort_.on_.events().click($sort);
         sort_.off_.events().click($sort);
         place["sort_"] << sort_;
+        
+        refresh_.events().click($refresh);
+        place["refresh_"] << refresh_;
         
         place["msg_"] << msg_;
         
