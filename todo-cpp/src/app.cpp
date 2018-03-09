@@ -11,6 +11,7 @@
 #include <coreds/rpc.h>
 #include <coreds/pstore.h>
 
+#include "util.h"
 #include "ui.h"
 #include "pager.h"
 #include "app.h"
@@ -19,32 +20,6 @@
 #include "../g/user/index_generated.h"
 
 namespace rpc = coreds::rpc;
-
-struct Request
-{
-    const char* uri;
-    const std::string body;
-    const char* res_type;
-    std::string* errmsg;
-    std::function<void(void* res)> cb;
-    
-    Request(const char* uri, const std::string body,
-            const char* res_type, std::string* errmsg, std::function<void(void* res)> cb):
-        uri(uri),
-        body(body),
-        res_type(res_type),
-        errmsg(errmsg),
-        cb(cb)
-    {
-        
-    }
-};
-
-struct RequestQueue
-{
-    std::queue<Request> queue;
-    std::function<void()> send;
-};
 
 static void printTodos(void* flatbuf)
 {
