@@ -54,6 +54,7 @@ public:
         "vert margin=[5,0]"
         "<weight=25"
           "<msg_>"
+          "<weight=10>"
           "<sort_ weight=20>"
           "<weight=15>"
           "<refresh_ weight=20>"
@@ -132,7 +133,9 @@ public:
     {
         if (res == nullptr)
         {
+            nana::internal_scope_guard lock;
             store.cbFetchFailed();
+            msg_.update(store.errmsg);
         }
         else
         {

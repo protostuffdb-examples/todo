@@ -505,7 +505,9 @@ private:
     {
         if (res == nullptr)
         {
+            nana::internal_scope_guard lock;
             store.cbFetchFailed();
+            show(store.errmsg);
         }
         else
         {
