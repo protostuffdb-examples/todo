@@ -53,8 +53,8 @@ static const int IDLE_INTERVAL = 10000,
 
 static const char* LINKS[] = {
     "<color=0x0080FF size=12 target=\"content_0\">    Home    </>",
-    "<color=0x0080FF size=12 target=\"content_1\">    Todos    </>",
-    "<color=0x0080FF size=12 target=\"content_2\">    About    </>"
+    "<color=0x0080FF size=12 target=\"content_1\">    About    </>",
+    "<color=0x0080FF size=12 target=\"content_2\">    Exp    </>"
 };
 
 struct App : rpc::Base
@@ -77,9 +77,10 @@ struct App : rpc::Base
         "<content_2>"
     };
     std::vector<util::HasState<bool>*> content_array;
-    Home home{ content_, content_array, "content_0", true };
-    todo::user::Index todos{ content_, content_array, "content_1" };
-    About about{ content_, content_array, "content_2" };
+    todo::user::Index home{ content_, content_array, "content_0", true };
+    About about{ content_, content_array, "content_1" };
+    Home exp{ content_, content_array, "content_2" };
+    
     
     std::vector<nana::label*> link_array;
     std::forward_list<nana::label> links;
@@ -175,6 +176,7 @@ private:
         }
         else if (!connect())
         {
+            if (home.visible())
             {
                 std::string msg;
                 nana::internal_scope_guard lock;
@@ -182,10 +184,7 @@ private:
                 msg += "Could not connect to ";
                 msg += req_host;
                 
-                if (todos.visible())
-                    todos.pager_.msg_.update(msg);
-                else
-                    home.show(msg);
+                home.pager_.msg_.update(msg);
             }
             
             loop->loop(RECONNECT_INTERVAL);
@@ -207,8 +206,8 @@ private:
 public:
     void show(coreds::Opts opts)
     {
-        home.init(opts, rq);
-        todos.pager_.init(opts, rq);
+        home.pager_.init(opts, rq);
+        exp.init(opts, rq);
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {
