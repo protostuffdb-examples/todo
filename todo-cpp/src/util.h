@@ -2,6 +2,14 @@
 
 namespace util {
 
+const int MARGIN = 5,
+        #ifdef WIN32
+        HEIGHT = 750,
+        #else
+        HEIGHT = 710,
+        #endif
+        WIDTH = 1005;
+
 struct Request
 {
     const char* uri;
