@@ -51,13 +51,7 @@ static const char* LINKS[] = {
 };
 
 static const int IDLE_INTERVAL = 10000,
-        RECONNECT_INTERVAL = 5000,
-        #ifdef WIN32
-        HEIGHT = 750,
-        #else
-        HEIGHT = 710,
-        #endif
-        WIDTH = 1005;
+        RECONNECT_INTERVAL = 5000;
 
 struct App : rpc::Base
 {
