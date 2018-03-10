@@ -36,6 +36,20 @@ struct RequestQueue
     std::function<void()> send;
 };
 
+// {1: "CgAAAAAAAAMZ", 2: {1: [{1: 4, 2: false, 3: true}]}}
+void appendUpdateReqTo(std::string& buf, const char* key, int field, bool newVal)
+{
+    buf += R"({"1":")";
+    buf.append(key, 12);
+    buf += R"(","2":{"1":[{"1":)";
+    buf += std::to_string(field);
+    buf += R"(,"2":)";
+    buf += newVal ? "false" : "true";
+    buf += R"(,"3":)";
+    buf += !newVal ? "false" : "true";
+    buf += R"(}]}})";
+}
+
 template <typename T>
 struct HasState
 {

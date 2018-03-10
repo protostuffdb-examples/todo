@@ -29,6 +29,7 @@ struct TodoItemPanel;
 
 struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
 {
+    util::RequestQueue* rq{ nullptr };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
     ui::ToggleIcon sort_{ *this, "assets/png/arrow-down.png", "assets/png/arrow-up.png" };
@@ -46,7 +47,6 @@ private:
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
     };
-    
 public:
     TodoPager(nana::widget& owner) : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>(owner,
         "vert margin=[5,0]"
@@ -142,6 +142,8 @@ public:
     }
     void init(coreds::Opts opts, util::RequestQueue& rq)
     {
+        this->rq = &rq;
+        
         store.init(opts);
         store.$fnKey = [](const Todo& pojo) {
             return pojo.key.c_str();
@@ -219,6 +221,13 @@ struct TodoItemPanel : ui::BgPanel
     
     Todo* pojo{ nullptr };
     
+    std::function<void(void* res)> $onResponse{
+        std::bind(&TodoItemPanel::onResponse, this, std::placeholders::_1)
+    };
+    std::function<void()> $toggleCompleted{
+        std::bind(&TodoItemPanel::toggleCompleted, this)
+    };
+    
     TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
         "margin=[5,10]"
         "<title_>"
@@ -231,11 +240,6 @@ struct TodoItemPanel : ui::BgPanel
     {
         auto $selected = [this]() {
             pager.select(idx);
-        };
-        auto $completed = [this]() {
-            bool val = !pojo->completed;
-            pojo->completed = val;
-            completed_.update(val);
         };
         
         place["title_"] << title_
@@ -251,11 +255,33 @@ struct TodoItemPanel : ui::BgPanel
         ts_.events().key_press(pager.$navigate);
         
         place["completed_"] << completed_;
-        completed_.on_.events().click($completed);
-        completed_.off_.events().click($completed);
+        completed_.on_.events().click($toggleCompleted);
+        completed_.off_.events().click($toggleCompleted);
         
         place.collocate();
         hide();
+    }
+    
+    void toggleCompleted()
+    {
+        std::string buf;
+        util::appendUpdateReqTo(buf, pojo->key.c_str(), 4, !pojo->completed);
+        
+        pager.rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &pager.store.errmsg, $onResponse);
+        pager.rq->send();
+    }
+    
+    void onResponse(void* res)
+    {
+        nana::internal_scope_guard lock;
+        if (res == nullptr)
+        {
+            pager.msg_.update(pager.store.errmsg);
+        }
+        else
+        {
+            completed_.update((pojo->completed = !pojo->completed));
+        }
     }
     
     void update(Todo* message)
