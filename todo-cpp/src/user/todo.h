@@ -215,19 +215,27 @@ struct TodoItemPanel : ui::BgPanel
     const int idx;
     nana::label title_{ *this, "" };
     nana::label ts_{ *this, "" };
+    ui::ToggleIcon completed_ { *this, "assets/png/circle.png", "assets/png/circle-empty.png" };
     
     Todo* pojo{ nullptr };
     
     TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
         "margin=[5,10]"
         "<title_>"
-        "<ts_>"
+        "<ts_ weight=100>"
+        "<weight=10>"
+        "<completed_ weight=16>"
         ),
         pager(static_cast<TodoPager&>(owner)),
         idx(pager.size())
     {
         auto $selected = [this]() {
             pager.select(idx);
+        };
+        auto $completed = [this]() {
+            bool val = !pojo->completed;
+            pojo->completed = val;
+            completed_.update(val);
         };
         
         place["title_"] << title_
@@ -241,6 +249,10 @@ struct TodoItemPanel : ui::BgPanel
             .transparent(true);
         ts_.events().click($selected);
         ts_.events().key_press(pager.$navigate);
+        
+        place["completed_"] << completed_;
+        completed_.on_.events().click($completed);
+        completed_.off_.events().click($completed);
         
         place.collocate();
         hide();
@@ -261,6 +273,8 @@ struct TodoItemPanel : ui::BgPanel
         timeago.reserve(16); // just moments ago
         coreds::util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
+        
+        completed_.update(pojo->completed);
         
         show();
     }
