@@ -64,9 +64,9 @@ struct App : rpc::Base
     ui::Place place{ fm, 
         "vert margin=5"
         #ifdef WIN32
-        "<header_ weight=35 margin=[0,30%]>"
+        "<header_ weight=35 margin=[0,20%]>"
         #else
-        "<header_ weight=20 margin=[0,30%]>"
+        "<header_ weight=20 margin=[0,20%]>"
         #endif
         "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
