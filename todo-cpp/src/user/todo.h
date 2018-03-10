@@ -231,7 +231,7 @@ struct TodoItemPanel : ui::BgPanel
     TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
         "margin=[5,10]"
         "<title_>"
-        "<ts_ weight=100>"
+        "<ts_ weight=130>"
         "<weight=10>"
         "<completed_ weight=16>"
         ),
