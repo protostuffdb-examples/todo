@@ -9,6 +9,7 @@ static_library("app") {
     "src/exp.h",
     "src/util.h",
     "src/ui.h",
+    "src/icons.h",
     "src/pager.h",
     "src/app.h",
     "src/app.cpp",

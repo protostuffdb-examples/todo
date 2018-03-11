@@ -86,9 +86,9 @@ struct Place : nana::place
 
 struct Icon : nana::picture
 {
-    Icon(nana::widget& owner, const char* icon, bool cursor_hand = false) : nana::picture(owner)
+    Icon(nana::widget& owner, nana::paint::image icon, bool cursor_hand = false) : nana::picture(owner)
     {
-        load(nana::paint::image(icon));
+        load(icon);
         transparent(true);
         
         if (!cursor_hand)
@@ -97,6 +97,11 @@ struct Icon : nana::picture
         events().mouse_move([this](const nana::arg_mouse& arg) {
             cursor(nana::cursor::hand);
         });
+    }
+    Icon(nana::widget& owner, const char* icon, bool cursor_hand = false):
+        Icon(owner, nana::paint::image(icon), cursor_hand)
+    {
+        
     }
 };
 
@@ -115,7 +120,7 @@ struct ToggleIcon : Panel
     Icon on_;
     Icon off_;
     
-    ToggleIcon(nana::widget& owner, const char* icon_on, const char* icon_off):
+    ToggleIcon(nana::widget& owner, nana::paint::image icon_on, nana::paint::image icon_off):
         Panel(owner, "<on_><off_>"),
         on_(*this, icon_on, true),
         off_(*this, icon_off, true)
@@ -124,6 +129,11 @@ struct ToggleIcon : Panel
         place["off_"] << off_;
         place.collocate();
         place.field_display("off_", false);
+    }
+    ToggleIcon(nana::widget& owner, const char* icon_on, const char* icon_off):
+        ToggleIcon(owner, nana::paint::image(icon_on), nana::paint::image(icon_off))
+    {
+        
     }
     
     void update(bool on)

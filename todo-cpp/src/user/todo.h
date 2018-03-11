@@ -5,6 +5,8 @@
 #include "../util.h"
 #include "../pager.h"
 
+#include "../icons.h"
+
 namespace todo {
 
 struct Todo// : brynet::NonCopyable
@@ -32,17 +34,17 @@ struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
     util::RequestQueue* rq{ nullptr };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
-    ui::ToggleIcon sort_{ *this, "assets/png/arrow-down.png", "assets/png/arrow-up.png" };
+    ui::ToggleIcon sort_{ *this, icons::arrow_down, icons::arrow_up };
     
-    ui::Icon refresh_{ *this, "assets/png/cw.png", true };
+    ui::Icon refresh_{ *this, icons::cw, true };
     
     nana::label page_info_{ *this, "" };
     std::string page_str;
     
-    ui::Icon goto_first_{ *this, "assets/png/angle-double-left.png", true };
-    ui::Icon goto_left_{ *this, "assets/png/angle-left.png", true };
-    ui::Icon goto_right_{ *this, "assets/png/angle-right.png", true };
-    ui::Icon goto_last_{ *this, "assets/png/angle-double-right.png", true };
+    ui::Icon goto_first_{ *this, icons::angle_double_left, true };
+    ui::Icon goto_left_{ *this, icons::angle_left, true };
+    ui::Icon goto_right_{ *this, icons::angle_right, true };
+    ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
@@ -217,7 +219,7 @@ struct TodoItemPanel : ui::BgPanel
     const int idx;
     nana::label title_{ *this, "" };
     nana::label ts_{ *this, "" };
-    ui::ToggleIcon completed_ { *this, "assets/png/circle.png", "assets/png/circle-empty.png" };
+    ui::ToggleIcon completed_ { *this, icons::circle, icons::circle_empty };
     
     Todo* pojo{ nullptr };
     
