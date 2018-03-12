@@ -58,30 +58,19 @@ public:
         close_on_success(close_on_success),
         store(store_)
     {
-        place["title_"] << title_;
-        title_.tip_string("Title *");
+        place["title_"] << title_
+            .multi_lines(false)
+            .tip_string("Title *");
+        title_.events().key_press([this](const nana::arg_keyboard& arg) {
+            if (nana::keyboard::enter == arg.key)
+                submit();
+        });
         
         place["msg_"] << msg_;
         
         place["submit_"] << submit_;
         submit_.events().click([this] {
-            if (store.loading())
-                return;
-            
-            auto title = title_.caption();
-            if (title.empty())
-                return;
-            
-            auto lastSeen = store.front();
-            std::string buf;
-            util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
-            
-            rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $onResponse);
-            rq->send();
-            
-            title_.editable(false);
-            ui::visible(msg_, false);
-            store.loading(true);
+            submit();
         });
         
         place.collocate();
@@ -92,6 +81,26 @@ public:
         title_.focus();
     }
 private:
+    void submit()
+    {
+        if (store.loading())
+            return;
+        
+        auto title = title_.caption();
+        if (title.empty())
+            return;
+        
+        auto lastSeen = store.front();
+        std::string buf;
+        util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
+        
+        rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $onResponse);
+        rq->send();
+        
+        title_.editable(false);
+        ui::visible(msg_, false);
+        store.loading(true);
+    }
     void onResponse(void* res)
     {
         nana::internal_scope_guard lock;
