@@ -52,7 +52,7 @@ static bool LoadFile(const char *name, bool binary, std::string *buf, bool strip
     if (!ifs.is_open())
         return false;
     *buf = std::string(std::istreambuf_iterator<char>(ifs), std::istreambuf_iterator<char>());
-    if (stripWS)
+    if (stripWS && !buf->empty())
     {
         while (isSPCRLF(buf->back()))
             buf->pop_back();
