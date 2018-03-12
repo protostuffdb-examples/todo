@@ -10,8 +10,11 @@ const nana::paint::image angle_left("assets/png/angle-left.png");
 const nana::paint::image angle_right("assets/png/angle-right.png");
 const nana::paint::image angle_double_left("assets/png/angle-double-left.png");
 const nana::paint::image angle_double_right("assets/png/angle-double-right.png");
-const nana::paint::image cw("assets/png/cw.png");
+
 const nana::paint::image circle("assets/png/circle.png");
 const nana::paint::image circle_empty("assets/png/circle-empty.png");
+
+const nana::paint::image cw("assets/png/cw.png");
+const nana::paint::image plus("assets/png/plus.png");
 
 }

@@ -117,7 +117,11 @@ struct Form : nana::form
 struct SubForm : nana::form
 {
     const bool modal;
-    SubForm(nana::widget& owner, bool modal, nana::rectangle rect, uint8_t flags = uint8_t(WindowFlags::DECORATION), unsigned bg = 0xFFFFFF): nana::form(owner, rect,
+    SubForm(nana::rectangle rect,
+            const std::string& title = "",
+            bool modal = true,
+            uint8_t flags = uint8_t(WindowFlags::DECORATION),
+            unsigned bg = 0xFFFFFF): nana::form(*ui::root, rect,
         nana::appearance(
             0 != (flags & WindowFlags::DECORATION),
             0 != (flags & WindowFlags::TASKBAR),
@@ -129,6 +133,7 @@ struct SubForm : nana::form
         )
     ), modal(modal)
     {
+        caption(title);
         bgcolor(nana::color_rgb(bg));
         events().unload([this](const nana::arg_unload& arg) {
             arg.cancel = true;
@@ -138,9 +143,10 @@ struct SubForm : nana::form
         });
     }
     
-    void popTo(nana::window target)
+    void popTo(nana::window target, int y = 0)
     {
         auto pos = nana::API::window_position(target);
+        pos.y += y;
         nana::API::move_window(*this, pos);
         show();
         if (modal)

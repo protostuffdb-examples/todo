@@ -34,6 +34,9 @@ struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
     util::RequestQueue* rq{ nullptr };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
+    ui::SubForm popup_{ {0, 0, 360, 600}, "New Todo" };
+    ui::Icon add_{ *this, icons::plus, true };
+
     ui::ToggleIcon sort_{ *this, icons::arrow_down, icons::arrow_up };
     
     ui::Icon refresh_{ *this, icons::cw, true };
@@ -55,6 +58,8 @@ public:
         "<weight=25"
           "<msg_>"
           "<weight=10>"
+          "<add_ weight=20>"
+          "<weight=15>"
           "<sort_ weight=20>"
           "<weight=15>"
           "<refresh_ weight=20>"
@@ -86,11 +91,17 @@ public:
             else
                 store.fetchOlder();
         };
+        auto $add = [this]() {
+            popup_.popTo(add_, 50);
+        };
         
         place["page_info_"] << page_info_
                 .text_align(nana::align::center);
         
         place["msg_"] << msg_;
+        
+        place["add_"] << add_;
+        add_.events().click($add);
         
         place["sort_"] << sort_;
         sort_.on_.events().click($sort);
