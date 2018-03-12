@@ -31,6 +31,7 @@ using TodoStore = coreds::PojoStore<Todo, todo::user::Todo>;
 
 struct TodoNewForm : ui::SubForm
 {
+    const bool close_on_success;
     util::RequestQueue* rq{ nullptr };
 private:
     TodoStore& store;
@@ -52,7 +53,10 @@ private:
         std::bind(&TodoNewForm::onResponse, this, std::placeholders::_1)
     };
 public:
-    TodoNewForm(TodoStore& store_, const char* title) : ui::SubForm({0, 0, 360, 90}, title), store(store_)
+    TodoNewForm(TodoStore& store_, const char* title, bool close_on_success = false):
+        ui::SubForm({0, 0, 360, 90}, title),
+        close_on_success(close_on_success),
+        store(store_)
     {
         place["title_"] << title_;
         title_.tip_string("Title *");
@@ -98,6 +102,9 @@ private:
         {
             title_.caption("");
             store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p(), true);
+            
+            if (close_on_success)
+                close();
         }
     }
 };
@@ -123,7 +130,7 @@ private:
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
-    TodoNewForm fnew_{ store, "New Todo" };
+    TodoNewForm fnew_{ store, "New Todo", true };
     
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
