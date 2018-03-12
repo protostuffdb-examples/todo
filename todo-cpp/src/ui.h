@@ -108,7 +108,7 @@ struct Form : nana::form
     {
         root = this;
         bgcolor(nana::color_rgb(bg));
-        events().unload([](const nana::arg_unload& arg){
+        events().unload([](const nana::arg_unload& arg) {
             nana::API::exit();
         });
     }
