@@ -3,6 +3,7 @@
 #include <thread>
 
 #include <nana/gui/wvl.hpp>
+#include <nana/gui/widgets/float_listbox.hpp>
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/widgets/listbox.hpp>
 #include <nana/gui/widgets/textbox.hpp>
@@ -26,6 +27,8 @@ namespace rpc = coreds::rpc;
 struct About : ui::Panel, util::HasState<bool>
 {
     nana::label text_{ *this, "about" };
+    
+    //nana::float_listbox float_{ *this, { util::WIDTH-100, util::HEIGHT-100, 100, 100 }, false };
     
     About(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
@@ -59,7 +62,7 @@ static const char* LINKS[] = {
 
 struct App : rpc::Base
 {
-    ui::Form fm{ {273, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0xFFFFFF };
+    ui::Form fm{ {273, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0xFFFFFF, uint8_t(ui::WindowFlags::STATIC) };
     
     ui::Place place{ fm, 
         "vert margin=5"

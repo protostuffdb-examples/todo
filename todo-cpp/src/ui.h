@@ -66,13 +66,44 @@ inline void visible(nana::widget& w, bool on)
     nana::API::show_window(w.handle(), on);
 }
 
+enum class WindowFlags : uint8_t
+{
+    TASKBAR = 1,
+    FLOATING = 2,
+    NO_ACTIVATE = 4,
+    MINIMIZE = 8,
+    MAXIMIZE = 16,
+    SIZABLE = 32,
+    DECORATION = 64,
+    
+    DEFAULT = DECORATION | TASKBAR | MINIMIZE | MAXIMIZE | SIZABLE,
+    STATIC = DECORATION | TASKBAR | MINIMIZE
+};
+
+inline uint8_t operator| (uint8_t a, WindowFlags b)
+{
+    return a | static_cast<uint8_t>(b);
+}
+inline uint8_t operator& (uint8_t a, WindowFlags b)
+{
+    return a & static_cast<uint8_t>(b);
+}
+
 struct Form : nana::form
 {
-    Form(nana::rectangle rect, unsigned bg, const char* title = nullptr) : nana::form(rect)
+    Form(nana::rectangle rect, unsigned bg, uint8_t flags = uint8_t(WindowFlags::DEFAULT)): nana::form(rect,
+        nana::appearance(
+            0 != (flags & WindowFlags::DECORATION),
+            0 != (flags & WindowFlags::TASKBAR),
+            0 != (flags & WindowFlags::FLOATING),
+            0 != (flags & WindowFlags::NO_ACTIVATE),
+            0 != (flags & WindowFlags::MINIMIZE),
+            0 != (flags & WindowFlags::MAXIMIZE),
+            0 != (flags & WindowFlags::SIZABLE)
+        )
+    )
     {
         bgcolor(nana::color_rgb(bg));
-        if (title)
-            caption(title);
     }
 };
 
