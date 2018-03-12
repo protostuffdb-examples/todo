@@ -80,6 +80,7 @@ public:
             rq->send();
             
             title_.editable(false);
+            ui::visible(msg_, false);
             store.loading(true);
         });
         
