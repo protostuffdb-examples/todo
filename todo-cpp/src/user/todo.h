@@ -34,7 +34,6 @@ struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
     util::RequestQueue* rq{ nullptr };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
-    ui::SubForm popup_{ {0, 0, 360, 600}, "New Todo" };
     ui::Icon add_{ *this, icons::plus, true };
 
     ui::ToggleIcon sort_{ *this, icons::arrow_down, icons::arrow_up };
@@ -48,6 +47,16 @@ private:
     ui::Icon goto_left_{ *this, icons::angle_left, true };
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
+    
+    ui::SubForm new_{ {0, 0, 360, 65}, "New Todo" };
+    ui::Place new_place{ new_,
+        "vert margin=5"
+        "<new_title_ weight=25>"
+        "<weight=5>"
+        "<new_submit_ weight=25>"
+    };
+    nana::textbox new_title_{ new_ };
+    nana::button new_submit_{ new_, "Submit" };
     
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
@@ -92,7 +101,7 @@ public:
                 store.fetchOlder();
         };
         auto $add = [this]() {
-            popup_.popTo(add_, 50);
+            new_.popTo(add_, 50);
         };
         
         place["page_info_"] << page_info_
@@ -121,6 +130,13 @@ public:
         
         place["goto_last_"] << goto_last_;
         goto_last_.events().click($last);
+        
+        new_place["new_title_"] << new_title_;
+        new_title_.tip_string("Title *");
+        
+        new_place["new_submit_"] << new_submit_;
+        
+        new_place.collocate();
     }
     void beforePopulate() override
     {
