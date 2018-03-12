@@ -27,6 +27,29 @@ struct Todo// : brynet::NonCopyable
     }
 };
 
+struct TodoNewForm : ui::SubForm
+{
+    ui::Place place{ *this,
+        "vert margin=5"
+        "<title_ weight=25>"
+        "<weight=5>"
+        "<submit_ weight=25>"
+    };
+    
+    nana::textbox title_{ *this };
+    nana::button submit_{ *this, "Submit" };
+    
+    TodoNewForm(const char* title) : ui::SubForm({0, 0, 360, 65}, title)
+    {
+        place["title_"] << title_;
+        title_.tip_string("Title *");
+        
+        place["submit_"] << submit_;
+        
+        place.collocate();
+    }
+};
+
 struct TodoItemPanel;
 
 struct TodoPager : ui::Pager<Todo, todo::user::Todo, TodoItemPanel>
@@ -48,15 +71,7 @@ private:
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
-    ui::SubForm new_{ {0, 0, 360, 65}, "New Todo" };
-    ui::Place new_place{ new_,
-        "vert margin=5"
-        "<new_title_ weight=25>"
-        "<weight=5>"
-        "<new_submit_ weight=25>"
-    };
-    nana::textbox new_title_{ new_ };
-    nana::button new_submit_{ new_, "Submit" };
+    TodoNewForm fnew_{ "New Todo" };
     
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
@@ -101,7 +116,7 @@ public:
                 store.fetchOlder();
         };
         auto $add = [this]() {
-            new_.popTo(add_, 50);
+            fnew_.popTo(add_, 50);
         };
         
         place["page_info_"] << page_info_
@@ -130,13 +145,6 @@ public:
         
         place["goto_last_"] << goto_last_;
         goto_last_.events().click($last);
-        
-        new_place["new_title_"] << new_title_;
-        new_title_.tip_string("Title *");
-        
-        new_place["new_submit_"] << new_submit_;
-        
-        new_place.collocate();
     }
     void beforePopulate() override
     {
