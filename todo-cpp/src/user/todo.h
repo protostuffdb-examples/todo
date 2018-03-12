@@ -61,12 +61,22 @@ public:
         
         place["submit_"] << submit_;
         submit_.events().click([this] {
-            /*std::string buf;
-            // TODO
+            if (store.loading())
+                return;
+            
+            auto title = title_.caption();
+            if (title.empty())
+                return;
+            
+            auto lastSeen = store.front();
+            std::string buf;
+            util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
             
             rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $onResponse);
             rq->send();
-            */
+            
+            title_.editable(false);
+            store.loading(true);
         });
         
         place.collocate();
@@ -76,6 +86,10 @@ private:
     void onResponse(void* res)
     {
         nana::internal_scope_guard lock;
+        
+        store.loading(false);
+        title_.editable(true);
+        
         if (res == nullptr)
         {
             msg_.update(errmsg);
@@ -83,7 +97,7 @@ private:
         else
         {
             title_.caption("");
-            // TODO append results to store
+            store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p(), true);
         }
     }
 };
@@ -340,16 +354,24 @@ struct TodoItemPanel : ui::BgPanel
     
     void toggleCompleted()
     {
+        if (pager.store.loading())
+            return;
+        
         std::string buf;
         util::appendUpdateReqTo(buf, pojo->key.c_str(), 4, !pojo->completed);
         
         pager.rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &pager.store.errmsg, $onResponse);
         pager.rq->send();
+        
+        pager.store.loading(true);
     }
     
     void onResponse(void* res)
     {
         nana::internal_scope_guard lock;
+        
+        pager.store.loading(false);
+        
         if (res == nullptr)
         {
             pager.msg_.update(pager.store.errmsg);
