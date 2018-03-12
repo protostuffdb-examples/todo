@@ -27,26 +27,64 @@ struct Todo// : brynet::NonCopyable
     }
 };
 
+using TodoStore = coreds::PojoStore<Todo, todo::user::Todo>;
+
 struct TodoNewForm : ui::SubForm
 {
+    util::RequestQueue* rq{ nullptr };
+private:
+    TodoStore& store;
+    std::string errmsg;
     ui::Place place{ *this,
         "vert margin=5"
         "<title_ weight=25>"
         "<weight=5>"
         "<submit_ weight=25>"
+        "<weight=5>"
+        "<msg_>"
     };
     
     nana::textbox title_{ *this };
+    ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Submit" };
     
-    TodoNewForm(const char* title) : ui::SubForm({0, 0, 360, 65}, title)
+    std::function<void(void* res)> $onResponse{
+        std::bind(&TodoNewForm::onResponse, this, std::placeholders::_1)
+    };
+public:
+    TodoNewForm(TodoStore& store_, const char* title) : ui::SubForm({0, 0, 360, 90}, title), store(store_)
     {
         place["title_"] << title_;
         title_.tip_string("Title *");
         
+        place["msg_"] << msg_;
+        
         place["submit_"] << submit_;
+        submit_.events().click([this] {
+            /*std::string buf;
+            // TODO
+            
+            rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $onResponse);
+            rq->send();
+            */
+        });
         
         place.collocate();
+        ui::visible(msg_, false);
+    }
+private:
+    void onResponse(void* res)
+    {
+        nana::internal_scope_guard lock;
+        if (res == nullptr)
+        {
+            msg_.update(errmsg);
+        }
+        else
+        {
+            title_.caption("");
+            // TODO append results to store
+        }
     }
 };
 
@@ -71,7 +109,7 @@ private:
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
-    TodoNewForm fnew_{ "New Todo" };
+    TodoNewForm fnew_{ store, "New Todo" };
     
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
@@ -177,9 +215,10 @@ public:
             store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
         }
     }
-    void init(coreds::Opts opts, util::RequestQueue& rq)
+    void init(coreds::Opts opts, util::RequestQueue& requestQueue)
     {
-        this->rq = &rq;
+        rq = &requestQueue;
+        fnew_.rq = &requestQueue;
         
         store.init(opts);
         store.$fnKey = [](const Todo& pojo) {
@@ -233,12 +272,12 @@ public:
                 }
             }
         };
-        store.$fnFetch = [this, &rq](coreds::ParamRangeKey prk) {
+        store.$fnFetch = [this](coreds::ParamRangeKey prk) {
             std::string buf;
             prk.stringifyTo(buf);
             
-            rq.queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $onResponse);
-            rq.send();
+            rq->queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $onResponse);
+            rq->send();
             return true;
         };
         
