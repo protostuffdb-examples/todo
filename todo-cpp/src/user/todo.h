@@ -87,6 +87,10 @@ public:
         place.collocate();
         ui::visible(msg_, false);
     }
+    void focus()
+    {
+        title_.focus();
+    }
 private:
     void onResponse(void* res)
     {
@@ -177,6 +181,7 @@ public:
         };
         auto $add = [this]() {
             fnew_.popTo(add_, 50);
+            fnew_.focus();
         };
         
         place["page_info_"] << page_info_

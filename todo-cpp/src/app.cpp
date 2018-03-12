@@ -88,7 +88,6 @@ struct App : rpc::Base
     About about{ content_, content_array, "content_1" };
     Home exp{ content_, content_array, "content_2" };
     
-    
     std::vector<nana::label*> link_array;
     std::forward_list<nana::label> links;
     std::string current_target{ "content_0" };
