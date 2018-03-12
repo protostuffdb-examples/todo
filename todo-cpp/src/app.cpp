@@ -62,7 +62,7 @@ static const char* LINKS[] = {
 
 struct App : rpc::Base
 {
-    ui::Form fm{ {273, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0xFFFFFF, 0 | ui::WindowFlags::STATIC };
+    ui::Form fm{ {273, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0 | ui::WindowFlags::STATIC };
     
     ui::Place place{ fm, 
         "vert margin=5"

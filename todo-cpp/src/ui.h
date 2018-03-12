@@ -89,9 +89,12 @@ inline uint8_t operator& (uint8_t a, WindowFlags b)
     return a & static_cast<uint8_t>(b);
 }
 
+struct Form;
+Form* root{ nullptr };
+
 struct Form : nana::form
 {
-    Form(nana::rectangle rect, unsigned bg, uint8_t flags = uint8_t(WindowFlags::DEFAULT)): nana::form(rect,
+    Form(nana::rectangle rect, uint8_t flags = uint8_t(WindowFlags::DEFAULT), unsigned bg = 0xFFFFFF): nana::form(rect,
         nana::appearance(
             0 != (flags & WindowFlags::DECORATION),
             0 != (flags & WindowFlags::TASKBAR),
@@ -103,7 +106,42 @@ struct Form : nana::form
         )
     )
     {
+        root = this;
         bgcolor(nana::color_rgb(bg));
+    }
+};
+
+struct SubForm : nana::form
+{
+    const bool modal;
+    SubForm(nana::widget& owner, bool modal, nana::rectangle rect, uint8_t flags = uint8_t(WindowFlags::DECORATION), unsigned bg = 0xFFFFFF): nana::form(owner, rect,
+        nana::appearance(
+            0 != (flags & WindowFlags::DECORATION),
+            0 != (flags & WindowFlags::TASKBAR),
+            0 != (flags & WindowFlags::FLOATING),
+            0 != (flags & WindowFlags::NO_ACTIVATE),
+            0 != (flags & WindowFlags::MINIMIZE),
+            0 != (flags & WindowFlags::MAXIMIZE),
+            0 != (flags & WindowFlags::SIZABLE)
+        )
+    ), modal(modal)
+    {
+        bgcolor(nana::color_rgb(bg));
+        events().unload([this](const nana::arg_unload& arg) {
+            arg.cancel = true;
+            hide();
+            if (this->modal)
+                nana::API::window_enabled(*root, true);
+        });
+    }
+    
+    void popTo(nana::window target)
+    {
+        auto pos = nana::API::window_position(target);
+        nana::API::move_window(*this, pos);
+        show();
+        if (modal)
+            nana::API::window_enabled(*root, false);
     }
 };
 
