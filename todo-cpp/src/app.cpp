@@ -2,33 +2,26 @@
 #include <queue>
 #include <thread>
 
-#include <nana/gui/wvl.hpp>
-#include <nana/gui/widgets/float_listbox.hpp>
-#include <nana/gui/widgets/label.hpp>
-#include <nana/gui/widgets/listbox.hpp>
-#include <nana/gui/widgets/textbox.hpp>
-#include <nana/gui/widgets/button.hpp>
+#include <coreds/nana/ui.h>
+#include <coreds/nana/pager.h>
 
 #include <coreds/rpc.h>
 #include <coreds/pstore.h>
 
+#include "user/index.h"
+
+#include "exp.h"
+
 #include "util.h"
-#include "ui.h"
-#include "pager.h"
-#include "app.h"
 
 #include "../g/user/fbs_schema.h"
-
-#include "user/index.h"
-#include "exp.h"
+#include "app.h"
 
 namespace rpc = coreds::rpc;
 
 struct About : ui::Panel, util::HasState<bool>
 {
     nana::label text_{ *this, "about" };
-    
-    //nana::float_listbox float_{ *this, { util::WIDTH-100, util::HEIGHT-100, 100, 100 }, false };
     
     About(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 

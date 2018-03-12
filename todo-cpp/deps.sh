@@ -27,6 +27,7 @@ mkdir -p deps && cd deps
 [ -e brynet ] || $GIT_CLONE gn https://github.com/dyu/brynet.git
 [ -e fmt ] || $GIT_CLONE gn https://github.com/dyu/fmt.git
 
-[ -e tiny-process-library ] || $GIT_CLONE gn https://github.com/dyu/tiny-process-library.git
+[ -e coreds-nana ] || $GIT_CLONE master https://github.com/fbsgen/coreds-nana.git
 [ -e nana ] || $GIT_CLONE gn https://github.com/dyu/nana.git
 
+[ -e tiny-process-library ] || $GIT_CLONE gn https://github.com/dyu/tiny-process-library.git

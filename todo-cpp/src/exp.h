@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../g/user/index_generated.h"
+#include <coreds/nana/ui.h>
+#include <nana/gui/widgets/button.hpp>
+#include <nana/gui/widgets/listbox.hpp>
+#include <nana/gui/widgets/textbox.hpp>
 
 #include "user/todo.h"
 

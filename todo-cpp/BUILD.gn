@@ -24,6 +24,8 @@ static_library("app") {
     "//deps/brynet:http",
     "//deps/flatbuffers:flatbuffers",
     #"//deps/fmt:fmt",
+    
+    "//deps/coreds-nana:coreds",
     "//deps/nana:base",
     "//deps/nana:gui",
   ]

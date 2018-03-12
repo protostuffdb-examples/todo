@@ -1,9 +1,12 @@
 #pragma once
 
+#include <coreds/nana/pager.h>
+#include <nana/gui/widgets/button.hpp>
+#include <nana/gui/widgets/textbox.hpp>
+
 #include "../../g/user/index_generated.h"
 
 #include "../util.h"
-#include "../pager.h"
 
 #include "../icons.h"
 
