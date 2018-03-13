@@ -301,7 +301,7 @@ public:
     }
     void update(bool on) override
     {
-        if (on)
+        if (on && !store.loading())
             store.fetchUpdate();
     }
     void show(const std::string& msg, ui::Msg type = ui::Msg::$ERROR)

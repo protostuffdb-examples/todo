@@ -30,7 +30,7 @@ struct Index : ui::Panel, util::HasState<bool>
     }
     void update(bool on) override
     {
-        if (on)
+        if (on && !pager_.store.loading())
             pager_.store.fetchUpdate();
     }
 };
