@@ -221,7 +221,7 @@ private:
     const int idx;
     nana::label title_{ *this, "" };
     nana::label ts_{ *this, "" };
-    ui::ToggleIcon completed_ { *this, icons::circle, icons::circle_empty };
+    ui::ToggleIcon completed_{ *this, icons::circle, icons::circle_empty };
     
     todo::Todo* pojo{ nullptr };
     

@@ -58,10 +58,6 @@ public:
         place.collocate();
         ui::visible(msg_, false);
     }
-    void focus()
-    {
-        title_.focus();
-    }
 private:
     void submit$$(void* res)
     {
@@ -119,6 +115,11 @@ private:
                     close();
                 break;
         }
+    }
+public:
+    void focus()
+    {
+        title_.focus();
     }
 };
 
