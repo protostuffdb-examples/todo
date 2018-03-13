@@ -9,9 +9,9 @@
 namespace todo {
 namespace user {
 
-struct TodoItemPanel;
+struct TodoItem;
 
-struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItemPanel>
+struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>
 {
     util::RequestQueue* rq{ nullptr };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
@@ -39,7 +39,7 @@ private:
         std::bind(&TodoPager::fetch, this, std::placeholders::_1)
     };
 public:
-    TodoPager(nana::widget& owner) : ui::Pager<todo::Todo, todo::user::Todo, TodoItemPanel>(owner,
+    TodoPager(nana::widget& owner) : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>(owner,
         "vert margin=[5,0]"
         "<weight=25"
           "<msg_>"
@@ -214,7 +214,7 @@ public:
     }
 };
 
-struct TodoItemPanel : ui::BgPanel
+struct TodoItem : ui::BgPanel
 {
 private:
     TodoPager& pager;
@@ -226,13 +226,13 @@ private:
     todo::Todo* pojo{ nullptr };
     
     std::function<void(void* res)> $toggleCompleted$${
-        std::bind(&TodoItemPanel::toggleCompleted$$, this, std::placeholders::_1)
+        std::bind(&TodoItem::toggleCompleted$$, this, std::placeholders::_1)
     };
     std::function<void()> $toggleCompleted{
-        std::bind(&TodoItemPanel::toggleCompleted, this)
+        std::bind(&TodoItem::toggleCompleted, this)
     };
 public:
-    TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
+    TodoItem(nana::widget& owner) : ui::BgPanel(owner,
         "margin=[5,10]"
         "<title_>"
         "<ts_ weight=130>"
