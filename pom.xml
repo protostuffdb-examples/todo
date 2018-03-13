@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <name>todo</name>
   <description>
-    a full-stack todomvc app with a leveldb + uWebsockets backend, dart + flutter mobile frontend, typescript + vue web frontend and nwjs for desktop
+    a full-stack todomvc app with a java + c++ backend, dart mobile frontend, typescript web frontend and c++ desktop frontend
   </description>
   <url>https://github.com/protostuffdb-examples/todo/</url>
   <inceptionYear>2017</inceptionYear>

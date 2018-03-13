@@ -1,5 +1,11 @@
 # full-stack todo app
 
+A full-stack todomvc app with:
+- java + c++ backend
+- dart (flutter) mobile frontend (todo-dart)
+- typescript web frontend (todo-ts)
+- c++ desktop frontend (todo-cpp)
+
 It can be seen live [here](https://apps.dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and desktop (c++) apps.
 
 The web and mobile apps have the same semantics.
