@@ -1,7 +1,8 @@
-#include "app.h"
 #include <string>
 #include <vector>
 #include <fstream>
+
+#include "app.h"
 
 static bool isSPCRLF(char c)
 {
