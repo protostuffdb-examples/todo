@@ -3,10 +3,10 @@ PORT.txt
 run.properties
 target/data/main/README.txt
 todo-all/target/todo-all-jarjar.jar
+todo-ts/g/user/UserServices.json
 todo-ts/package.json
 todo-ts/index.html
 todo-ts/favicon.ico
 todo-ts/dist
 todo-ts/assets
 todo-ts/nw
-todo-ts/g/user/UserServices.json

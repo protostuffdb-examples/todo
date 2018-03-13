@@ -20,7 +20,7 @@ echo '#!/bin/sh' > start.sh && tail --lines=+4 scripts/s-start.sh >> start.sh &&
 rm start.sh
 
 # desktop files
-head --lines=5 scripts/files.txt > target/files.txt
+head --lines=6 scripts/files.txt > target/files.txt
 cp todo-cpp/gn-out/todo-pdb target/todo
 
 TAR_FILE=$OUT_DIR/todo-desktop-standalone-linux-x64.tar.gz
