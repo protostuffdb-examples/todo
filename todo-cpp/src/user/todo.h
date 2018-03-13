@@ -55,6 +55,9 @@ private:
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoNewForm::onResponse, this, std::placeholders::_1)
     };
+    std::function<void(const nana::arg_keyboard& arg)> $key_press{
+        std::bind(&TodoNewForm::key_press, this, std::placeholders::_1)
+    };
 public:
     TodoNewForm(TodoStore& store_, const char* title, bool close_on_success = false):
         ui::SubForm({0, 0, 360, 90}, title),
@@ -64,10 +67,7 @@ public:
         place["title_"] << title_
             .multi_lines(false)
             .tip_string("Title *");
-        title_.events().key_press([this](const nana::arg_keyboard& arg) {
-            if (nana::keyboard::enter == arg.key)
-                submit();
-        });
+        title_.events().key_press($key_press);
         
         place["msg_"] << msg_;
         
@@ -104,6 +104,21 @@ private:
         ui::visible(msg_, false);
         store.loading(true);
     }
+    void key_press(const nana::arg_keyboard& arg)
+    {
+        switch (arg.key)
+        {
+            case nana::keyboard::enter:
+                submit();
+                break;
+            case nana::keyboard::escape:
+                if (msg_.visible())
+                    ui::visible(msg_, false);
+                else
+                    close();
+                break;
+        }
+    }
     void onResponse(void* res)
     {
         nana::internal_scope_guard lock;
@@ -122,6 +137,8 @@ private:
             
             if (close_on_success)
                 close();
+            else
+                title_.focus();
         }
     }
 };
@@ -147,7 +164,7 @@ private:
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
-    TodoNewForm fnew_{ store, "New Todo", true };
+    TodoNewForm fnew_{ store, "New Todo" };
     
     std::function<void(void* res)> $onResponse{
         std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
