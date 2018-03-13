@@ -21,10 +21,10 @@ static_library("app") {
   ]
   deps = [
     "//deps/coreds:coreds",
+    "//deps/flatbuffers:flatbuffers",
     "//deps/brynet:utils",
     "//deps/brynet:timer",
     "//deps/brynet:http",
-    "//deps/flatbuffers:flatbuffers",
     #"//deps/fmt:fmt",
     
     "//deps/coreds-nana:coreds",
