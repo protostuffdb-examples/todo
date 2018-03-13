@@ -23,7 +23,7 @@ static bool loadFile(const char *name, bool binary, std::string *buf, bool strip
     return !ifs.bad();
 }
 
-bool findSpace(std::string& args, std::vector<size_t>& offsets)
+static bool findSpace(std::string& args, std::vector<size_t>& offsets)
 {
     for (size_t idx = 0, len = args.size();
             idx < len && std::string::npos != (idx = args.find(' ', idx));
