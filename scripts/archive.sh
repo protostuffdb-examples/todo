@@ -30,7 +30,7 @@ TAR_FILE=$OUT_DIR/todo-desktop-client-linux-x64.tar.gz
 
 rm -f $TAR_FILE
 cp target/setup .
-tar -cvzf $TAR_FILE setup target/todo target/name.txt assets/*
+tar -cvzf $TAR_FILE setup target/todo target/name.txt target/ARGS.txt assets/*
 rm -f setup
 
 # TODO zipfile
