@@ -2,7 +2,7 @@
 
 #include <coreds/pstore.h>
 
-#include "../../g/user/index_generated.h"
+#include "../g/user/index_generated.h"
 
 namespace todo {
 

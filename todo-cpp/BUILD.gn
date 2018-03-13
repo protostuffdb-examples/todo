@@ -5,9 +5,9 @@ static_library("app") {
     
     "src/user/TodoForms.h",
     "src/user/TodoPager.h",
-    "src/user/todo.h",
     "src/user/index.h",
     
+    "src/todo.h",
     "src/exp.h",
     "src/util.h",
     "src/ui.h",
