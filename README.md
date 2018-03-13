@@ -1,7 +1,7 @@
 # full-stack todo app
 
 A full-stack todomvc app with:
-- java + c++ backend
+- java (jni stored procs) + c++ backend
 - dart (flutter) mobile frontend (todo-dart)
 - typescript web frontend (todo-ts)
 - c++ desktop frontend (todo-cpp)
