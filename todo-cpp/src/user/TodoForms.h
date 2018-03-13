@@ -31,8 +31,8 @@ private:
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Submit" };
     
-    std::function<void(void* res)> $onResponse{
-        std::bind(&TodoNew::onResponse, this, std::placeholders::_1)
+    std::function<void(void* res)> $submit$${
+        std::bind(&TodoNew::submit$$, this, std::placeholders::_1)
     };
     std::function<void(const nana::arg_keyboard& arg)> $key_press{
         std::bind(&TodoNew::key_press, this, std::placeholders::_1)
@@ -63,42 +63,7 @@ public:
         title_.focus();
     }
 private:
-    void submit()
-    {
-        if (store.loading())
-            return;
-        
-        auto title = title_.caption();
-        if (title.empty())
-            return;
-        
-        auto lastSeen = store.front();
-        std::string buf;
-        util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
-        
-        rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $onResponse);
-        rq->send();
-        
-        title_.editable(false);
-        ui::visible(msg_, false);
-        store.loading(true);
-    }
-    void key_press(const nana::arg_keyboard& arg)
-    {
-        switch (arg.key)
-        {
-            case nana::keyboard::enter:
-                submit();
-                break;
-            case nana::keyboard::escape:
-                if (msg_.visible())
-                    ui::visible(msg_, false);
-                else
-                    close();
-                break;
-        }
-    }
-    void onResponse(void* res)
+    void submit$$(void* res)
     {
         nana::internal_scope_guard lock;
         
@@ -118,6 +83,41 @@ private:
                 close();
             else
                 title_.focus();
+        }
+    }
+    void submit()
+    {
+        if (store.loading())
+            return;
+        
+        auto title = title_.caption();
+        if (title.empty())
+            return;
+        
+        auto lastSeen = store.front();
+        std::string buf;
+        util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
+        
+        rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $submit$$);
+        rq->send();
+        
+        title_.editable(false);
+        ui::visible(msg_, false);
+        store.loading(true);
+    }
+    void key_press(const nana::arg_keyboard& arg)
+    {
+        switch (arg.key)
+        {
+            case nana::keyboard::enter:
+                submit();
+                break;
+            case nana::keyboard::escape:
+                if (msg_.visible())
+                    ui::visible(msg_, false);
+                else
+                    close();
+                break;
         }
     }
 };
