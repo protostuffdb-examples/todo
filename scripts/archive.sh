@@ -26,7 +26,7 @@ rm -f todo-ts/todo.exe
 # desktop executable
 cp todo-cpp/gn-out/todo target/todo
 
-TAR_FILE=$OUT_DIR/todo-client-linux-x64.tar.gz
+TAR_FILE=$OUT_DIR/todo-desktop-client-linux-x64.tar.gz
 
 rm -f $TAR_FILE
 cp target/setup .
