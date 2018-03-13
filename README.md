@@ -1,8 +1,8 @@
 # full-stack todo app
 
-It can be seen live [here](https://apps.dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and desktop (nwjs) apps.
+It can be seen live [here](https://apps.dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and desktop (c++) apps.
 
-They all have the same semantics.
+The web and mobile apps have the same semantics.
 Swipe horizontally to nagivate the pages (paginate).
 Long-press the item to update.
 
@@ -11,11 +11,16 @@ Long-press the item to update.
 
 ## Desktop runtime dependencies
 - jdk7
-- [nwjs](https://nwjs.io/) [0.19.5](https://dl.nwjs.io/v0.19.5/) or higher
 
-## Dev requirements
+## Desktop dev requirements (c++)
+- [ninja](https://ninja-build.org/)
+- [gn](https://refi64.com/gn-builds/)
+
+## Web dev requirements
 - [node](https://nodejs.org/en/download/) 6.9.0 or higher
-- yarn (npm install -g yarn)
+- [yarn](https://yarnpkg.com/en/)
+
+## Common dev requirements
 - jdk7 (at /usr/lib/jvm/java-7-oracle)
 - [maven](https://maven.apache.org/download.cgi)
 - [protostuffdb](https://gitlab.com/dyu/protostuffdb) (downloaded below)
@@ -31,7 +36,14 @@ yarn add protostuffdb@0.19.0 && mv node_modules/protostuffdb/dist/* target/ && r
 wget -O target/fbsgen-ds.jar https://repo1.maven.org/maven2/com/dyuproject/fbsgen/ds/fbsgen-ds-fatjar/1.0.17/fbsgen-ds-fatjar-1.0.17.jar
 ./modules/codegen.sh
 mvn install
+```
 
+### To build the c++ desktop frontend, visit todo-cpp/README.md
+
+### To build the dart mobile frontend, visit todo-dart/README.md
+
+## Web dev setup
+```sh
 cd todo-ts
 yarn install
 
