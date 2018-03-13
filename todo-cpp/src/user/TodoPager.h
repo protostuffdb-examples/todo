@@ -32,8 +32,11 @@ private:
     
     TodoNew fnew_{ store, "New Todo" };
     
-    std::function<void(void* res)> $onResponse{
-        std::bind(&TodoPager::onResponse, this, std::placeholders::_1)
+    std::function<void(void* res)> $fetch$${
+        std::bind(&TodoPager::fetch$$, this, std::placeholders::_1)
+    };
+    std::function<bool(coreds::ParamRangeKey prk)> $fetch{
+        std::bind(&TodoPager::fetch, this, std::placeholders::_1)
     };
 public:
     TodoPager(nana::widget& owner) : ui::Pager<todo::Todo, todo::user::Todo, TodoItemPanel>(owner,
@@ -106,6 +109,7 @@ public:
         place["goto_last_"] << goto_last_;
         goto_last_.events().click($last);
     }
+private:
     void beforePopulate() override
     {
         ui::visible(*this, false);
@@ -124,7 +128,7 @@ public:
     {
         afterPopulate(store.getSelectedIdx());
     }
-    void onResponse(void* res)
+    void fetch$$(void* res)
     {
         if (res == nullptr)
         {
@@ -137,12 +141,23 @@ public:
             store.cbFetchSuccess(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
         }
     }
+    bool fetch(coreds::ParamRangeKey prk)
+    {
+        std::string buf;
+        prk.stringifyTo(buf);
+        
+        rq->queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $fetch$$);
+        rq->send();
+        return true;
+    }
+public:
     void init(coreds::Opts opts, util::RequestQueue& requestQueue)
     {
         rq = &requestQueue;
         fnew_.rq = &requestQueue;
         
         store.init(opts);
+        store.$fnFetch = $fetch;
         store.$fnKey = [](const todo::Todo& pojo) {
             return pojo.key.c_str();
         };
@@ -193,14 +208,6 @@ public:
                     break;
                 }
             }
-        };
-        store.$fnFetch = [this](coreds::ParamRangeKey prk) {
-            std::string buf;
-            prk.stringifyTo(buf);
-            
-            rq->queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $onResponse);
-            rq->send();
-            return true;
         };
         
         collocate(opts.pageSize);
