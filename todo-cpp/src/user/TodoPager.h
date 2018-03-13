@@ -209,6 +209,7 @@ public:
 
 struct TodoItemPanel : ui::BgPanel
 {
+private:
     TodoPager& pager;
     const int idx;
     nana::label title_{ *this, "" };
@@ -217,13 +218,13 @@ struct TodoItemPanel : ui::BgPanel
     
     todo::Todo* pojo{ nullptr };
     
-    std::function<void(void* res)> $onResponse{
-        std::bind(&TodoItemPanel::onResponse, this, std::placeholders::_1)
+    std::function<void(void* res)> $toggleCompleted$${
+        std::bind(&TodoItemPanel::toggleCompleted$$, this, std::placeholders::_1)
     };
     std::function<void()> $toggleCompleted{
         std::bind(&TodoItemPanel::toggleCompleted, this)
     };
-    
+public:
     TodoItemPanel(nana::widget& owner) : ui::BgPanel(owner,
         "margin=[5,10]"
         "<title_>"
@@ -257,22 +258,8 @@ struct TodoItemPanel : ui::BgPanel
         place.collocate();
         hide();
     }
-    
-    void toggleCompleted()
-    {
-        if (pager.store.loading())
-            return;
-        
-        std::string buf;
-        util::appendUpdateReqTo(buf, pojo->key.c_str(), 4, !pojo->completed);
-        
-        pager.rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &pager.store.errmsg, $onResponse);
-        pager.rq->send();
-        
-        pager.store.loading(true);
-    }
-    
-    void onResponse(void* res)
+private:
+    void toggleCompleted$$(void* res)
     {
         nana::internal_scope_guard lock;
         
@@ -287,7 +274,20 @@ struct TodoItemPanel : ui::BgPanel
             completed_.update((pojo->completed = !pojo->completed));
         }
     }
-    
+    void toggleCompleted()
+    {
+        if (pager.store.loading())
+            return;
+        
+        std::string buf;
+        util::appendUpdateReqTo(buf, pojo->key.c_str(), 4, !pojo->completed);
+        
+        pager.rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &pager.store.errmsg, $toggleCompleted$$);
+        pager.rq->send();
+        
+        pager.store.loading(true);
+    }
+public:
     void update(todo::Todo* message)
     {
         pojo = message;
