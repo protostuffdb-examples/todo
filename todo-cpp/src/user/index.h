@@ -9,10 +9,11 @@
 namespace todo {
 namespace user {
 
-struct Index : ui::Panel, util::HasState<bool>
+struct Index : ui::Panel, util::HasState<bool>, util::HasState<const std::string&>
 {
+private:
     TodoPager pager_{ *this };
-    
+public:
     Index(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
         const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
@@ -32,6 +33,17 @@ struct Index : ui::Panel, util::HasState<bool>
     {
         if (on && !pager_.store.loading())
             pager_.store.fetchUpdate();
+    }
+    void update(const std::string& msg) override
+    {
+        if (msg.empty())
+            pager_.msg_.hide();
+        else
+            pager_.msg_.update(msg);
+    }
+    void init(coreds::Opts opts, util::RequestQueue& requestQueue)
+    {
+        pager_.init(opts, requestQueue);
     }
 };
 

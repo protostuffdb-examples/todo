@@ -183,7 +183,7 @@ private:
                 msg += "Could not connect to ";
                 msg += req_host;
                 
-                home.pager_.msg_.update(msg);
+                home.update(msg);
             }
             
             loop->loop(RECONNECT_INTERVAL);
@@ -205,7 +205,7 @@ private:
 public:
     void show(coreds::Opts opts)
     {
-        home.pager_.init(opts, rq);
+        home.init(opts, rq);
         exp.init(opts, rq);
         
         // header
