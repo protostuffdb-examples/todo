@@ -4,14 +4,14 @@
 
 #include "../util.h"
 
-#include "todo.h"
+#include "TodoPager.h"
 
 namespace todo {
 namespace user {
 
 struct Index : ui::Panel, util::HasState<bool>
 {
-    todo::TodoPager pager_{ *this };
+    TodoPager pager_{ *this };
     
     Index(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
         const char* field, bool active = false) : ui::Panel(owner, 
