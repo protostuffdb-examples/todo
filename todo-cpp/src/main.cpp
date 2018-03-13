@@ -9,7 +9,7 @@ static bool isSPCRLF(char c)
     return c == ' ' || c == '\r' || c == '\n';
 }
 
-static bool LoadFile(const char *name, bool binary, std::string *buf, bool stripWS = false)
+static bool loadFile(const char *name, bool binary, std::string *buf, bool stripWS = false)
 {
     std::ifstream ifs(name, binary ? std::ifstream::binary : std::ifstream::in);
     if (!ifs.is_open())
@@ -23,7 +23,7 @@ static bool LoadFile(const char *name, bool binary, std::string *buf, bool strip
     return !ifs.bad();
 }
 
-bool find_space(std::string& args, std::vector<size_t>& offsets)
+bool findSpace(std::string& args, std::vector<size_t>& offsets)
 {
     for (size_t idx = 0, len = args.size();
             idx < len && std::string::npos != (idx = args.find(' ', idx));
@@ -41,11 +41,11 @@ int main(int argc, char* argv[])
     int ret;
     std::string args;
     std::vector<size_t> offsets;
-    if (argc > 1 || !LoadFile("target/ARGS.txt", false, &args, true))
+    if (argc > 1 || !loadFile("target/ARGS.txt", false, &args, true))
     {
         ret = todo::run(argc, argv);
     }
-    else if (!find_space(args, offsets))
+    else if (!findSpace(args, offsets))
     {
         char* argv_override[]{ argv[0], const_cast<char*>(args.c_str()), nullptr };
         ret = todo::run(2, argv_override);
