@@ -63,22 +63,6 @@ public:
         "<items_ vert>"
     )
     {
-        auto $sort = [this]() { store.toggleDesc(); };
-        auto $refresh = [this]() { store.fetchUpdate(); };
-        auto $first = [this]() { store.pageTo(0); };
-        auto $last = [this]() { store.pageTo(store.getPageCount()); };
-        auto $left = [this]() {
-            if (0 != store.getPage())
-                store.pageTo(store.getPage() - 1);
-            else
-                store.fetchNewer();
-        };
-        auto $right = [this]() {
-            if (store.getPageCount() != store.getPage())
-                store.pageTo(store.getPage() + 1);
-            else
-                store.fetchOlder();
-        };
         auto $add = [this]() {
             fnew_.popTo(add_, 50);
             fnew_.focus();
@@ -93,23 +77,23 @@ public:
         add_.events().click($add);
         
         place["sort_"] << sort_;
-        sort_.on_.events().click($sort);
-        sort_.off_.events().click($sort);
+        sort_.on_.events().click(store.$toggleSort);
+        sort_.off_.events().click(store.$toggleSort);
         
         place["refresh_"] << refresh_;
-        refresh_.events().click($refresh);
+        refresh_.events().click(store.$refresh);
         
         place["goto_first_"] << goto_first_;
-        goto_first_.events().click($first);
+        goto_first_.events().click(store.$gotoFirst);
         
         place["goto_left_"] << goto_left_;
-        goto_left_.events().click($left);
+        goto_left_.events().click(store.$prevOrLoad);
         
         place["goto_right_"] << goto_right_;
-        goto_right_.events().click($right);
+        goto_right_.events().click(store.$nextOrLoad);
         
         place["goto_last_"] << goto_last_;
-        goto_last_.events().click($last);
+        goto_last_.events().click(store.$gotoLast);
     }
 private:
     void beforePopulate() override

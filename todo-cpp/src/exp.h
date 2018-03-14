@@ -241,9 +241,6 @@ public:
     {
         container.push_back(this);
         
-        auto $sort = [this]() { store.toggleDesc(); };
-        auto $refresh = [this]() { store.fetchUpdate(); };
-        
         auto $add = [this]() {
             fnew_.popTo(add_, 50);
             fnew_.focus();
@@ -255,11 +252,11 @@ public:
         add_.events().click($add);
         
         place["sort_"] << sort_;
-        sort_.on_.events().click($sort);
-        sort_.off_.events().click($sort);
+        sort_.on_.events().click(store.$toggleSort);
+        sort_.off_.events().click(store.$toggleSort);
         
         place["refresh_"] << refresh_;
-        refresh_.events().click($refresh);
+        refresh_.events().click(store.$refresh);
         
         // =====================================
         // msg
