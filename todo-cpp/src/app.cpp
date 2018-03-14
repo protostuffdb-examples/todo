@@ -47,6 +47,8 @@ struct About : ui::Panel, util::HasState<bool>
     }
 };
 
+static const char URI_TODO_COMPLETED[] = "/todo/user/qTodo0Completed";
+
 static const int IDLE_INTERVAL = 10000,
         RECONNECT_INTERVAL = 5000;
 
@@ -218,13 +220,13 @@ public:
             buf += R"({"1":0,"4":)";
             prk.stringifyTo(buf);
             buf += '}';
-            return "/todo/user/qTodo0Completed";
+            return URI_TODO_COMPLETED;
         });
         completed_.init(opts, [](std::string& buf, coreds::ParamRangeKey& prk) {
             buf += R"({"1":1,"4":)";
             prk.stringifyTo(buf);
             buf += '}';
-            return "/todo/user/qTodo0Completed";
+            return URI_TODO_COMPLETED;
         });
         exp_.init(opts);
         
