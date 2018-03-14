@@ -297,7 +297,8 @@ public:
             fnew_.focus();
         };
         
-        place["search_"] << search_.tip_string("Todo");
+        place["search_"] << search_
+            .tip_string("Todo");//.borderless(true);
         
         // =====================================
         // msg
