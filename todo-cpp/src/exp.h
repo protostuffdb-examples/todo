@@ -64,27 +64,113 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     };
     nana::label title_;
     nana::label ts_;
-    ui::DeferredToggleIcon completed_{ icons::circle, icons::circle_empty, false };
+    ui::DeferredToggleIcon completed_{ icons::circle, icons::circle_empty };
     //nana::textbox txt_;
     //nana::button btn_;
     
     todo::Todo* pojo{ nullptr };
     todo::TodoStore* store{ nullptr };
+    util::RequestQueue* rq{ nullptr };
     int idx;
+    
+    util::HasState<const std::string&>* hasMsg { nullptr };
+    
+    std::function<void(void* res)> $toggleCompleted$${
+        std::bind(&TodoItem::toggleCompleted$$, this, std::placeholders::_1)
+    };
+    std::function<void()> $toggleCompleted{
+        std::bind(&TodoItem::toggleCompleted, this)
+    };
     
     TodoItem()
     {
         todo_items.push_back(this);
     }
-    void init(int idx, todo::TodoStore* store, std::function<void(const nana::arg_keyboard& arg)> $navigate)
+private:
+    void create(nana::window wd) override
+    {
+        pnl_.create(wd);
+        pnl_.hide();
+        
+        // title
+        title_.create(pnl_);
+        title_.transparent(true)
+            .events().click($selected);
+        pnl_.place["title_"] << title_;
+        
+        // ts
+        ts_.create(pnl_);
+        ts_.transparent(true)
+            .text_align(nana::align::right)
+            .events().click($selected);
+        pnl_.place["ts_"] << ts_;
+        
+        completed_.create(pnl_);
+        pnl_.place["completed_"] << completed_;
+        completed_.on_.events().click($toggleCompleted);
+        completed_.off_.events().click($toggleCompleted);
+        
+        /*
+        // textbox
+        txt_.create(pnl_);
+        txt_.events().click($selected);
+        pnl_.place["txt_"] << txt_;
+        
+        // button
+        btn_.create(pnl_);
+        btn_.caption("x");
+        btn_.events().click([this]
+        {
+            ind_->selected(pos_);
+            // TODO delete the item when button is clicked
+            //auto& lsbox = dynamic_cast<nana::listbox&>(ind->host());
+            //lsbox.erase(lsbox.at(pos_));
+        });
+        pnl_.place["btn_"] << btn_;
+        */
+    }
+    void toggleCompleted$$(void* res)
+    {
+        nana::internal_scope_guard lock;
+        
+        store->loading(false);
+        
+        if (res == nullptr)
+        {
+            hasMsg->update(store->errmsg);
+        }
+        else
+        {
+            completed_.update((pojo->completed = !pojo->completed));
+        }
+    }
+    void toggleCompleted()
+    {
+        if (store->loading())
+            return;
+        
+        std::string buf;
+        util::appendUpdateReqTo(buf, pojo->key.c_str(), 4, !pojo->completed);
+        
+        rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &store->errmsg, $toggleCompleted$$);
+        rq->send();
+        
+        store->loading(true);
+    }
+public:
+    void init(int idx,
+            todo::TodoStore& store,
+            util::RequestQueue& rq,
+            util::HasState<const std::string&>* hasMsg,
+            std::function<void(const nana::arg_keyboard& arg)> $navigate)
     {
         this->idx = idx;
-        this->store = store;
+        this->store = &store;
+        this->rq = &rq;
+        this->hasMsg = hasMsg;
         
         title_.events().key_press($navigate);
         ts_.events().key_press($navigate);
-        //completed_.on_.events().click($toggleCompleted);
-        //completed_.off_.events().click($toggleCompleted);
     }
     void selected()
     {
@@ -111,46 +197,6 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         pnl_.show();
     }
 private:
-    void create(nana::window wd) override
-    {
-        pnl_.create(wd);
-        pnl_.hide();
-        
-        // title
-        title_.create(pnl_);
-        title_.transparent(true)
-            .events().click($selected);
-        pnl_.place["title_"] << title_;
-        
-        // ts
-        ts_.create(pnl_);
-        ts_.transparent(true)
-            .text_align(nana::align::right)
-            .events().click($selected);
-        pnl_.place["ts_"] << ts_;
-        
-        completed_.create(pnl_);
-        pnl_.place["completed_"] << completed_;
-        
-        /*
-        // textbox
-        txt_.create(pnl_);
-        txt_.events().click($selected);
-        pnl_.place["txt_"] << txt_;
-        
-        // button
-        btn_.create(pnl_);
-        btn_.caption("x");
-        btn_.events().click([this]
-        {
-            ind_->selected(pos_);
-            // TODO delete the item when button is clicked
-            //auto& lsbox = dynamic_cast<nana::listbox&>(ind->host());
-            //lsbox.erase(lsbox.at(pos_));
-        });
-        pnl_.place["btn_"] << btn_;
-        */
-    }
     void notify_status(status_type status, bool on) override
     {
         if (pojo && on && status == status_type::selecting)
@@ -162,7 +208,7 @@ private:
     bool whether_to_draw() const override { return false; }
 };
 
-struct Home : ui::Panel, util::HasState<bool>
+struct Home : ui::Panel, util::HasState<bool>, util::HasState<const std::string&>
 {
     todo::TodoStore store;
 private:
@@ -351,6 +397,13 @@ public:
         ui::visible(msg_close_, true);
         msg_panel_.show();
     }
+    void update(const std::string& msg) override
+    {
+        if (msg.empty())
+            msg_panel_.hide();
+        else
+            show(msg);
+    }
     
 private:
     void lazyInit()
@@ -367,7 +420,7 @@ private:
         place.field_visible("list_", false);
         
         for (int i = 0; i < len; ++i)
-            todo_items[item_offset + i]->init(i, &store, $navigate);
+            todo_items[item_offset + i]->init(i, store, rq, this, $navigate);
     }
     void populate(int idx, todo::Todo* pojo)
     {
