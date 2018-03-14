@@ -36,7 +36,7 @@ public:
     }
     void update(bool on) override
     {
-        if (init_pager)
+        if (init_pager && on)
         {
             pager_.init(opts, rq);
             init_pager = false;
