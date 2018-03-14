@@ -5,7 +5,9 @@
 #include <nana/gui/widgets/listbox.hpp>
 //#include <nana/gui/widgets/textbox.hpp>
 
-#include "todo.h"
+#include "icons.h"
+
+#include "user/TodoForms.h"
 
 /*
 static void printTodos(void* flatbuf)
@@ -178,15 +180,11 @@ private:
     
     nana::textbox search_{ *this };
     
-    nana::label add_{ *this,
-        "  "
-        "<bold color=0x0080FF size=11 target=\"2\"> + </>"
-    };
-    nana::label sort_{ *this, SORT_TOGGLE[0] };
-    nana::label refresh_{ *this,
-        "  "
-        "<color=0x0080FF size=11 target=\"3\">refresh</>"
-    };
+    ui::Icon add_{ *this, icons::plus, true };
+    
+    ui::ToggleIcon sort_{ *this, icons::arrow_down, icons::arrow_up };
+    
+    ui::Icon refresh_{ *this, icons::cw, true };
     
     ui::BgPanel msg_panel_{ *this,
         "margin=[3,2,1,3]"
@@ -209,6 +207,8 @@ private:
         "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
     };
     
+    todo::user::TodoNew fnew_{ store, "New Todo" };
+    
     nana::listbox list_{ *this, { 0, 25 + util::MARGIN, unsigned(LB_WIDTH), unsigned(LB_HEIGHT - (25 + util::MARGIN)) } };
     
     std::string page_str;
@@ -225,10 +225,14 @@ public:
         "vert"
         "<horizontal weight=25"
           "<search_ weight=200>"
-          "<add_ weight=40>"
-          "<sort_ weight=40>"
-          "<refresh_ weight=80>"
+          "<weight=15>"
           "<msg_panel_>"
+          "<add_ weight=20>"
+          "<weight=15>"
+          "<sort_ weight=20>"
+          "<weight=15>"
+          "<refresh_ weight=20>"
+          "<weight=15>"
           "<page_info_ weight=160>"
           "<nav_ weight=160>"
         ">"
@@ -236,23 +240,26 @@ public:
     ), rq(rq)
     {
         container.push_back(this);
+        
+        auto $sort = [this]() { store.toggleDesc(); };
+        auto $refresh = [this]() { store.fetchUpdate(); };
+        
+        auto $add = [this]() {
+            fnew_.popTo(add_, 50);
+            fnew_.focus();
+        };
+        
         place["search_"] << search_.tip_string("Todo");
         
-        // ctrls
-        place["add_"] << add_
-                .text_align(nana::align::center)
-                .add_format_listener($onLabelEvent)
-                .format(true);
+        place["add_"] << add_;
+        add_.events().click($add);
         
-        place["sort_"] << sort_
-                .text_align(nana::align::center)
-                .add_format_listener($onLabelEvent)
-                .format(true);
+        place["sort_"] << sort_;
+        sort_.on_.events().click($sort);
+        sort_.off_.events().click($sort);
         
-        place["refresh_"] << refresh_
-                .text_align(nana::align::center)
-                .add_format_listener($onLabelEvent)
-                .format(true);
+        place["refresh_"] << refresh_;
+        refresh_.events().click($refresh);
         
         // =====================================
         // msg
@@ -530,7 +537,7 @@ public:
                 case coreds::EventType::DESC:
                 {
                     nana::internal_scope_guard lock;
-                    sort_.caption(SORT_TOGGLE[on ? 0 : 1]);
+                    sort_.update(on);
                     break;
                 }
                 case coreds::EventType::LOADING:
