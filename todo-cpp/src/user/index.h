@@ -12,13 +12,18 @@ namespace user {
 struct Index : ui::Panel, util::HasState<bool>, util::HasState<const std::string&>
 {
 private:
+    util::RequestQueue& rq;
     TodoPager pager_{ *this };
+    bool init_pager{ true };
+    coreds::Opts opts;
 public:
-    Index(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
+    Index(ui::Panel& owner,
+        util::RequestQueue& rq,
+        std::vector<util::HasState<bool>*>& container,
         const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
         "<pager_>"
-    )
+    ), rq(rq)
     {
         container.push_back(this);
         
@@ -31,6 +36,12 @@ public:
     }
     void update(bool on) override
     {
+        if (init_pager)
+        {
+            pager_.init(opts, rq);
+            init_pager = false;
+        }
+        
         if (on && !pager_.store.loading())
             pager_.store.fetchUpdate();
     }
@@ -41,9 +52,9 @@ public:
         else
             pager_.msg_.update(msg);
     }
-    void init(coreds::Opts opts, util::RequestQueue& requestQueue)
+    void init(coreds::Opts opts)
     {
-        pager_.init(opts, requestQueue);
+        this->opts = opts;
     }
 };
 

@@ -21,13 +21,16 @@ namespace rpc = coreds::rpc;
 
 struct About : ui::Panel, util::HasState<bool>
 {
+    util::RequestQueue& rq;
     nana::label text_{ *this, "about" };
     
-    About(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
+    About(ui::Panel& owner, 
+            util::RequestQueue& rq,
+            std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
         "<text_ weight=25>"
-    )
+    ), rq(rq)
     {
         container.push_back(this);
         
@@ -76,10 +79,11 @@ struct App : rpc::Base
         "<content_1>"
         "<content_2>"
     };
+    util::RequestQueue rq;
     std::vector<util::HasState<bool>*> content_array;
-    todo::user::Index home{ content_, content_array, "content_0", true };
-    About about{ content_, content_array, "content_1" };
-    Home exp{ content_, content_array, "content_2" };
+    todo::user::Index home{ content_, rq, content_array, "content_0", true };
+    About about{ content_, rq, content_array, "content_1" };
+    Home exp{ content_, rq, content_array, "content_2" };
     
     std::vector<nana::label*> link_array;
     std::forward_list<nana::label> links;
@@ -89,8 +93,6 @@ struct App : rpc::Base
     brynet::net::EventLoop::PTR loop{ nullptr };
     brynet::net::HttpSession::PTR session{ nullptr };
     
-    util::RequestQueue rq;
-    std::string buf;
     std::function<void()> $send{
         std::bind(&App::send, this)
     };
@@ -205,8 +207,8 @@ private:
 public:
     void show(coreds::Opts opts)
     {
-        home.init(opts, rq);
-        exp.init(opts, rq);
+        home.init(opts);
+        exp.init(opts);
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {

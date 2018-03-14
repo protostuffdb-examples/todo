@@ -160,6 +160,7 @@ struct Home : ui::Panel, util::HasState<bool>
 {
     TodoStore store;
 private:
+    util::RequestQueue& rq;
     std::function<void(void* res)> $onResponse{
         std::bind(&Home::onResponse, this, std::placeholders::_1)
     };
@@ -215,7 +216,9 @@ private:
     int item_offset;
     
 public:
-    Home(ui::Panel& owner, std::vector<util::HasState<bool>*>& container,
+    Home(ui::Panel& owner,
+            util::RequestQueue& rq,
+            std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner,
         "vert"
         "<horizontal weight=25"
@@ -228,7 +231,7 @@ public:
           "<nav_ weight=160>"
         ">"
         "<list_>"
-    )
+    ), rq(rq)
     {
         container.push_back(this);
         place["search_"] << search_.tip_string("Todo");
@@ -497,7 +500,7 @@ private:
         }
     }
 public:
-    void init(coreds::Opts opts, util::RequestQueue& rq)
+    void init(coreds::Opts opts)
     {
         store.init(opts);
         store.$fnKey = [](const todo::Todo& pojo) {
@@ -552,7 +555,7 @@ public:
                 }
             }
         };
-        store.$fnFetch = [this, &rq](coreds::ParamRangeKey prk) {
+        store.$fnFetch = [this](coreds::ParamRangeKey prk) {
             std::string buf;
             prk.stringifyTo(buf);
             
