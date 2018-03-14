@@ -47,8 +47,6 @@ static const int
 struct TodoItem;
 static std::vector<TodoItem*> todo_items;
 
-using TodoStore = coreds::PojoStore<todo::Todo, todo::user::Todo>;
-
 struct TodoItem : nana::listbox::inline_notifier_interface
 {
     std::function<void()> $selected{ std::bind(&TodoItem::selected, this) };
@@ -58,18 +56,20 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     
     ui::DeferredPanel pnl_ {
         "margin=[1,10]"
-        "<title_>"
-        "<ts_ weight=120 margin=[0,5]>"
+        "<title_ margin=[2,10,0,0]>"
+        "<ts_ weight=120 margin=[2,10,0,0]>"
+        "<completed_ weight=16 margin=[3,0,0,0]>"
         //"<txt_ weight=200 margin=[0,5,0,0]>"
         //"<btn_ weight=25>" 
     };
     nana::label title_;
     nana::label ts_;
+    ui::DeferredToggleIcon completed_{ icons::circle, icons::circle_empty, false };
     //nana::textbox txt_;
     //nana::button btn_;
     
     todo::Todo* pojo{ nullptr };
-    TodoStore* store{ nullptr };
+    todo::TodoStore* store{ nullptr };
     int idx;
     
     TodoItem()
@@ -83,6 +83,8 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         
         title_.events().key_press($navigate);
         ts_.events().key_press($navigate);
+        //completed_.on_.events().click($toggleCompleted);
+        //completed_.off_.events().click($toggleCompleted);
     }
     void selected()
     {
@@ -104,6 +106,8 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         coreds::util::appendTimeagoTo(timeago, pojo->ts);
         ts_.caption(timeago);
         
+        completed_.update(pojo->completed);
+        
         pnl_.show();
     }
 private:
@@ -124,6 +128,9 @@ private:
             .text_align(nana::align::right)
             .events().click($selected);
         pnl_.place["ts_"] << ts_;
+        
+        completed_.create(pnl_);
+        pnl_.place["completed_"] << completed_;
         
         /*
         // textbox
