@@ -267,17 +267,16 @@ public:
             util::RequestQueue& rq,
             std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner,
-        "vert"
+        "vert margin=[5,0]"
         "<horizontal weight=25"
-          "<search_ weight=200>"
-          "<weight=15>"
+          "<search_ weight=200 margin=[0,15,0,1]>"
           "<msg_panel_>"
+          "<weight=10>"
           "<add_ weight=20>"
           "<weight=15>"
           "<sort_ weight=20>"
           "<weight=15>"
           "<refresh_ weight=20>"
-          "<weight=15>"
           "<page_info_ weight=160>"
           "<goto_first_ weight=20>"
           "<weight=10>"
@@ -298,7 +297,7 @@ public:
         };
         
         place["search_"] << search_
-            .tip_string("Todo");//.borderless(true);
+            .tip_string("Todo").borderless(true);
         
         // =====================================
         // msg
