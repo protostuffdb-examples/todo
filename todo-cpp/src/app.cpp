@@ -90,7 +90,7 @@ struct App : rpc::Base
     todo::user::Index home_{ content_, rq, content_array, "content_0", true };
     todo::user::Index active_{ content_, rq, content_array, "content_1" };
     todo::user::Index completed_{ content_, rq, content_array, "content_2" };
-    Home exp_{ content_, rq, content_array, "content_3" };
+    todo::exp::Home exp_{ content_, rq, content_array, "content_3" };
     About about_{ content_, rq, content_array, "content_4" };
     
     std::vector<nana::label*> link_array;
@@ -292,11 +292,9 @@ int run(int argc, char* argv[], const char* title)
         return 1;
     }
     
-    todo_items.reserve(PAGE_SIZE);
-    
     coreds::Opts opts;
-    opts.pageSize = PAGE_SIZE;
-    opts.multiplier = MULTIPLIER;
+    opts.pageSize = util::PAGE_SIZE;
+    opts.multiplier = util::MULTIPLIER;
     
     app.show(opts);
     nana::exec();

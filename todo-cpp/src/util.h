@@ -10,7 +10,10 @@ const int MARGIN = 5,
         #else
         HEIGHT = 710,
         #endif
-        WIDTH = 1005;
+        WIDTH = 1005,
+        // page
+        PAGE_SIZE = 20,
+        MULTIPLIER = 2;
 
 struct Request
 {

@@ -9,6 +9,9 @@
 
 #include "user/TodoForms.h"
 
+namespace todo {
+namespace exp {
+
 /*
 static void printTodos(void* flatbuf)
 {
@@ -28,9 +31,6 @@ nana::listbox::oresolver& operator << (nana::listbox::oresolver& orr, const todo
 */
 
 static const int
-        // page
-        PAGE_SIZE = 20,
-        MULTIPLIER = 2,
         // listbox
         LB_OUTER = util::MARGIN * 2,
         LB_HEIGHT = util::HEIGHT - LB_OUTER,
@@ -203,6 +203,8 @@ private:
     
     std::string page_str;
     
+    coreds::Opts opts;
+    
     bool initialized{ false };
     
     int item_offset;
@@ -348,15 +350,16 @@ private:
     {
         item_offset = todo_items.size();
         
+        int len = opts.pageSize;
         auto slot = list_.at(0);
-        for (int i = 0; i < PAGE_SIZE; ++i)
+        for (int i = 0; i < len; ++i)
             slot.append({ "" });
         
         // the stmt below creates the items
         place.field_visible("list_", true);
         place.field_visible("list_", false);
         
-        for (int i = 0; i < PAGE_SIZE; ++i)
+        for (int i = 0; i < len; ++i)
             todo_items[item_offset + i]->init(i, &store, $navigate);
     }
     void populate(int idx, todo::Todo* pojo)
@@ -488,6 +491,11 @@ private:
 public:
     void init(coreds::Opts opts)
     {
+        this->opts = opts;
+        
+        if (todo_items.empty())
+            todo_items.reserve(opts.pageSize);
+        
         store.init(opts);
         store.$fnKey = [](const todo::Todo& pojo) {
             return pojo.key.c_str();
@@ -587,3 +595,6 @@ public:
         //    slot.append(plist->Get(i));
     }*/
 };
+
+} // exp
+} // todo
