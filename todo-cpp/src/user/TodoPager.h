@@ -39,6 +39,10 @@ private:
         std::bind(&TodoPager::fetch, this, std::placeholders::_1)
     };
     
+    std::function<void()> $fnewFocus{
+        std::bind(&TodoPager::fnewFocus, this)
+    };
+    
     std::function<const char*(std::string& buf, coreds::ParamRangeKey& prk)> $filter{ nullptr };
 public:
     TodoPager(nana::widget& owner) : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>(owner,
@@ -63,18 +67,13 @@ public:
         "<items_ vert>"
     )
     {
-        auto $add = [this]() {
-            fnew_.popTo(add_, 50);
-            fnew_.focus();
-        };
-        
         place["page_info_"] << page_info_
                 .text_align(nana::align::center);
         
         place["msg_"] << msg_;
         
         place["add_"] << add_;
-        add_.events().click($add);
+        add_.events().click($fnewFocus);
         
         place["sort_"] << sort_;
         sort_.on_.events().click(store.$toggleSort);
@@ -96,6 +95,11 @@ public:
         goto_last_.events().click(store.$gotoLast);
     }
 private:
+    void fnewFocus()
+    {
+        fnew_.popTo(add_, 50);
+        fnew_.focus();
+    }
     void beforePopulate() override
     {
         ui::visible(*this, false);
