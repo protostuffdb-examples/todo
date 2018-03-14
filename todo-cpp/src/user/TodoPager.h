@@ -30,6 +30,7 @@ private:
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
+    //std::forward_list<TodoNew> fnew_;
     TodoNew fnew_{ store, "New Todo" };
     
     std::function<void(void* res)> $fetch$${
@@ -72,9 +73,6 @@ public:
         
         place["msg_"] << msg_;
         
-        place["add_"] << add_;
-        add_.events().click($fnewFocus);
-        
         place["sort_"] << sort_;
         sort_.on_.events().click(store.$toggleSort);
         sort_.off_.events().click(store.$toggleSort);
@@ -97,6 +95,7 @@ public:
 private:
     void fnewFocus()
     {
+        //auto& fnew = fnew_.front();
         fnew_.popTo(add_, 50);
         fnew_.focus();
     }
@@ -155,7 +154,18 @@ public:
         this->rq = &rq;
         fnew_.rq = &rq;
         
-        $filter = filter;
+        if (filter)
+        {
+            $filter = filter;
+        }
+        else
+        {
+            //fnew_.emplace_front(store, "New Todo");
+            //fnew_.front().rq = &rq;
+            
+            place["add_"] << add_;
+            add_.events().click($fnewFocus);
+        }
         
         store.init(opts);
         store.$fnFetch = $fetch;
