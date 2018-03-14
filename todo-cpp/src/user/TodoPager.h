@@ -248,7 +248,7 @@ public:
         "<title_ margin=[1,0,0,0]>"
         "<ts_ weight=130 margin=[1,0,0,0]>"
         "<weight=10>"
-        "<completed_ weight=16 margin=[1,0,0,0]>"
+        "<completed_ weight=16 margin=[2,0,0,0]>"
         ),
         pager(static_cast<TodoPager&>(owner)),
         idx(pager.size())
