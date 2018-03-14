@@ -38,6 +38,8 @@ private:
     std::function<bool(coreds::ParamRangeKey prk)> $fetch{
         std::bind(&TodoPager::fetch, this, std::placeholders::_1)
     };
+    
+    std::function<const char*(std::string& buf, coreds::ParamRangeKey& prk)> $filter{ nullptr };
 public:
     TodoPager(nana::widget& owner) : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>(owner,
         "vert margin=[5,0]"
@@ -144,17 +146,28 @@ private:
     bool fetch(coreds::ParamRangeKey prk)
     {
         std::string buf;
-        prk.stringifyTo(buf);
+        if ($filter)
+        {
+            rq->queue.emplace($filter(buf, prk), buf, "Todo_PList", &store.errmsg, $fetch$$);
+        }
+        else
+        {
+            prk.stringifyTo(buf);
+            rq->queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $fetch$$);
+        }
         
-        rq->queue.emplace("/todo/user/Todo/list", buf, "Todo_PList", &store.errmsg, $fetch$$);
         rq->send();
         return true;
     }
 public:
-    void init(coreds::Opts opts, util::RequestQueue& requestQueue)
+    void init(coreds::Opts opts,
+            util::RequestQueue& rq,
+            std::function<const char*(std::string& buf, coreds::ParamRangeKey& prk)> filter = nullptr)
     {
-        rq = &requestQueue;
-        fnew_.rq = &requestQueue;
+        this->rq = &rq;
+        fnew_.rq = &rq;
+        
+        $filter = filter;
         
         store.init(opts);
         store.$fnFetch = $fetch;

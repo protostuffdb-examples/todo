@@ -16,6 +16,8 @@ private:
     TodoPager pager_{ *this };
     bool init_pager{ true };
     coreds::Opts opts;
+    
+    std::function<const char*(std::string& buf, coreds::ParamRangeKey& prk)> $filter{ nullptr };
 public:
     Index(ui::Panel& owner,
         util::RequestQueue& rq,
@@ -52,9 +54,10 @@ public:
         else
             pager_.msg_.update(msg);
     }
-    void init(coreds::Opts opts)
+    void init(coreds::Opts opts, std::function<const char*(std::string& buf, coreds::ParamRangeKey& prk)> filter = nullptr)
     {
         this->opts = opts;
+        $filter = filter;
     }
 };
 
