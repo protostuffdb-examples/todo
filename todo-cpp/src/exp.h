@@ -279,7 +279,7 @@ public:
         // =====================================
         
         place["page_info_"] << page_info_
-                .text_align(nana::align::right);
+                .text_align(nana::align::center);
         
         place["nav_"] << nav_
                 .text_align(nana::align::right)
