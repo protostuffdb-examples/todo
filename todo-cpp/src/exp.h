@@ -155,11 +155,6 @@ private:
     bool whether_to_draw() const override { return false; }
 };
 
-static const std::string SORT_TOGGLE[] = {
-    " <color=0x0080FF size=11 target=\"0\"> dsc </>",
-    " <color=0x0080FF size=11 target=\"1\"> asc </>",
-};
-
 struct Home : ui::Panel, util::HasState<bool>
 {
     TodoStore store;
@@ -193,19 +188,14 @@ private:
         0xFFFFFF
     };
     nana::label msg_{ msg_panel_, "" };
-    nana::label msg_close_{ msg_panel_, "<bold target=\"8\"> x </>" };
+    nana::label msg_close_{ msg_panel_, "<bold target=\"2\"> x </>" };
     
     nana::label page_info_{ *this, "" };
     
-    nana::label nav_{ *this,
-        "<color=0x0080FF size=11 target=\"4\">\\<\\<</>"
-        "     "
-        "<color=0x0080FF size=11 target=\"5\"> \\< </>"
-        "     "
-        "<color=0x0080FF size=11 target=\"6\"> \\> </>"
-        "     "
-        "<color=0x0080FF size=11 target=\"7\">\\>\\></>"
-    };
+    ui::Icon goto_first_{ *this, icons::angle_double_left, true };
+    ui::Icon goto_left_{ *this, icons::angle_left, true };
+    ui::Icon goto_right_{ *this, icons::angle_right, true };
+    ui::Icon goto_last_{ *this, icons::angle_double_right, true };
     
     todo::user::TodoNew fnew_{ store, "New Todo" };
     
@@ -234,7 +224,13 @@ public:
           "<refresh_ weight=20>"
           "<weight=15>"
           "<page_info_ weight=160>"
-          "<nav_ weight=160>"
+          "<goto_first_ weight=20>"
+          "<weight=10>"
+          "<goto_left_ weight=20>"
+          "<weight=10>"
+          "<goto_right_ weight=20>"
+          "<weight=10>"
+          "<goto_last_ weight=20>"
         ">"
         "<list_>"
     ), rq(rq)
@@ -247,16 +243,6 @@ public:
         };
         
         place["search_"] << search_.tip_string("Todo");
-        
-        place["add_"] << add_;
-        add_.events().click($add);
-        
-        place["sort_"] << sort_;
-        sort_.on_.events().click(store.$toggleSort);
-        sort_.off_.events().click(store.$toggleSort);
-        
-        place["refresh_"] << refresh_;
-        refresh_.events().click(store.$refresh);
         
         // =====================================
         // msg
@@ -278,13 +264,32 @@ public:
         
         // =====================================
         
+        place["add_"] << add_;
+        add_.events().click($add);
+        
+        place["sort_"] << sort_;
+        sort_.on_.events().click(store.$toggleSort);
+        sort_.off_.events().click(store.$toggleSort);
+        
+        place["refresh_"] << refresh_;
+        refresh_.events().click(store.$refresh);
+        
         place["page_info_"] << page_info_
                 .text_align(nana::align::center);
         
-        place["nav_"] << nav_
-                .text_align(nana::align::right)
-                .add_format_listener($onLabelEvent)
-                .format(true);
+        place["goto_first_"] << goto_first_;
+        goto_first_.events().click(store.$gotoFirst);
+        
+        place["goto_left_"] << goto_left_;
+        goto_left_.events().click(store.$prevOrLoad);
+        
+        place["goto_right_"] << goto_right_;
+        goto_right_.events().click(store.$nextOrLoad);
+        
+        place["goto_last_"] << goto_last_;
+        goto_last_.events().click(store.$gotoLast);
+        
+        // =====================================
         
         // listbox
         list_.show_header(false);
@@ -395,32 +400,7 @@ private:
         int i = std::atoi(target.c_str());
         switch (i)
         {
-            case 0:
-            case 1:
-                store.toggleDesc();
-                break;
-            case 3: // refresh
-                store.fetchUpdate();
-                break;
-            case 4:
-                store.pageTo(0);
-                break;
-            case 5:
-                if (0 == (i = store.getPage()))
-                    store.fetch(store.isDesc());
-                else
-                    store.pageTo(i - 1);
-                break;
-            case 6:
-                if (store.getPageCount() == (i = store.getPage()))
-                    store.fetch(!store.isDesc());
-                else
-                    store.pageTo(i + 1);
-                break;
-            case 7:
-                store.pageTo(store.getPageCount());
-                break;
-            case 8:
+            case 2:
                 msg_panel_.hide();
                 break;
         }
