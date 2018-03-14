@@ -76,7 +76,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     {
         todo_items.push_back(this);
     }
-    void init(int idx, TodoStore* store, std::function<void(const nana::arg_keyboard& arg)> $navigate)
+    void init(int idx, todo::TodoStore* store, std::function<void(const nana::arg_keyboard& arg)> $navigate)
     {
         this->idx = idx;
         this->store = store;
@@ -164,7 +164,7 @@ private:
 
 struct Home : ui::Panel, util::HasState<bool>
 {
-    TodoStore store;
+    todo::TodoStore store;
 private:
     util::RequestQueue& rq;
     std::function<void(void* res)> $onResponse{
