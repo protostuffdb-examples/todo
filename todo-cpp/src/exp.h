@@ -1,9 +1,9 @@
 #pragma once
 
 #include <coreds/nana/ui.h>
-#include <nana/gui/widgets/button.hpp>
+//#include <nana/gui/widgets/button.hpp>
 #include <nana/gui/widgets/listbox.hpp>
-#include <nana/gui/widgets/textbox.hpp>
+//#include <nana/gui/widgets/textbox.hpp>
 
 #include "todo.h"
 
@@ -58,13 +58,13 @@ struct TodoItem : nana::listbox::inline_notifier_interface
         "margin=[1,10]"
         "<title_>"
         "<ts_ weight=120 margin=[0,5]>"
-        "<txt_ weight=200 margin=[0,5,0,0]>"
-        "<btn_ weight=25>" 
+        //"<txt_ weight=200 margin=[0,5,0,0]>"
+        //"<btn_ weight=25>" 
     };
     nana::label title_;
     nana::label ts_;
-    nana::textbox txt_;
-    nana::button btn_;
+    //nana::textbox txt_;
+    //nana::button btn_;
     
     todo::Todo* pojo{ nullptr };
     TodoStore* store{ nullptr };
@@ -123,6 +123,7 @@ private:
             .events().click($selected);
         pnl_.place["ts_"] << ts_;
         
+        /*
         // textbox
         txt_.create(pnl_);
         txt_.events().click($selected);
@@ -139,6 +140,7 @@ private:
             //lsbox.erase(lsbox.at(pos_));
         });
         pnl_.place["btn_"] << btn_;
+        */
     }
     void notify_status(status_type status, bool on) override
     {
