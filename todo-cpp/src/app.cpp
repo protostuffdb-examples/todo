@@ -52,8 +52,10 @@ static const int IDLE_INTERVAL = 10000,
 
 static const char* LINKS[] = {
     "<color=0x0080FF size=12 target=\"content_0\">    Home    </>",
-    "<color=0x0080FF size=12 target=\"content_1\">    About    </>",
-    "<color=0x0080FF size=12 target=\"content_2\">    Exp    </>"
+    "<color=0x0080FF size=12 target=\"content_1\">    Active    </>",
+    "<color=0x0080FF size=12 target=\"content_2\">    Completed    </>",
+    "<color=0x0080FF size=12 target=\"content_3\">    Exp    </>",
+    "<color=0x0080FF size=12 target=\"content_4\">    About    </>"
 };
 
 struct App : rpc::Base
@@ -63,9 +65,9 @@ struct App : rpc::Base
     ui::Place place{ fm, 
         "vert margin=5"
         #ifdef WIN32
-        "<header_ weight=35 margin=[0,20%]>"
+        "<header_ weight=35>"
         #else
-        "<header_ weight=20 margin=[0,20%]>"
+        "<header_ weight=20>"
         #endif
         "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
@@ -78,12 +80,16 @@ struct App : rpc::Base
         "<content_0>"
         "<content_1>"
         "<content_2>"
+        "<content_3>"
+        "<content_4>"
     };
     util::RequestQueue rq;
     std::vector<util::HasState<bool>*> content_array;
-    todo::user::Index home{ content_, rq, content_array, "content_0", true };
-    About about{ content_, rq, content_array, "content_1" };
-    Home exp{ content_, rq, content_array, "content_2" };
+    todo::user::Index home_{ content_, rq, content_array, "content_0", true };
+    todo::user::Index active_{ content_, rq, content_array, "content_1" };
+    todo::user::Index completed_{ content_, rq, content_array, "content_2" };
+    Home exp_{ content_, rq, content_array, "content_3" };
+    About about_{ content_, rq, content_array, "content_4" };
     
     std::vector<nana::label*> link_array;
     std::forward_list<nana::label> links;
@@ -177,7 +183,7 @@ private:
         }
         else if (!connect())
         {
-            if (home.visible())
+            if (home_.visible())
             {
                 std::string msg;
                 nana::internal_scope_guard lock;
@@ -185,7 +191,7 @@ private:
                 msg += "Could not connect to ";
                 msg += req_host;
                 
-                home.update(msg);
+                home_.update(msg);
             }
             
             loop->loop(RECONNECT_INTERVAL);
@@ -207,8 +213,20 @@ private:
 public:
     void show(coreds::Opts opts)
     {
-        home.init(opts);
-        exp.init(opts);
+        home_.init(opts);
+        active_.init(opts, [](std::string& buf, coreds::ParamRangeKey& prk) {
+            buf += R"({"1":0,"4":)";
+            prk.stringifyTo(buf);
+            buf += '}';
+            return "/todo/user/qTodo0Completed";
+        });
+        completed_.init(opts, [](std::string& buf, coreds::ParamRangeKey& prk) {
+            buf += R"({"1":1,"4":)";
+            prk.stringifyTo(buf);
+            buf += '}';
+            return "/todo/user/qTodo0Completed";
+        });
+        exp_.init(opts);
         
         // header
         auto listener = [this](nana::label::command cmd, const std::string& target) {

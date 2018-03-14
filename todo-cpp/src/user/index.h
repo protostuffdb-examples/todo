@@ -40,7 +40,7 @@ public:
     {
         if (init_pager && on)
         {
-            pager_.init(opts, rq);
+            pager_.init(opts, rq, $filter);
             init_pager = false;
         }
         
