@@ -33,13 +33,38 @@ const nana::paint::image plus("assets/png/plus.png");
 
 } // icons
 
-/*
+namespace util {
+
+const int MARGIN = 5,
+        LEFT = 360,
+        #ifdef WIN32
+        HEIGHT = 750,
+        POP_OFFSET = 75,
+        #else
+        HEIGHT = 710,
+        POP_OFFSET = 50,
+        #endif
+        WIDTH = 1005,
+        // page
+        PAGE_SIZE = 20,
+        MULTIPLIER = 2;
+
+} // util
+
 namespace fonts {
 
 //const nana::paint::font karla10(10, "assets/Karla-Regular.ttf");
-const nana::paint::font karla12(12, "assets/Karla-Regular.ttf");
+//const nana::paint::font karla12(12, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla14(14, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla16(16, "assets/Karla-Regular.ttf");
 
+const nana::paint::font r12("", 12);
+
+//#ifdef WIN32
+//const nana::paint::font header("", 12);
+//#else
+//const nana::paint::font header("", 14);
+//#endif
+
 } // fonts
-*/
+

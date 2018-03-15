@@ -22,19 +22,21 @@ namespace rpc = coreds::rpc;
 struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
-    nana::label text_{ *this, "about" };
+    ui::w$::Label text_ { *this, "<_ margin=[8,5,12,5]>", "_", "about" };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
             std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
-        "<text_ weight=25>"
+        "<text_ weight=35>"
     ), rq(rq)
     {
         container.push_back(this);
         
         place["text_"] << text_;
+        text_.bg(colors::primary).fgcolor(nana::colors::white);
+        text_.$.typeface(fonts::r12);
         
         place.collocate();
         
@@ -53,11 +55,11 @@ static const int IDLE_INTERVAL = 10000,
         RECONNECT_INTERVAL = 5000;
 
 static const char* LINKS[] = {
-    "<color=0x0080FF size=12 target=\"content_0\">    Home    </>",
-    "<color=0x0080FF size=12 target=\"content_1\">    Active    </>",
-    "<color=0x0080FF size=12 target=\"content_2\">    Completed    </>",
-    "<color=0x0080FF size=12 target=\"content_3\">    Exp    </>",
-    "<color=0x0080FF size=12 target=\"content_4\">    About    </>"
+    "<color=0x0080FF target=\"content_0\">    Home    </>",
+    "<color=0x0080FF target=\"content_1\">    Active    </>",
+    "<color=0x0080FF target=\"content_2\">    Completed    </>",
+    "<color=0x0080FF target=\"content_3\">    Exp    </>",
+    "<color=0x0080FF target=\"content_4\">    About    </>"
 };
 
 struct App : rpc::Base
@@ -248,6 +250,7 @@ public:
                 .add_format_listener(listener)
                 .caption(text);
             
+            links.front().typeface(fonts::r12);
             links.front().bgcolor(nana::colors::white);
         }
         
