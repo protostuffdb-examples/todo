@@ -5,6 +5,7 @@
 namespace util {
 
 const int MARGIN = 5,
+        LEFT = 360,
         #ifdef WIN32
         HEIGHT = 750,
         #else
