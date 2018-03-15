@@ -221,7 +221,10 @@ public:
             }
         };
         
+        hide();
         collocate(opts.pageSize);
+        store.populate();
+        show();
     }
 };
 
@@ -292,7 +295,7 @@ public:
         }
         
         place.collocate();
-        hide();
+        //hide();
     }
 private:
     void toggleCompleted$$(void* res)
