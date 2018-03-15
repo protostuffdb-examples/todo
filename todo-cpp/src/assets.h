@@ -2,6 +2,13 @@
 
 #include <nana/gui/wvl.hpp>
 
+namespace colors {
+
+const nana::color primary(nana::color_rgb(0x0080FF));
+const nana::color lgray(nana::color_rgb(0xF3F3F3));
+
+} // colors
+
 namespace icons {
 
 const nana::paint::image arrow_up("assets/png/arrow-up.png");

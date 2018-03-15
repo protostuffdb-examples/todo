@@ -124,7 +124,7 @@ private:
             return;
         
         link_array[current_selected]->bgcolor(nana::colors::white);
-        link_array[selected]->bgcolor(nana::color_rgb(0xF3F3F3));
+        link_array[selected]->bgcolor(colors::lgray);
         
         // hide current
         content_.place.field_display(current_target.c_str(), false);
@@ -174,7 +174,7 @@ private:
             this->loop = loop;
             
             nana::internal_scope_guard lock;
-            link_array[current_selected]->bgcolor(nana::color_rgb(0xF3F3F3));
+            link_array[current_selected]->bgcolor(colors::lgray);
             content_array[current_selected]->update(true);
         }
         
