@@ -284,6 +284,10 @@ int run(int argc, char* argv[], const char* title)
         return 1;
     }
     
+    #ifndef WIN32
+    nana::API::window_icon_default(nana::paint::image("assets/icon.ico"));
+    #endif
+    
     App app(config, title);
     
     if (!app.parser.Parse(todo_user_schema))
@@ -296,7 +300,6 @@ int run(int argc, char* argv[], const char* title)
     opts.pageSize = util::PAGE_SIZE;
     opts.multiplier = util::MULTIPLIER;
     
-    //nana::API::window_icon_default(nana::paint::image("assets/icon.png"));
     app.show(opts);
     nana::exec();
     return 0;
