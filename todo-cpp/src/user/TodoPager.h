@@ -2,7 +2,7 @@
 
 #include <coreds/nana/pager.h>
 
-#include "../icons.h"
+#include "../assets.h"
 
 #include "TodoForms.h"
 
