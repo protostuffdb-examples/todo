@@ -245,8 +245,8 @@ private:
 public:
     TodoItem(nana::widget& owner) : ui::BgPanel(owner,
         "margin=[5,10]"
-        "<title_ margin=[1,0,0,0]>"
-        "<ts_ weight=130 margin=[1,0,0,0]>"
+        "<title_ margin=[2,0,0,0]>"
+        "<ts_ weight=130 margin=[2,0,0,0]>"
         "<weight=10>"
         "<completed_ weight=16 margin=[2,0,0,0]>"
         ),
