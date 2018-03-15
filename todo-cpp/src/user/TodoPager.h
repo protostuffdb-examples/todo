@@ -260,12 +260,14 @@ public:
         place["title_"] << title_
             .text_align(nana::align::left)
             .transparent(true);
+        //title_.typeface(fonts::karla12);
         title_.events().click($selected);
         title_.events().key_press(pager.$navigate);
         
         place["ts_"] << ts_
             .text_align(nana::align::right)
             .transparent(true);
+        //ts_.typeface(fonts::karla12);
         ts_.events().click($selected);
         ts_.events().key_press(pager.$navigate);
         
