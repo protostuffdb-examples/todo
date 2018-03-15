@@ -2,6 +2,12 @@
 
 #include <nana/gui/wvl.hpp>
 
+namespace msgs {
+
+const std::string validation_required("All required fields must be provided.");
+
+} // msgs
+
 namespace colors {
 
 const nana::color primary(nana::color_rgb(0x0080FF));

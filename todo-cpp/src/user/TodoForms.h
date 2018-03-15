@@ -88,7 +88,11 @@ private:
         
         auto title = title_.caption();
         if (title.empty())
+        {
+            msg_.update(msgs::validation_required);
+            title_.focus();
             return;
+        }
         
         auto lastSeen = store.front();
         std::string buf;
