@@ -292,7 +292,7 @@ public:
         container.push_back(this);
         
         auto $add = [this]() {
-            fnew_.popTo(add_, 50);
+            fnew_.popTo(add_, util::POP_OFFSET);
             fnew_.focus();
         };
         

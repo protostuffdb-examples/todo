@@ -8,8 +8,10 @@ const int MARGIN = 5,
         LEFT = 360,
         #ifdef WIN32
         HEIGHT = 750,
+        POP_OFFSET = 75,
         #else
         HEIGHT = 710,
+        POP_OFFSET = 50,
         #endif
         WIDTH = 1005,
         // page

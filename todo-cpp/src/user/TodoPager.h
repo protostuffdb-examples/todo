@@ -96,7 +96,7 @@ private:
     void fnewFocus()
     {
         //auto& fnew = fnew_.front();
-        fnew_.popTo(add_, 50);
+        fnew_.popTo(add_, util::POP_OFFSET);
         fnew_.focus();
     }
     void beforePopulate() override
