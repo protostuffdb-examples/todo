@@ -6,6 +6,7 @@ namespace colors {
 
 const nana::color primary(nana::color_rgb(0x0080FF));
 const nana::color lgray(nana::color_rgb(0xF3F3F3));
+const nana::color border(nana::color_rgb(0xDEDEDE));
 
 } // colors
 

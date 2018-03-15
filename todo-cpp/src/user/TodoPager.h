@@ -275,6 +275,22 @@ public:
         completed_.on_.events().click($toggleCompleted);
         completed_.off_.events().click($toggleCompleted);
         
+        if (idx != 0)
+        {
+            nana::drawing dw(*this);
+            dw.draw([](nana::paint::graphics& graph) {
+                ui::border_top(graph, colors::border);
+            });
+            
+            /*dw.draw([](nana::paint::graphics& graph) {
+                graph.frame_rectangle(nana::rectangle(graph.size()),
+                    nana::colors::white, // left
+                    colors::border, // top
+                    nana::colors::white, // right
+                    nana::colors::white); // bottom
+            });*/
+        }
+        
         place.collocate();
         hide();
     }
