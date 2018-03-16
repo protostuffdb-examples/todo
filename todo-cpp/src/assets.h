@@ -73,13 +73,13 @@ namespace util {
 
 const int MARGIN = 5,
         LEFT = 273,
-        MAX_HEIGHT = 832,
+        MAX_HEIGHT = 842, // 900 - 58
         WIDTH = 1005,
         #ifdef WIN32
         DEF_HEIGHT = 700,
         POP_OFFSET = 67,
         #else
-        DEF_HEIGHT = 710,
+        DEF_HEIGHT = 710, // 768 - 58
         POP_OFFSET = 63,
         #endif
         // page
