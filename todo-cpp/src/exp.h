@@ -246,7 +246,7 @@ private:
     
     todo::user::TodoNew fnew_{ store, "New Todo" };
     
-    nana::listbox list_{ *this, { 0, 25 + util::MARGIN, unsigned(util::LB_WIDTH), unsigned(util::LB_HEIGHT - (25 + util::MARGIN)) } };
+    nana::listbox list_{ *this, { 0, 25 + util::MARGIN, unsigned(util::LB_WIDTH), unsigned(util::sc->lb_height - (25 + util::MARGIN)) } };
     
     std::string page_str;
     

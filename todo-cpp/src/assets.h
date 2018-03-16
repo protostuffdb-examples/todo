@@ -76,10 +76,10 @@ const int MARGIN = 5,
         MAX_HEIGHT = 832,
         WIDTH = 1005,
         #ifdef WIN32
-        HEIGHT = 700,
+        DEF_HEIGHT = 700,
         POP_OFFSET = 67,
         #else
-        HEIGHT = 710,
+        DEF_HEIGHT = 710,
         POP_OFFSET = 63,
         #endif
         // page
@@ -87,7 +87,7 @@ const int MARGIN = 5,
         MULTIPLIER = 2,
         // listbox
         LB_OUTER = MARGIN * 2,
-        LB_HEIGHT = HEIGHT - LB_OUTER,
+        //LB_HEIGHT = DEF_HEIGHT - LB_OUTER,
         LB_WIDTH = WIDTH - LB_OUTER,
         // panel
         LB_PANEL_WIDTH = LB_WIDTH - (MARGIN * 3);

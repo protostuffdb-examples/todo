@@ -94,7 +94,7 @@ static const char* LINKS[] = {
 
 struct App : rpc::Base
 {
-    ui::Form fm;
+    ui::Form fm{ {util::LEFT, 0, unsigned(util::WIDTH), unsigned(util::sc->height)}, 0 | ui::WindowFlags::STATIC };
     
     ui::Place place{ fm, 
         "vert margin=5"
@@ -135,9 +135,7 @@ struct App : rpc::Base
     
     //int disconnect_count{ 0 };
     
-    App(const rpc::Config config, const char* title):
-        rpc::Base(config),
-        fm({util::LEFT, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0 | ui::WindowFlags::STATIC)
+    App(const rpc::Config config, const char* title) : rpc::Base(config)
     {
         fm.caption(title ? title : "Todo App");
         rq.send = [this]() {
@@ -316,6 +314,12 @@ int run(int argc, char* argv[], const char* title)
         fprintf(stderr, "Invalid endpoint %s\n", argv[1]);
         return 1;
     }
+    
+    auto pms = nana::screen::primary_monitor_size();
+    int height = pms.height > util::MAX_HEIGHT ? util::MAX_HEIGHT : util::DEF_HEIGHT;
+    
+    util::ScreenConfig sc(height);
+    util::sc = &sc;
     
     #ifndef WIN32
     nana::API::window_icon_default(nana::paint::image("assets/icon.ico"));
