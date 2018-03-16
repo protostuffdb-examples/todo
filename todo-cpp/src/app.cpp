@@ -22,20 +22,45 @@ namespace rpc = coreds::rpc;
 struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
-    ui::w$::Label text_{ *this, "about", fonts::r12, w$::label12 };
+    
+    ui::w$::Label text8_{ *this, "about", fonts::r8, w$::label8 };
+    ui::w$::Label text10_{ *this, "about", fonts::r10, w$::label10 };
+    ui::w$::Label text12_{ *this, "about", fonts::r12, w$::label12 };
+    ui::w$::Label text14_{ *this, "about", fonts::r14, w$::label14 };
+    ui::w$::Label text16_{ *this, "about", fonts::r16, w$::label16 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
             std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
-        "<text_ weight=34>"
+        "<text8_ weight=26>"
+        "<weight=5>"
+        "<text10_ weight=30>"
+        "<weight=5>"
+        "<text12_ weight=34>"
+        "<weight=5>"
+        "<text14_ weight=38>"
+        "<weight=5>"
+        "<text16_ weight=42>"
     ), rq(rq)
     {
         container.push_back(this);
         
-        place["text_"] << text_;
-        text_.bg(colors::primary).fgcolor(nana::colors::white);
+        place["text8_"] << text8_;
+        text8_.bg(colors::primary).fgcolor(nana::colors::white);
+        
+        place["text10_"] << text10_;
+        text10_.bg(colors::primary).fgcolor(nana::colors::white);
+        
+        place["text12_"] << text12_;
+        text12_.bg(colors::primary).fgcolor(nana::colors::white);
+        
+        place["text14_"] << text14_;
+        text14_.bg(colors::primary).fgcolor(nana::colors::white);
+        
+        place["text16_"] << text16_;
+        text16_.bg(colors::primary).fgcolor(nana::colors::white);
         
         place.collocate();
         
