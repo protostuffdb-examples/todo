@@ -68,6 +68,11 @@ public:
         "<items_ vert>"
     )
     {
+        if (util::sc->hd)
+        {
+            page_info_.typeface(fonts::r11);
+        }
+        
         place["page_info_"] << page_info_
                 .text_align(nana::align::center);
         
