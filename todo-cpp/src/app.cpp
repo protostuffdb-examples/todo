@@ -192,10 +192,12 @@ private:
         current_selected = selected;
         current_target.assign(target);
         
+        // prepare
+        content_array[selected]->update(true);
+        
         // show
         content_.place.field_display(target.c_str(), true);
         content_.place.collocate();
-        content_array[selected]->update(true);
     }
     
     void onHttpData(const brynet::net::HTTPParser& httpParser,
