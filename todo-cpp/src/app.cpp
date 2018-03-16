@@ -52,15 +52,15 @@ struct About : ui::Panel, util::HasState<bool>
         "<weight=5>"
         "<text14_ weight=32>"
         "<weight=5>"
-        "<text16_ weight=37>"
+        "<text16_ weight=36>"
         "<weight=5>"
-        "<text18_ weight=42>"
+        "<text18_ weight=41>"
         "<weight=5>"
-        "<text20_ weight=47>"
+        "<text20_ weight=46>"
         "<weight=5>"
-        "<text22_ weight=52>"
+        "<text22_ weight=51>"
         "<weight=5>"
-        "<text24_ weight=57>"
+        "<text24_ weight=56>"
     ), rq(rq)
     {
         container.push_back(this);
