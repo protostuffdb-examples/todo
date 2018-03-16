@@ -56,7 +56,7 @@ namespace w$ {
 #ifdef WIN32
 const char* const label12 = "margin=[0,5]<_>";
 #else
-const char* const label12 = "margin=[8,5,12,5]<_>";
+const char* const label12 = "margin=[7,5,9,5]<_>";
 #endif
 
 } // w$
