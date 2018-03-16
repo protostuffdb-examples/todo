@@ -346,7 +346,8 @@ int run(int argc, char* argv[], const char* title)
     }
     
     auto pms = nana::screen::primary_monitor_size();
-    int height = pms.height > util::MAX_HEIGHT ? util::MAX_HEIGHT : util::DEF_HEIGHT;
+    int h = pms.height;
+    int height = h > util::MAX_HEIGHT ? std::max(h - 58, util::MAX_HEIGHT) : util::DEF_HEIGHT;
     
     util::ScreenConfig sc(height);
     util::sc = &sc;
