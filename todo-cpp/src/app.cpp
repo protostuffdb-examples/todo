@@ -22,7 +22,7 @@ namespace rpc = coreds::rpc;
 struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
-    ui::w$::Label text_ { *this, w$::label12, "_", "about" };
+    ui::w$::Label text_{ *this, "about", fonts::r12, w$::label12 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
@@ -36,7 +36,6 @@ struct About : ui::Panel, util::HasState<bool>
         
         place["text_"] << text_;
         text_.bg(colors::primary).fgcolor(nana::colors::white);
-        text_.$.typeface(fonts::r12);
         
         place.collocate();
         
@@ -55,11 +54,11 @@ static const int IDLE_INTERVAL = 10000,
         RECONNECT_INTERVAL = 5000;
 
 static const char* LINKS[] = {
-    "<color=0x0080FF target=\"content_0\">    Home    </>",
-    "<color=0x0080FF target=\"content_1\">    Active    </>",
-    "<color=0x0080FF target=\"content_2\">    Completed    </>",
-    "<color=0x0080FF target=\"content_3\">    Exp    </>",
-    "<color=0x0080FF target=\"content_4\">    About    </>"
+    "<target=\"content_0\">    Home    </>",
+    "<target=\"content_1\">    Active    </>",
+    "<target=\"content_2\">    Completed    </>",
+    "<target=\"content_3\">    Exp    </>",
+    "<target=\"content_4\">    About    </>"
 };
 
 struct App : rpc::Base
@@ -68,11 +67,7 @@ struct App : rpc::Base
     
     ui::Place place{ fm, 
         "vert margin=5"
-        #ifdef WIN32
         "<header_ weight=34>"
-        #else
-        "<header_ weight=20>"
-        #endif
         "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
     };
@@ -95,8 +90,8 @@ struct App : rpc::Base
     todo::exp::Home exp_{ content_, rq, content_array, "content_3" };
     About about_{ content_, rq, content_array, "content_4" };
     
-    std::vector<nana::label*> link_array;
-    std::forward_list<nana::label> links;
+    std::vector<ui::w$::Label*> link_array;
+    std::forward_list<ui::w$::Label> links;
     std::string current_target{ "content_0" };
     int current_selected{ 0 };
     
@@ -125,8 +120,8 @@ private:
         if (selected == current_selected)
             return;
         
-        link_array[current_selected]->bgcolor(nana::colors::white);
-        link_array[selected]->bgcolor(colors::lgray);
+        link_array[current_selected]->bg(nana::colors::white);
+        link_array[selected]->bg(colors::lgray);
         
         // hide current
         content_.place.field_display(current_target.c_str(), false);
@@ -176,7 +171,7 @@ private:
             this->loop = loop;
             
             nana::internal_scope_guard lock;
-            link_array[current_selected]->bgcolor(colors::lgray);
+            link_array[current_selected]->bg(colors::lgray);
             content_array[current_selected]->update(true);
         }
         
@@ -240,18 +235,20 @@ public:
         
         for (auto text : LINKS)
         {
-            links.emplace_front(fm.handle());
+            links.emplace_front(fm, "", fonts::r12, w$::label12);
             
-            link_array.push_back(&links.front());
+            auto& front = links.front();
+            link_array.push_back(&front);
             
-            place["header_"] << links.front()
+            front.$
                 .text_align(nana::align::center)
                 .format(true)
                 .add_format_listener(listener)
                 .caption(text);
             
-            links.front().typeface(fonts::r12);
-            links.front().bgcolor(nana::colors::white);
+            front.bg(nana::colors::white).fgcolor(colors::primary);
+            
+            place["header_"] << front;
         }
         
         /*

@@ -37,6 +37,7 @@ namespace util {
 
 const int MARGIN = 5,
         LEFT = 360,
+        WIDTH = 1005,
         #ifdef WIN32
         HEIGHT = 750,
         POP_OFFSET = 75,
@@ -44,7 +45,6 @@ const int MARGIN = 5,
         HEIGHT = 710,
         POP_OFFSET = 50,
         #endif
-        WIDTH = 1005,
         // page
         PAGE_SIZE = 20,
         MULTIPLIER = 2;
