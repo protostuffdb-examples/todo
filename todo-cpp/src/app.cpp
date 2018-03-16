@@ -35,17 +35,17 @@ struct About : ui::Panel, util::HasState<bool>
             std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
-        "<text8_ weight=20>"
+        "<text8_ weight=16>"
         "<weight=5>"
-        "<text10_ weight=26>"
+        "<text10_ weight=22>"
         "<weight=5>"
-        "<text11_ weight=30>"
+        "<text11_ weight=26>"
         "<weight=5>"
-        "<text12_ weight=34>"
+        "<text12_ weight=30>"
         "<weight=5>"
-        "<text14_ weight=38>"
+        "<text14_ weight=34>"
         "<weight=5>"
-        "<text16_ weight=44>"
+        "<text16_ weight=40>"
     ), rq(rq)
     {
         container.push_back(this);
@@ -98,7 +98,7 @@ struct App : rpc::Base
     
     ui::Place place{ fm, 
         "vert margin=5"
-        "<header_ weight=34>"
+        "<header_ weight=30>"
         "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
     };

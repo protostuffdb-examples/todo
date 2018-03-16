@@ -36,14 +36,14 @@ const nana::paint::image plus("assets/png/plus.png");
 namespace util {
 
 const int MARGIN = 5,
-        LEFT = 360,
+        LEFT = 273,
         WIDTH = 1005,
         #ifdef WIN32
-        HEIGHT = 800,
-        POP_OFFSET = 75,
+        HEIGHT = 700,
+        POP_OFFSET = 70,
         #else
         HEIGHT = 710,
-        POP_OFFSET = 50,
+        POP_OFFSET = 62,
         #endif
         // page
         PAGE_SIZE = 20,
@@ -61,12 +61,12 @@ const char* const label12 = "margin=[0,5]<_>";
 const char* const label14 = "margin=[0,5]<_>";
 const char* const label16 = "margin=[0,5]<_>";
 #else
-const char* const label8 = "margin=[3,5,0,5]<_>";
-const char* const label10 = "margin=[4,5,0,5]<_>";
-const char* const label11 = "margin=[5,5,0,5]<_>";
-const char* const label12 = "margin=[6,5,0,5]<_>";
-const char* const label14 = "margin=[7,5,0,5]<_>";
-const char* const label16 = "margin=[8,5,0,5]<_>";
+const char* const label8 = "margin=[1,5,0,5]<_>";
+const char* const label10 = "margin=[2,5,0,5]<_>";
+const char* const label11 = "margin=[3,5,0,5]<_>";
+const char* const label12 = "margin=[4,5,0,5]<_>";
+const char* const label14 = "margin=[5,5,0,5]<_>";
+const char* const label16 = "margin=[6,5,0,5]<_>";
 #endif
 
 } // w$
