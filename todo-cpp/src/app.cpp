@@ -23,11 +23,11 @@ struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
     
-    ui::w$::Label text8_{ *this, "about", fonts::r8, w$::label8 };
-    ui::w$::Label text10_{ *this, "about", fonts::r10, w$::label10 };
-    ui::w$::Label text12_{ *this, "about", fonts::r12, w$::label12 };
-    ui::w$::Label text14_{ *this, "about", fonts::r14, w$::label14 };
-    ui::w$::Label text16_{ *this, "about", fonts::r16, w$::label16 };
+    ui::w$::Label text8_{ *this, "about | g", fonts::r8, w$::label8 };
+    ui::w$::Label text10_{ *this, "about | g", fonts::r10, w$::label10 };
+    ui::w$::Label text12_{ *this, "about | g", fonts::r12, w$::label12 };
+    ui::w$::Label text14_{ *this, "about | g", fonts::r14, w$::label14 };
+    ui::w$::Label text16_{ *this, "about | g", fonts::r16, w$::label16 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
