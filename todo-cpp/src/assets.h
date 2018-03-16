@@ -37,18 +37,20 @@ namespace w$ {
 
 #ifdef WIN32
 const char* const label8 = "margin=[0,5]<_>";
-const char* const label10 = "margin=[0,5]<_>";
-const char* const label11 = "margin=[0,5]<_>";
-const char* const label12 = "margin=[0,5]<_>";
-const char* const label14 = "margin=[0,5]<_>";
-const char* const label16 = "margin=[0,5]<_>";
+const char* const label9 = label8;
+const char* const label10 = label8;
+const char* const label11 = label8;
+const char* const label12 = label8;
+const char* const label14 = label8;
+const char* const label16 = label8;
 #else
 const char* const label8 = "margin=[1,5,0,5]<_>";
+const char* const label9 = label8;
 const char* const label10 = "margin=[2,5,0,5]<_>";
-const char* const label11 = "margin=[3,5,0,5]<_>";
-const char* const label12 = "margin=[4,5,0,5]<_>";
-const char* const label14 = "margin=[5,5,0,5]<_>";
-const char* const label16 = "margin=[6,5,0,5]<_>";
+const char* const label11 = label10;
+const char* const label12 = "margin=[3,5,0,5]<_>";
+const char* const label14 = "margin=[4,5,0,5]<_>";
+const char* const label16 = "margin=[5,5,0,5]<_>";
 #endif
 
 } // w$
@@ -56,6 +58,7 @@ const char* const label16 = "margin=[6,5,0,5]<_>";
 namespace fonts {
 
 const nana::paint::font r8("", 8);
+const nana::paint::font r9("", 9);
 const nana::paint::font r10("", 10);
 const nana::paint::font r11("", 11);
 const nana::paint::font r12("", 12);

@@ -23,12 +23,13 @@ struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
     
-    ui::w$::Label text8_{ *this, "about | g", fonts::r8, w$::label8 };
-    ui::w$::Label text10_{ *this, "about | g", fonts::r10, w$::label10 };
-    ui::w$::Label text11_{ *this, "about | g", fonts::r11, w$::label11 };
-    ui::w$::Label text12_{ *this, "about | g", fonts::r12, w$::label12 };
-    ui::w$::Label text14_{ *this, "about | g", fonts::r14, w$::label14 };
-    ui::w$::Label text16_{ *this, "about | g", fonts::r16, w$::label16 };
+    ui::w$::Label text8_{ *this, "about | 8 | g", fonts::r8, w$::label8 };
+    ui::w$::Label text9_{ *this, "about | 9 |  g", fonts::r9, w$::label9 };
+    ui::w$::Label text10_{ *this, "about | 10 |  g", fonts::r10, w$::label10 };
+    ui::w$::Label text11_{ *this, "about | 11 |  g", fonts::r11, w$::label11 };
+    ui::w$::Label text12_{ *this, "about | 12 |  g", fonts::r12, w$::label12 };
+    ui::w$::Label text14_{ *this, "about | 14 |  g", fonts::r14, w$::label14 };
+    ui::w$::Label text16_{ *this, "about | 16 |  g", fonts::r16, w$::label16 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
@@ -37,21 +38,26 @@ struct About : ui::Panel, util::HasState<bool>
         "vert"
         "<text8_ weight=16>"
         "<weight=5>"
+        "<text9_ weight=18>"
+        "<weight=5>"
         "<text10_ weight=22>"
         "<weight=5>"
-        "<text11_ weight=26>"
+        "<text11_ weight=24>"
         "<weight=5>"
-        "<text12_ weight=30>"
+        "<text12_ weight=27>"
         "<weight=5>"
-        "<text14_ weight=34>"
+        "<text14_ weight=32>"
         "<weight=5>"
-        "<text16_ weight=40>"
+        "<text16_ weight=38>"
     ), rq(rq)
     {
         container.push_back(this);
         
         place["text8_"] << text8_;
         text8_.bg(colors::primary).fgcolor(nana::colors::white);
+        
+        place["text9_"] << text9_;
+        text9_.bg(colors::primary).fgcolor(nana::colors::white);
         
         place["text10_"] << text10_;
         text10_.bg(colors::primary).fgcolor(nana::colors::white);
@@ -98,7 +104,7 @@ struct App : rpc::Base
     
     ui::Place place{ fm, 
         "vert margin=5"
-        "<header_ weight=34>"
+        "<header_ weight=32>"
         "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
     };
