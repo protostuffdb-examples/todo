@@ -25,6 +25,7 @@ struct About : ui::Panel, util::HasState<bool>
     
     ui::w$::Label text8_{ *this, "about | g", fonts::r8, w$::label8 };
     ui::w$::Label text10_{ *this, "about | g", fonts::r10, w$::label10 };
+    ui::w$::Label text11_{ *this, "about | g", fonts::r11, w$::label11 };
     ui::w$::Label text12_{ *this, "about | g", fonts::r12, w$::label12 };
     ui::w$::Label text14_{ *this, "about | g", fonts::r14, w$::label14 };
     ui::w$::Label text16_{ *this, "about | g", fonts::r16, w$::label16 };
@@ -37,6 +38,8 @@ struct About : ui::Panel, util::HasState<bool>
         "<text8_ weight=20>"
         "<weight=5>"
         "<text10_ weight=26>"
+        "<weight=5>"
+        "<text11_ weight=30>"
         "<weight=5>"
         "<text12_ weight=34>"
         "<weight=5>"
@@ -52,6 +55,9 @@ struct About : ui::Panel, util::HasState<bool>
         
         place["text10_"] << text10_;
         text10_.bg(colors::primary).fgcolor(nana::colors::white);
+        
+        place["text11_"] << text11_;
+        text11_.bg(colors::primary).fgcolor(nana::colors::white);
         
         place["text12_"] << text12_;
         text12_.bg(colors::primary).fgcolor(nana::colors::white);

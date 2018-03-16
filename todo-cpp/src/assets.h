@@ -56,12 +56,14 @@ namespace w$ {
 #ifdef WIN32
 const char* const label8 = "margin=[0,5]<_>";
 const char* const label10 = "margin=[0,5]<_>";
+const char* const label11 = "margin=[0,5]<_>";
 const char* const label12 = "margin=[0,5]<_>";
 const char* const label14 = "margin=[0,5]<_>";
 const char* const label16 = "margin=[0,5]<_>";
 #else
 const char* const label8 = "margin=[3,5,0,5]<_>";
 const char* const label10 = "margin=[4,5,0,5]<_>";
+const char* const label11 = "margin=[5,5,0,5]<_>";
 const char* const label12 = "margin=[6,5,0,5]<_>";
 const char* const label14 = "margin=[7,5,0,5]<_>";
 const char* const label16 = "margin=[8,5,0,5]<_>";
@@ -73,6 +75,7 @@ namespace fonts {
 
 const nana::paint::font r8("", 8);
 const nana::paint::font r10("", 10);
+const nana::paint::font r11("", 11);
 const nana::paint::font r12("", 12);
 const nana::paint::font r14("", 14);
 const nana::paint::font r16("", 16);
