@@ -107,13 +107,21 @@ const int MARGIN = 5,
         // panel
         LB_PANEL_WIDTH = LB_WIDTH - (MARGIN * 3);
 
+inline int maxHeight(nana::size screenSize)
+{
+    int h = screenSize.height;
+    return h > util::MAX_HEIGHT ? std::max(h - 58, util::MAX_HEIGHT) : util::DEF_HEIGHT;
+}
+
 struct ScreenConfig
 {
+    const nana::size size;
     const int height;
     const int lb_height;
     const bool hd;
-    ScreenConfig(int h):
-        height(std::min(h, 1022)), // 1080 - 58 - hd max height
+    ScreenConfig(nana::size pms = nana::screen::primary_monitor_size()):
+        size(pms),
+        height(std::min(maxHeight(size), 1022)), // 1080 - 58 - hd max height
         lb_height(height - LB_OUTER),
         hd(height >= MAX_HEIGHT)
     {
