@@ -23,17 +23,17 @@ struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
     
-    ui::w$::Label text8_{ *this, "about | 8 | g", fonts::r8, w$::label8 };
-    ui::w$::Label text9_{ *this, "about | 9 | g", fonts::r9, w$::label9 };
-    ui::w$::Label text10_{ *this, "about | 10 | g", fonts::r10, w$::label10 };
-    ui::w$::Label text11_{ *this, "about | 11 | g", fonts::r11, w$::label11 };
-    ui::w$::Label text12_{ *this, "about | 12 | g", fonts::r12, w$::label12 };
-    ui::w$::Label text14_{ *this, "about | 14 | g", fonts::r14, w$::label14 };
-    ui::w$::Label text16_{ *this, "about | 16 | g", fonts::r16, w$::label16 };
-    ui::w$::Label text18_{ *this, "about | 18 | g", fonts::r18, w$::label18 };
-    ui::w$::Label text20_{ *this, "about | 20 | g", fonts::r20, w$::label20 };
-    ui::w$::Label text22_{ *this, "about | 22 | g", fonts::r22, w$::label22 };
-    ui::w$::Label text24_{ *this, "about | 24 | g", fonts::r24, w$::label24 };
+    ui::w$::Label text8_{ *this, "about | 08 | g | simon", fonts::r8, w$::label8 };
+    ui::w$::Label text9_{ *this, "about | 09 | g | says", fonts::r9, w$::label9 };
+    ui::w$::Label text10_{ *this, "about | 10 | g | the", fonts::r10, w$::label10 };
+    ui::w$::Label text11_{ *this, "about | 11 | g | quick", fonts::r11, w$::label11 };
+    ui::w$::Label text12_{ *this, "about | 12 | g | brown", fonts::r12, w$::label12 };
+    ui::w$::Label text14_{ *this, "about | 14 | g | fox", fonts::r14, w$::label14 };
+    ui::w$::Label text16_{ *this, "about | 16 | g | jumps", fonts::r16, w$::label16 };
+    ui::w$::Label text18_{ *this, "about | 18 | g | over", fonts::r18, w$::label18 };
+    ui::w$::Label text20_{ *this, "about | 20 | g | the", fonts::r20, w$::label20 };
+    ui::w$::Label text22_{ *this, "about | 22 | g | lazy", fonts::r22, w$::label22 };
+    ui::w$::Label text24_{ *this, "about | 24 | g | dog", fonts::r24, w$::label24 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
