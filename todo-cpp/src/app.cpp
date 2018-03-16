@@ -94,7 +94,7 @@ static const char* LINKS[] = {
 
 struct App : rpc::Base
 {
-    ui::Form fm{ {util::LEFT, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0 | ui::WindowFlags::STATIC };
+    ui::Form fm;
     
     ui::Place place{ fm, 
         "vert margin=5"
@@ -135,7 +135,9 @@ struct App : rpc::Base
     
     //int disconnect_count{ 0 };
     
-    App(const rpc::Config config, const char* title) : rpc::Base(config)
+    App(const rpc::Config config, const char* title):
+        rpc::Base(config),
+        fm({util::LEFT, 0, unsigned(util::WIDTH), unsigned(util::HEIGHT)}, 0 | ui::WindowFlags::STATIC)
     {
         fm.caption(title ? title : "Todo App");
         rq.send = [this]() {
