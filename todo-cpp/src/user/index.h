@@ -44,8 +44,19 @@ public:
             init_pager = false;
         }
         
-        if (on && !pager_.store.loading())
+        if (!on || pager_.store.loading())
+        {
+            // noop
+        }
+        else if ($filter == nullptr)
+        {
             pager_.store.fetchUpdate();
+        }
+        else
+        {
+            pager_.store.repaint();
+            pager_.store.fetchNewer();
+        }
     }
     void update(const std::string& msg) override
     {
