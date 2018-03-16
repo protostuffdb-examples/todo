@@ -98,7 +98,7 @@ struct App : rpc::Base
     
     ui::Place place{ fm, 
         "vert margin=5"
-        "<header_ weight=30>"
+        "<header_ weight=34>"
         "<content_ margin=[5,0]>"
         "<footer_ weight=20>"
     };
@@ -266,7 +266,7 @@ public:
         
         for (auto text : LINKS)
         {
-            links.emplace_front(fm, "", fonts::r12, w$::label12);
+            links.emplace_front(fm, "", fonts::r14, w$::label14);
             
             auto& front = links.front();
             link_array.push_back(&front);
