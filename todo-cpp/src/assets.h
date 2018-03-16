@@ -40,10 +40,10 @@ const int MARGIN = 5,
         WIDTH = 1005,
         #ifdef WIN32
         HEIGHT = 700,
-        POP_OFFSET = 70,
+        POP_OFFSET = 67,
         #else
         HEIGHT = 710,
-        POP_OFFSET = 62,
+        POP_OFFSET = 63,
         #endif
         // page
         PAGE_SIZE = 20,
