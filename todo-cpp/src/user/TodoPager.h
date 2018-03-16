@@ -278,6 +278,12 @@ public:
         completed_.on_.events().click($toggleCompleted);
         completed_.off_.events().click($toggleCompleted);
         
+        if (util::sc->hd)
+        {
+            title_.typeface(fonts::r12);
+            ts_.typeface(fonts::r12);
+        }
+        
         if (idx != 0)
         {
             nana::drawing dw(*this);
