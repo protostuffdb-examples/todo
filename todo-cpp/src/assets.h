@@ -33,24 +33,6 @@ const nana::paint::image plus("assets/png/plus.png");
 
 } // icons
 
-namespace util {
-
-const int MARGIN = 5,
-        LEFT = 273,
-        WIDTH = 1005,
-        #ifdef WIN32
-        HEIGHT = 700,
-        POP_OFFSET = 67,
-        #else
-        HEIGHT = 710,
-        POP_OFFSET = 63,
-        #endif
-        // page
-        PAGE_SIZE = 20,
-        MULTIPLIER = 2;
-
-} // util
-
 namespace w$ {
 
 #ifdef WIN32
@@ -87,3 +69,41 @@ const nana::paint::font r16("", 16);
 
 } // fonts
 
+namespace util {
+
+const int MARGIN = 5,
+        LEFT = 273,
+        MAX_HEIGHT = 832,
+        WIDTH = 1005,
+        #ifdef WIN32
+        HEIGHT = 700,
+        POP_OFFSET = 67,
+        #else
+        HEIGHT = 710,
+        POP_OFFSET = 63,
+        #endif
+        // page
+        PAGE_SIZE = 20,
+        MULTIPLIER = 2,
+        // listbox
+        LB_OUTER = MARGIN * 2,
+        LB_HEIGHT = HEIGHT - LB_OUTER,
+        LB_WIDTH = WIDTH - LB_OUTER,
+        // panel
+        LB_PANEL_WIDTH = LB_WIDTH - (MARGIN * 3);
+
+struct ScreenConfig
+{
+    const int height;
+    const int lb_height;
+    ScreenConfig(int height):
+        height(height),
+        lb_height(height - LB_OUTER)
+    {
+        
+    }
+};
+
+ScreenConfig* sc{ nullptr };
+
+} // util

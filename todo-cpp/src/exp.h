@@ -31,17 +31,11 @@ nana::listbox::oresolver& operator << (nana::listbox::oresolver& orr, const todo
 */
 
 static const int
-        // listbox
-        LB_OUTER = util::MARGIN * 2,
-        LB_HEIGHT = util::HEIGHT - LB_OUTER,
-        LB_WIDTH = util::WIDTH - LB_OUTER,
-        // panel
-        LB_PANEL_WIDTH = LB_WIDTH - (util::MARGIN * 3),
-        // inner
+        // listbox inner
         LB_FIELDS = 2,
         LB_INNER = util::MARGIN * 3 * LB_FIELDS,
         COMPLETED_WIDTH = 20,
-        TITLE_WIDTH = LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
+        TITLE_WIDTH = util::LB_WIDTH - LB_INNER - COMPLETED_WIDTH;
 
 // hack
 struct TodoItem;
@@ -252,7 +246,7 @@ private:
     
     todo::user::TodoNew fnew_{ store, "New Todo" };
     
-    nana::listbox list_{ *this, { 0, 25 + util::MARGIN, unsigned(LB_WIDTH), unsigned(LB_HEIGHT - (25 + util::MARGIN)) } };
+    nana::listbox list_{ *this, { 0, 25 + util::MARGIN, unsigned(util::LB_WIDTH), unsigned(util::LB_HEIGHT - (25 + util::MARGIN)) } };
     
     std::string page_str;
     
@@ -351,7 +345,7 @@ public:
         list_.enable_single(true, true);
         
         // 1-column inline widgets
-        list_.append_header("", LB_PANEL_WIDTH);
+        list_.append_header("", util::LB_PANEL_WIDTH);
         list_.at(0).inline_factory(0, nana::pat::make_factory<TodoItem>());
         
         // 2-column text-only
