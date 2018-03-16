@@ -292,6 +292,11 @@ public:
             fnew_.focus();
         };
         
+        if (util::sc->hd)
+        {
+            page_info_.typeface(fonts::r11);
+        }
+        
         place["search_"] << search_
             .tip_string("Todo").borderless(true);
         
