@@ -51,6 +51,16 @@ const int MARGIN = 5,
 
 } // util
 
+namespace w$ {
+
+#ifdef WIN32
+const char* const label12 = "margin=[0,5]<_>";
+#else
+const char* const label12 = "margin=[8,5,12,5]<_>";
+#endif
+
+} // w$
+
 namespace fonts {
 
 //const nana::paint::font karla10(10, "assets/Karla-Regular.ttf");

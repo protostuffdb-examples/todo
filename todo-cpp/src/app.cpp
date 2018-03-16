@@ -22,14 +22,14 @@ namespace rpc = coreds::rpc;
 struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
-    ui::w$::Label text_ { *this, "<_ margin=[8,5,12,5]>", "_", "about" };
+    ui::w$::Label text_ { *this, w$::label12, "_", "about" };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
             std::vector<util::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
-        "<text_ weight=35>"
+        "<text_ weight=34>"
     ), rq(rq)
     {
         container.push_back(this);
@@ -69,7 +69,7 @@ struct App : rpc::Base
     ui::Place place{ fm, 
         "vert margin=5"
         #ifdef WIN32
-        "<header_ weight=35>"
+        "<header_ weight=34>"
         #else
         "<header_ weight=20>"
         #endif
