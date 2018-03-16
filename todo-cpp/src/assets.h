@@ -63,18 +63,12 @@ const char* const label12 = "margin=[7,5,9,5]<_>";
 
 namespace fonts {
 
+const nana::paint::font r12("", 12);
+
 //const nana::paint::font karla10(10, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla12(12, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla14(14, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla16(16, "assets/Karla-Regular.ttf");
-
-const nana::paint::font r12("", 12);
-
-//#ifdef WIN32
-//const nana::paint::font header("", 12);
-//#else
-//const nana::paint::font header("", 14);
-//#endif
 
 } // fonts
 
