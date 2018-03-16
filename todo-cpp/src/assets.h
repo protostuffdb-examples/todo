@@ -39,7 +39,7 @@ const int MARGIN = 5,
         LEFT = 360,
         WIDTH = 1005,
         #ifdef WIN32
-        HEIGHT = 750,
+        HEIGHT = 800,
         POP_OFFSET = 75,
         #else
         HEIGHT = 710,
