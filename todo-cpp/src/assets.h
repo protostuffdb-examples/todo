@@ -112,8 +112,8 @@ struct ScreenConfig
     const int height;
     const int lb_height;
     const bool hd;
-    ScreenConfig(int height):
-        height(height),
+    ScreenConfig(int h):
+        height(std::min(h, 1022)), // 1080 - 58 - hd max height
         lb_height(height - LB_OUTER),
         hd(height >= MAX_HEIGHT)
     {
