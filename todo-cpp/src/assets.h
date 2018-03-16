@@ -60,11 +60,11 @@ const char* const label12 = "margin=[0,5]<_>";
 const char* const label14 = "margin=[0,5]<_>";
 const char* const label16 = "margin=[0,5]<_>";
 #else
-const char* const label8 = "margin=[6,5,8,5]<_>";
-const char* const label10 = "margin=[6,5,8,5]<_>";
-const char* const label12 = "margin=[7,5,9,5]<_>";
-const char* const label14 = "margin=[8,5,10,5]<_>";
-const char* const label16 = "margin=[8,5,12,5]<_>";
+const char* const label8 = "margin=[3,5,0,5]<_>";
+const char* const label10 = "margin=[4,5,0,5]<_>";
+const char* const label12 = "margin=[6,5,0,5]<_>";
+const char* const label14 = "margin=[7,5,0,5]<_>";
+const char* const label16 = "margin=[8,5,0,5]<_>";
 #endif
 
 } // w$
