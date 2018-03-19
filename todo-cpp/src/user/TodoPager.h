@@ -184,8 +184,8 @@ public:
             message->title()->assign_to(pojo.title);
             pojo.completed = message->completed();
         };
-        store.$fnPopulate = [this](int idx, todo::Todo* pojo) {
-            populate(idx, pojo);
+        store.$fnPopulate = [this](int idx, todo::Todo* pojo, int64_t ts) {
+            populate(idx, pojo, ts);
         };
         store.$fnCall = [this](std::function<void()> op) {
             nana::internal_scope_guard lock;
@@ -338,7 +338,7 @@ private:
         pager.store.loading(true);
     }
 public:
-    void update(todo::Todo* message)
+    void update(todo::Todo* message, int64_t ts)
     {
         pojo = message;
         if (message == nullptr)
@@ -351,7 +351,7 @@ public:
         
         std::string timeago;
         timeago.reserve(16); // just moments ago
-        coreds::util::appendTimeagoTo(timeago, pojo->ts);
+        coreds::util::appendTimeagoTo(timeago, pojo->ts, ts);
         ts_.caption(timeago);
         
         completed_.update(pojo->completed);

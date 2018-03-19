@@ -170,7 +170,7 @@ public:
     {
         ind_->selected(pos_);
     }
-    void update(todo::Todo* message)
+    void update(todo::Todo* message, int64_t ts)
     {
         pojo = message;
         if (message == nullptr)
@@ -183,7 +183,7 @@ public:
         
         std::string timeago;
         timeago.reserve(16); // just moments ago
-        coreds::util::appendTimeagoTo(timeago, pojo->ts);
+        coreds::util::appendTimeagoTo(timeago, pojo->ts, ts);
         ts_.caption(timeago);
         
         completed_.update(pojo->completed);
@@ -423,14 +423,14 @@ private:
         for (int i = 0; i < len; ++i)
             todo_items[item_offset + i]->init(i, store, rq, this, $navigate);
     }
-    void populate(int idx, todo::Todo* pojo)
+    void populate(int idx, todo::Todo* pojo, int64_t ts)
     {
         if (!initialized)
         {
             lazyInit();
             initialized = true;
         }
-        todo_items[item_offset + idx]->update(pojo);
+        todo_items[item_offset + idx]->update(pojo, ts);
     }
     void select(int idx)
     {
@@ -568,8 +568,8 @@ public:
             message->title()->assign_to(pojo.title);
             pojo.completed = message->completed();
         };
-        store.$fnPopulate = [this](int idx, todo::Todo* pojo) {
-            populate(idx, pojo);
+        store.$fnPopulate = [this](int idx, todo::Todo* pojo, int64_t ts) {
+            populate(idx, pojo, ts);
         };
         store.$fnCall = [this](std::function<void()> op) {
             nana::internal_scope_guard lock;
