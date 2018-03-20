@@ -118,7 +118,7 @@ static const char* LINKS[] = {
     "<target=\"content_0\">    Home    </>",
     "<target=\"content_1\">    Active    </>",
     "<target=\"content_2\">    Completed    </>",
-    "<target=\"content_3\">    Exp    </>",
+    "<target=\"content_3\">    Compact    </>",
     "<target=\"content_4\">    About    </>"
 };
 

@@ -551,9 +551,10 @@ private:
         }
     }
 public:
-    void init(coreds::Opts opts)
+    void init(coreds::Opts o)
     {
-        this->opts = opts;
+        opts = o;
+        opts.pageSize += util::sc->hd ? 20 : 5;
         
         if (todo_items.empty())
             todo_items.reserve(opts.pageSize);
