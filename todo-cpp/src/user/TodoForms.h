@@ -94,6 +94,7 @@ private:
             return;
         
         auto title = title_.$.caption();
+        util::trim(title);
         if (title.empty())
         {
             msg_.update(msgs::validation_required);
