@@ -38,11 +38,11 @@ private:
         "<weight=10>"
         "<submit_ weight=30>"
         "<weight=10>"
-        "<msg_ weight=20>"
+        "<msg_ weight=40>"
     };
 public:
     TodoNew(TodoStore& store_, const char* title, bool close_on_success = false):
-        ui::SubForm({0, 0, 360, 90}, title),
+        ui::SubForm({0, 0, 360, 110}, title),
         close_on_success(close_on_success),
         store(store_)
     {
