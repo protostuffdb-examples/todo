@@ -299,6 +299,7 @@ public:
         
         place["search_"] << search_
             .tip_string("Todo").borderless(true);
+        search_.typeface(fonts::md());
         nana::API::effects_edge_nimbus(search_, nana::effects::edge_nimbus::none);
         
         // =====================================
