@@ -29,7 +29,7 @@ private:
     int flex_height{ 0 };
     
     ui::w$::Input title_{ *this, &flex_height, "Title *", fonts::lg(), &colors::border };
-    ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
+    ui::MsgPanel msg_{ *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Submit" };
     
     ui::Place place{ *this,
