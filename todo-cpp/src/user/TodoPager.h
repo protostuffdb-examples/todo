@@ -16,6 +16,7 @@ struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>
     util::RequestQueue* rq{ nullptr };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
 private:
+    //ui::w$::Input search_{ *this, nullptr, "Todo", fonts::md(), &colors::primary };
     ui::Icon add_{ *this, icons::plus, true };
 
     ui::ToggleIcon sort_{ *this, icons::arrow_down, icons::arrow_up };
@@ -49,6 +50,8 @@ public:
     TodoPager(nana::widget& owner) : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>(owner,
         "vert margin=[5,0]"
         "<weight=25"
+          //"<search_ weight=200>"
+          //"<weight=15>"
           "<msg_>"
           "<weight=10>"
           "<add_ weight=20>"
@@ -72,6 +75,8 @@ public:
         {
             page_info_.typeface(ui::fonts::r11);
         }
+        
+        //place["search_"] << search_;
         
         place["page_info_"] << page_info_
                 .text_align(nana::align::center);
