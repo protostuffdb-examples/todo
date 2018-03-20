@@ -19,15 +19,17 @@ private:
     todo::TodoStore& store;
     std::string errmsg;
     ui::Place place{ *this,
-        "vert margin=5"
-        "<title_ weight=25>"
-        "<weight=5>"
+        "vert margin=10"
+        "<title_>"
+        "<weight=10>"
         "<submit_ weight=25>"
-        "<weight=5>"
-        "<msg_>"
+        "<weight=10>"
+        "<msg_ weight=20>"
     };
     
-    nana::textbox title_{ *this };
+    int flex_height{ 0 };
+    
+    ui::w$::Input title_{ *this, &flex_height, "Title *", fonts::lg(), &colors::border };
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Submit" };
     
@@ -39,18 +41,19 @@ private:
     };
 public:
     TodoNew(TodoStore& store_, const char* title, bool close_on_success = false):
-        ui::SubForm({0, 0, 360, 90}, title),
+        ui::SubForm({0, 0, 360, 85}, title),
         close_on_success(close_on_success),
         store(store_)
     {
-        place["title_"] << title_
-            .multi_lines(false)
-            .tip_string("Title *");
-        title_.events().key_press($key_press);
+        resizeY(flex_height);
+        
+        place["title_"] << title_;
+        title_.$.events().key_press($key_press);
         
         place["msg_"] << msg_;
         
         place["submit_"] << submit_;
+        submit_.typeface(fonts::lg());
         submit_.events().click([this] {
             submit();
         });
@@ -64,7 +67,7 @@ private:
         nana::internal_scope_guard lock;
         
         store.loading(false);
-        title_.editable(true);
+        title_.$.editable(true);
         
         if (res == nullptr)
         {
@@ -72,13 +75,13 @@ private:
         }
         else
         {
-            title_.caption("");
+            title_.$.caption("");
             store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p(), true);
             
             if (close_on_success)
                 close();
             else
-                title_.focus();
+                title_.$.focus();
         }
     }
     void submit()
@@ -86,11 +89,11 @@ private:
         if (store.loading())
             return;
         
-        auto title = title_.caption();
+        auto title = title_.$.caption();
         if (title.empty())
         {
             msg_.update(msgs::validation_required);
-            title_.focus();
+            title_.$.focus();
             return;
         }
         
@@ -101,7 +104,7 @@ private:
         rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $submit$$);
         rq->send();
         
-        title_.editable(false);
+        title_.$.editable(false);
         ui::visible(msg_, false);
         store.loading(true);
     }
@@ -123,7 +126,7 @@ private:
 public:
     void focus()
     {
-        title_.focus();
+        title_.$.focus();
     }
 };
 

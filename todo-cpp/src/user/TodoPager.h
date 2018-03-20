@@ -70,7 +70,7 @@ public:
     {
         if (util::sc->hd)
         {
-            page_info_.typeface(fonts::r11);
+            page_info_.typeface(ui::fonts::r11);
         }
         
         place["page_info_"] << page_info_
@@ -268,26 +268,20 @@ public:
         place["title_"] << title_
             .text_align(nana::align::left)
             .transparent(true);
-        //title_.typeface(fonts::karla12);
+        title_.typeface(fonts::sm());
         title_.events().click($selected);
         title_.events().key_press(pager.$navigate);
         
         place["ts_"] << ts_
             .text_align(nana::align::right)
             .transparent(true);
-        //ts_.typeface(fonts::karla12);
+        ts_.typeface(fonts::sm());
         ts_.events().click($selected);
         ts_.events().key_press(pager.$navigate);
         
         place["completed_"] << completed_;
         completed_.on_.events().click($toggleCompleted);
         completed_.off_.events().click($toggleCompleted);
-        
-        if (util::sc->hd)
-        {
-            title_.typeface(fonts::r12);
-            ts_.typeface(fonts::r12);
-        }
         
         if (idx != 0)
         {

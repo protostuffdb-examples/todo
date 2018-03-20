@@ -23,17 +23,17 @@ struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
     
-    ui::w$::Label text8_{ *this, "about | 08 | g | simon", fonts::r8, w$::label8 };
-    ui::w$::Label text9_{ *this, "about | 09 | g | says", fonts::r9, w$::label9 };
-    ui::w$::Label text10_{ *this, "about | 10 | g | the", fonts::r10, w$::label10 };
-    ui::w$::Label text11_{ *this, "about | 11 | g | quick", fonts::r11, w$::label11 };
-    ui::w$::Label text12_{ *this, "about | 12 | g | brown", fonts::r12, w$::label12 };
-    ui::w$::Label text14_{ *this, "about | 14 | g | fox", fonts::r14, w$::label14 };
-    ui::w$::Label text16_{ *this, "about | 16 | g | jumps", fonts::r16, w$::label16 };
-    ui::w$::Label text18_{ *this, "about | 18 | g | over", fonts::r18, w$::label18 };
-    ui::w$::Label text20_{ *this, "about | 20 | g | the", fonts::r20, w$::label20 };
-    ui::w$::Label text22_{ *this, "about | 22 | g | lazy", fonts::r22, w$::label22 };
-    ui::w$::Label text24_{ *this, "about | 24 | g | dog", fonts::r24, w$::label24 };
+    ui::w$::Label text8_{ *this, "about | 08 | g | simon", ui::fonts::r8 };
+    ui::w$::Label text9_{ *this, "about | 09 | g | says",  ui::fonts::r9 };
+    ui::w$::Label text10_{ *this, "about | 10 | g | the",  ui::fonts::r10 };
+    ui::w$::Label text11_{ *this, "about | 11 | g | quick",  ui::fonts::r11 };
+    ui::w$::Label text12_{ *this, "about | 12 | g | brown",  ui::fonts::r12 };
+    ui::w$::Label text14_{ *this, "about | 14 | g | fox",  ui::fonts::r14 };
+    ui::w$::Label text16_{ *this, "about | 16 | g | jumps",  ui::fonts::r16 };
+    ui::w$::Label text18_{ *this, "about | 18 | g | over",  ui::fonts::r18 };
+    ui::w$::Label text20_{ *this, "about | 20 | g | the",  ui::fonts::r20 };
+    ui::w$::Label text22_{ *this, "about | 22 | g | lazy",  ui::fonts::r22 };
+    ui::w$::Label text24_{ *this, "about | 24 | g | dog",  ui::fonts::r24 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
@@ -298,7 +298,7 @@ public:
         
         for (auto text : LINKS)
         {
-            links.emplace_front(fm, "", fonts::r14, w$::label14);
+            links.emplace_front(fm, "", ui::fonts::r14);
             
             auto& front = links.front();
             link_array.push_back(&front);

@@ -294,7 +294,7 @@ public:
         
         if (util::sc->hd)
         {
-            page_info_.typeface(fonts::r11);
+            page_info_.typeface(ui::fonts::r11);
         }
         
         place["search_"] << search_

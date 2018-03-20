@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nana/gui/wvl.hpp>
+#include <coreds/nana/ui.h>
 
 namespace msgs {
 
@@ -82,65 +83,31 @@ ScreenConfig* sc{ nullptr };
 
 } // util
 
-namespace w$ {
-
-#ifdef WIN32
-const char* const label8 = "margin=[0,5]<_>";
-const char* const label9 = label8;
-const char* const label10 = label8;
-const char* const label11 = label8;
-const char* const label12 = label8;
-const char* const label14 = label8;
-const char* const label16 = label8;
-const char* const label18 = label8;
-const char* const label20 = label8;
-const char* const label22 = label8;
-const char* const label24 = label8;
-#else
-const char* const label8 = "margin=[1,5,0,5]<_>";
-const char* const label9 = label8;
-const char* const label10 = "margin=[2,5,0,5]<_>";
-const char* const label11 = label10;
-const char* const label12 = "margin=[3,5,0,5]<_>";
-const char* const label14 = "margin=[4,5,0,5]<_>";
-const char* const label16 = "margin=[5,5,0,5]<_>";
-const char* const label18 = "margin=[6,5,0,5]<_>";
-const char* const label20 = "margin=[7,5,0,5]<_>";
-const char* const label22 = "margin=[8,5,0,5]<_>";
-const char* const label24 = "margin=[9,5,0,5]<_>";
-#endif
-
-inline const char* label_xs() { return util::sc->hd ? label10 : label8; };
-inline const char* label_sm() { return util::sc->hd ? label12 : label10; };
-inline const char* label_md() { return util::sc->hd ? label14 : label12; };
-inline const char* label_lg() { return util::sc->hd ? label16 : label14; };
-inline const char* label_xl() { return util::sc->hd ? label18 : label16; };
-
-} // w$
-
 namespace fonts {
 
-const nana::paint::font r8("", 8);
-const nana::paint::font r9("", 9);
-const nana::paint::font r10("", 10);
-const nana::paint::font r11("", 11);
-const nana::paint::font r12("", 12);
-const nana::paint::font r14("", 14);
-const nana::paint::font r16("", 16);
-const nana::paint::font r18("", 18);
-const nana::paint::font r20("", 20);
-const nana::paint::font r22("", 22);
-const nana::paint::font r24("", 24);
+/*
+const nana::paint::font r8("", 8); // max ph: 16
+const nana::paint::font r9("", 9); // max ph: 18
+const nana::paint::font r10("", 10); // max ph: 22
+const nana::paint::font r11("", 11); // max ph: 24
+const nana::paint::font r12("", 12); // max ph: 27
+const nana::paint::font r14("", 14); // max ph: 32
+const nana::paint::font r16("", 16); // max ph: 36
+const nana::paint::font r18("", 18); // max ph: 41
+const nana::paint::font r20("", 20); // max ph: 46
+const nana::paint::font r22("", 22); // max ph: 51
+const nana::paint::font r24("", 24); // max ph: 56
+*/
 
 //const nana::paint::font karla10(10, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla12(12, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla14(14, "assets/Karla-Regular.ttf");
 //const nana::paint::font karla16(16, "assets/Karla-Regular.ttf");
 
-inline const nana::paint::font& xs() { return util::sc->hd ? r10 : r8; };
-inline const nana::paint::font& sm() { return util::sc->hd ? r12 : r10; };
-inline const nana::paint::font& md() { return util::sc->hd ? r14 : r12; };
-inline const nana::paint::font& lg() { return util::sc->hd ? r16 : r14; };
-inline const nana::paint::font& xl() { return util::sc->hd ? r18 : r16; };
+inline const nana::paint::font& xs() { return util::sc->hd ? ui::fonts::r10 : ui::fonts::r8; };
+inline const nana::paint::font& sm() { return util::sc->hd ? ui::fonts::r12 : ui::fonts::r10; };
+inline const nana::paint::font& md() { return util::sc->hd ? ui::fonts::r14 : ui::fonts::r12; };
+inline const nana::paint::font& lg() { return util::sc->hd ? ui::fonts::r16 : ui::fonts::r14; };
+inline const nana::paint::font& xl() { return util::sc->hd ? ui::fonts::r18 : ui::fonts::r16; };
 
 } // fonts
