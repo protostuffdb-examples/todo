@@ -23,17 +23,17 @@ struct About : ui::Panel, util::HasState<bool>
 {
     util::RequestQueue& rq;
     
-    ui::w$::Label text8_{ *this, "about | 08 | g | simon", ui::fonts::r8 };
-    ui::w$::Label text9_{ *this, "about | 09 | g | says",  ui::fonts::r9 };
-    ui::w$::Label text10_{ *this, "about | 10 | g | the",  ui::fonts::r10 };
-    ui::w$::Label text11_{ *this, "about | 11 | g | quick",  ui::fonts::r11 };
-    ui::w$::Label text12_{ *this, "about | 12 | g | brown",  ui::fonts::r12 };
-    ui::w$::Label text14_{ *this, "about | 14 | g | fox",  ui::fonts::r14 };
-    ui::w$::Label text16_{ *this, "about | 16 | g | jumps",  ui::fonts::r16 };
-    ui::w$::Label text18_{ *this, "about | 18 | g | over",  ui::fonts::r18 };
-    ui::w$::Label text20_{ *this, "about | 20 | g | the",  ui::fonts::r20 };
-    ui::w$::Label text22_{ *this, "about | 22 | g | lazy",  ui::fonts::r22 };
-    ui::w$::Label text24_{ *this, "about | 24 | g | dog",  ui::fonts::r24 };
+    ui::w$::Label text8_{ *this, nullptr, "about | 08 | g | simon", ui::fonts::r8 };
+    ui::w$::Label text9_{ *this, nullptr, "about | 09 | g | says",  ui::fonts::r9 };
+    ui::w$::Label text10_{ *this, nullptr, "about | 10 | g | the",  ui::fonts::r10 };
+    ui::w$::Label text11_{ *this, nullptr, "about | 11 | g | quick",  ui::fonts::r11 };
+    ui::w$::Label text12_{ *this, nullptr, "about | 12 | g | brown",  ui::fonts::r12 };
+    ui::w$::Label text14_{ *this, nullptr, "about | 14 | g | fox",  ui::fonts::r14 };
+    ui::w$::Label text16_{ *this, nullptr, "about | 16 | g | jumps",  ui::fonts::r16 };
+    ui::w$::Label text18_{ *this, nullptr, "about | 18 | g | over",  ui::fonts::r18 };
+    ui::w$::Label text20_{ *this, nullptr, "about | 20 | g | the",  ui::fonts::r20 };
+    ui::w$::Label text22_{ *this, nullptr, "about | 22 | g | lazy",  ui::fonts::r22 };
+    ui::w$::Label text24_{ *this, nullptr, "about | 24 | g | dog",  ui::fonts::r24 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
@@ -298,7 +298,7 @@ public:
         
         for (auto text : LINKS)
         {
-            links.emplace_front(fm, "", ui::fonts::r14);
+            links.emplace_front(fm, nullptr, "", ui::fonts::r14);
             
             auto& front = links.front();
             link_array.push_back(&front);
