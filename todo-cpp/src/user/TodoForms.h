@@ -18,13 +18,12 @@ struct TodoNew : ui::SubForm
 private:
     todo::TodoStore& store;
     std::string errmsg;
-    ui::Place place{ *this,
-        "vert margin=10"
-        "<title_>"
-        "<weight=10>"
-        "<submit_ weight=25>"
-        "<weight=10>"
-        "<msg_ weight=20>"
+    
+    std::function<void(void* res)> $submit$${
+        std::bind(&TodoNew::submit$$, this, std::placeholders::_1)
+    };
+    std::function<void(const nana::arg_keyboard& arg)> $key_press{
+        std::bind(&TodoNew::key_press, this, std::placeholders::_1)
     };
     
     int flex_height{ 0 };
@@ -33,11 +32,13 @@ private:
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Submit" };
     
-    std::function<void(void* res)> $submit$${
-        std::bind(&TodoNew::submit$$, this, std::placeholders::_1)
-    };
-    std::function<void(const nana::arg_keyboard& arg)> $key_press{
-        std::bind(&TodoNew::key_press, this, std::placeholders::_1)
+    ui::Place place{ *this,
+        "vert margin=10"
+        "<title_>"
+        "<weight=10>"
+        "<submit_ weight=25>"
+        "<weight=10>"
+        "<msg_ weight=20>"
     };
 public:
     TodoNew(TodoStore& store_, const char* title, bool close_on_success = false):
