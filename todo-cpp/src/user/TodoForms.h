@@ -79,13 +79,14 @@ private:
         }
         else
         {
-            title_.$.caption("");
             store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p(), true);
             
             if (close_on_success)
                 close();
             else
                 title_.$.focus();
+            
+            title_.$.caption("");
         }
     }
     void submit()
