@@ -98,11 +98,11 @@ private:
         util::trim(title);
         if (title.empty())
         {
+            title_.$.focus();
             // clear input if every char was whitespace
             if (title_sz != 0)
                 title_.$.caption("");
             
-            title_.$.focus();
             msg_.update(msgs::validation_required);
             return;
         }
