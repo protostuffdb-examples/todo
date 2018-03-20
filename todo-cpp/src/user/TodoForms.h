@@ -54,6 +54,7 @@ public:
         place["msg_"] << msg_;
         
         place["submit_"] << submit_;
+        submit_.fgcolor(nana::colors::blue);
         submit_.typeface(fonts::lg());
         submit_.events().click([this] {
             submit();
