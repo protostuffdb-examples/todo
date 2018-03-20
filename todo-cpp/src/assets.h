@@ -13,8 +13,9 @@ namespace colors {
 
 const nana::color primary(nana::color_rgb(0x0080FF));
 const nana::color lgray(nana::color_rgb(0xF3F3F3));
+const nana::color lgray_darken(nana::color_rgb(0xE9E9E9)); // 4%
 const nana::color border(nana::color_rgb(0xDEDEDE));
-const nana::color border_darken(nana::color_rgb(0xB8B8B8));
+const nana::color border_darken(nana::color_rgb(0xB8B8B8)); // 15%
 
 } // colors
 

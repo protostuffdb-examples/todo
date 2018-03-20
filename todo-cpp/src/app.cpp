@@ -182,7 +182,7 @@ private:
             return;
         
         link_array[current_selected]->bg(nana::colors::white);
-        link_array[selected]->bg(colors::lgray);
+        link_array[selected]->bg(colors::lgray_darken);
         
         // hide current
         content_.place.field_display(current_target.c_str(), false);
@@ -234,7 +234,7 @@ private:
             this->loop = loop;
             
             nana::internal_scope_guard lock;
-            link_array[current_selected]->bg(colors::lgray);
+            link_array[current_selected]->bg(colors::lgray_darken);
             content_array[current_selected]->update(true);
         }
         
