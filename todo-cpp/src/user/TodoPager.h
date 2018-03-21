@@ -14,7 +14,7 @@ struct TodoItem;
 struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>
 {
     util::RequestQueue* rq{ nullptr };
-    std::vector<coreds::HasState<bool>*> state_items;
+    std::vector<coreds::HasState<int>*> state_items;
     
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     TodoUpdate fupdate_{ store, "Update Todo" };
@@ -112,11 +112,17 @@ public:
             store.select(idx);
             
             if (prevIdx != -1)
-                state_items[prevIdx]->update(false);
+                state_items[prevIdx]->update(0);
             
             if (idx != -1)
-                state_items[idx]->update(true);
+                state_items[idx]->update(1);
         }
+    }
+protected:
+    void selectForUpdate(int idx) override
+    {
+        if (idx != -1)
+            state_items[idx]->update(-1);
     }
 private:
     void fnewFocus()
@@ -250,7 +256,7 @@ public:
     }
 };
 
-struct TodoItem : ui::BgPanel, coreds::HasState<bool>, coreds::HasState<int>
+struct TodoItem : ui::BgPanel, coreds::HasState<int>
 {
 private:
     TodoPager& pager;
@@ -288,7 +294,7 @@ public:
         };
         
         auto $show_form = [this]() {
-            pager.fupdate_.popTo(pencil_, pojo, this);
+            popForm();
         };
         
         place["pencil_"] << pencil_;
@@ -332,11 +338,11 @@ public:
         ui::visible(pencil_, false);
         //hide();
     }
-    void update(bool selected) override
-    {
-        ui::visible(pencil_, selected);
-    }
 private:
+    void popForm()
+    {
+        pager.fupdate_.popTo(pencil_, pojo, this);
+    }
     void toggleCompleted$$(void* res)
     {
         nana::internal_scope_guard lock;
@@ -365,6 +371,13 @@ private:
         
         pager.store.loading(true);
     }
+    void updateTimeago(int64_t ts)
+    {
+        std::string timeago;
+        timeago.reserve(16); // just moments ago
+        coreds::util::appendTimeagoTo(timeago, pojo->ts, ts);
+        ts_.caption(timeago);
+    }
 public:
     void update(todo::Todo* message, int64_t ts)
     {
@@ -377,10 +390,7 @@ public:
         
         title_.caption(pojo->title);
         
-        std::string timeago;
-        timeago.reserve(16); // just moments ago
-        coreds::util::appendTimeagoTo(timeago, pojo->ts, ts);
-        ts_.caption(timeago);
+        updateTimeago(ts);
         
         completed_.update(pojo->completed);
         
@@ -390,6 +400,21 @@ public:
     {
         switch (field)
         {
+            case -2: // called after close
+                title_.focus();
+                break;
+            case -1: // select for update
+                popForm();
+                break;
+            case 0:
+                ui::visible(pencil_, false);
+                break;
+            case 1:
+                ui::visible(pencil_, true);
+                break;
+            case 2:
+                updateTimeago(coreds::util::now());
+                break;
             case 3:
                 title_.caption(pojo->title);
                 break;

@@ -207,6 +207,11 @@ public:
         place.collocate();
         ui::visible(msg_, false);
     }
+protected:
+    void onClose() override
+    {
+        item->update(-2);
+    }
 private:
     void focus()
     {
@@ -327,10 +332,15 @@ public:
         fill();
         
         auto pos = nana::API::window_position(target.parent());
-        pos.y += util::POP_OFFSET + 4;
+        pos.x += 5;
+        pos.y += util::POP_OFFSET + 8;
         ui::SubForm::popTo(pos);
         
         focus();
+    }
+    coreds::HasState<int>* getItem()
+    {
+        return item;
     }
 };
 
