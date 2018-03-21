@@ -19,7 +19,7 @@
 
 namespace rpc = coreds::rpc;
 
-struct About : ui::Panel, util::HasState<bool>
+struct About : ui::Panel, coreds::HasState<bool>
 {
     util::RequestQueue& rq;
     
@@ -37,7 +37,7 @@ struct About : ui::Panel, util::HasState<bool>
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
-            std::vector<util::HasState<bool>*>& container,
+            std::vector<coreds::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
         "<text8_ weight=16>"
@@ -144,7 +144,7 @@ struct App : rpc::Base
         "<content_4>"
     };
     util::RequestQueue rq;
-    std::vector<util::HasState<bool>*> content_array;
+    std::vector<coreds::HasState<bool>*> content_array;
     todo::user::Index home_{ content_, rq, content_array, "content_0", true };
     todo::user::Index active_{ content_, rq, content_array, "content_1" };
     todo::user::Index completed_{ content_, rq, content_array, "content_2" };

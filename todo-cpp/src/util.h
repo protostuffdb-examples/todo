@@ -131,10 +131,4 @@ void appendUpdateReqTo(std::string& buf, const char* key, int field, std::string
     buf += R"("}]}})";
 }
 
-template <typename T>
-struct HasState
-{
-    virtual void update(T state) = 0;
-};
-
 } // util

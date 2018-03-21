@@ -158,7 +158,7 @@ private:
     todo::TodoStore& store;
     std::string errmsg;
     todo::Todo* pojo{ nullptr };
-    util::HasState<int>* item{ nullptr };
+    coreds::HasState<int>* item{ nullptr };
     std::vector<int> updated_fields;
     
     std::function<void(void* res)> $submit$${
@@ -318,7 +318,7 @@ private:
         title_.$.caption(pojo->title);
     }
 public:
-    void popTo(nana::widget& target, todo::Todo* pojo, util::HasState<int>* item)
+    void popTo(nana::widget& target, todo::Todo* pojo, coreds::HasState<int>* item)
     {
         this->item = item;
         this->pojo = pojo;

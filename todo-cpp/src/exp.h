@@ -67,7 +67,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     util::RequestQueue* rq{ nullptr };
     int idx;
     
-    util::HasState<const std::string&>* hasMsg { nullptr };
+    coreds::HasState<const std::string&>* hasMsg { nullptr };
     
     std::function<void(void* res)> $toggleCompleted$${
         std::bind(&TodoItem::toggleCompleted$$, this, std::placeholders::_1)
@@ -155,7 +155,7 @@ public:
     void init(int idx,
             todo::TodoStore& store,
             util::RequestQueue& rq,
-            util::HasState<const std::string&>* hasMsg,
+            coreds::HasState<const std::string&>* hasMsg,
             std::function<void(const nana::arg_keyboard& arg)> $navigate)
     {
         this->idx = idx;
@@ -202,7 +202,7 @@ private:
     bool whether_to_draw() const override { return false; }
 };
 
-struct Home : ui::Panel, util::HasState<bool>, util::HasState<const std::string&>
+struct Home : ui::Panel, coreds::HasState<bool>, coreds::HasState<const std::string&>
 {
     todo::TodoStore store;
 private:
@@ -259,7 +259,7 @@ private:
 public:
     Home(ui::Panel& owner,
             util::RequestQueue& rq,
-            std::vector<util::HasState<bool>*>& container,
+            std::vector<coreds::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner,
         "vert margin=[5,0]"
         "<horizontal weight=25"

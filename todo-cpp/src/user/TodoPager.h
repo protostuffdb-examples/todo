@@ -14,7 +14,7 @@ struct TodoItem;
 struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>
 {
     util::RequestQueue* rq{ nullptr };
-    std::vector<util::HasState<bool>*> state_items;
+    std::vector<coreds::HasState<bool>*> state_items;
     
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     TodoUpdate fupdate_{ store, "Update Todo" };
@@ -250,7 +250,7 @@ public:
     }
 };
 
-struct TodoItem : ui::BgPanel, util::HasState<bool>, util::HasState<int>
+struct TodoItem : ui::BgPanel, coreds::HasState<bool>, coreds::HasState<int>
 {
 private:
     TodoPager& pager;

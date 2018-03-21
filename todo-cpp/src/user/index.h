@@ -9,7 +9,7 @@
 namespace todo {
 namespace user {
 
-struct Index : ui::Panel, util::HasState<bool>, util::HasState<const std::string&>
+struct Index : ui::Panel, coreds::HasState<bool>, coreds::HasState<const std::string&>
 {
 private:
     util::RequestQueue& rq;
@@ -21,7 +21,7 @@ private:
 public:
     Index(ui::Panel& owner,
         util::RequestQueue& rq,
-        std::vector<util::HasState<bool>*>& container,
+        std::vector<coreds::HasState<bool>*>& container,
         const char* field, bool active = false) : ui::Panel(owner, 
         "vert"
         "<pager_>"
