@@ -66,6 +66,10 @@ public:
         ui::visible(msg_, false);
     }
 private:
+    void focus()
+    {
+        title_.$.focus();
+    }
     void submit$$(void* res)
     {
         nana::internal_scope_guard lock;
@@ -84,7 +88,7 @@ private:
             if (close_on_success)
                 close();
             else
-                title_.$.focus();
+                focus();
             
             title_.$.caption("");
         }
@@ -110,7 +114,9 @@ private:
         
         auto lastSeen = store.front();
         std::string buf;
-        util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
+        util::appendCreateReqTo(buf,
+                lastSeen == nullptr ? nullptr : lastSeen->key.c_str(),
+                title);
         
         rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $submit$$);
         rq->send();
@@ -134,12 +140,8 @@ private:
                 break;
         }
     }
-    void focus()
-    {
-        title_.$.focus();
-    }
 public:
-    void popTo(nana::window target)
+    void popTo(nana::widget& target)
     {
         ui::SubForm::popTo(target, util::POP_OFFSET);
         focus();
@@ -156,6 +158,8 @@ private:
     todo::TodoStore& store;
     std::string errmsg;
     todo::Todo* pojo{ nullptr };
+    util::HasState<int>* item{ nullptr };
+    std::vector<int> updated_fields;
     
     std::function<void(void* res)> $submit$${
         std::bind(&TodoUpdate::submit$$, this, std::placeholders::_1)
@@ -204,6 +208,20 @@ public:
         ui::visible(msg_, false);
     }
 private:
+    void focus()
+    {
+        title_.$.focus();
+    }
+    void update(int field)
+    {
+        switch (field)
+        {
+            case 3:
+                pojo->title.assign(title_.$.caption());
+                item->update(field);
+                break;
+        }
+    }
     void submit$$(void* res)
     {
         nana::internal_scope_guard lock;
@@ -217,20 +235,25 @@ private:
         }
         else
         {
-            store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p(), true);
+            msg_.update(msgs::successful, ui::Msg::$SUCCESS);
             
             if (close_on_success)
                 close();
             else
-                title_.$.focus();
+                focus();
             
-            title_.$.caption("");
+            for (auto field : updated_fields)
+                update(field);
         }
+        
+        updated_fields.clear();
     }
     void submit()
     {
         if (store.loading())
             return;
+        
+        updated_fields.clear();
         
         auto title = title_.$.caption();
         auto title_sz = title.size();
@@ -245,12 +268,30 @@ private:
             msg_.update(msgs::validation_required);
             return;
         }
+        else if (title == pojo->title)
+        {
+            title_.$.focus();
+            // reset input if there was whitespace
+            if (title_sz != title.size())
+                title_.$.caption(title);
+            
+            msg_.update(msgs::no_changes, ui::Msg::$WARNING);
+            return;
+        }
+        else if (title_sz != title.size())
+        {
+            // set input without whitespace
+            title_.$.caption(title);
+        }
         
-        auto lastSeen = store.front();
+        updated_fields.push_back(3);
+        
         std::string buf;
-        util::appendCreateReqTo(buf, lastSeen == nullptr ? nullptr : lastSeen->key.c_str(), title);
+        util::appendUpdateReqTo(buf,
+                pojo->key.c_str(),
+                3, title, pojo->title);
         
-        rq->queue.emplace("/todo/user/Todo/create", buf, "Todo_PList", &errmsg, $submit$$);
+        rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &errmsg, $submit$$);
         rq->send();
         
         title_.$.editable(false);
@@ -272,15 +313,23 @@ private:
                 break;
         }
     }
-    void focus()
+    void fill()
     {
-        title_.$.focus();
+        title_.$.caption(pojo->title);
     }
 public:
-    void popTo(nana::window target, todo::Todo* pojo)
+    void popTo(nana::widget& target, todo::Todo* pojo, util::HasState<int>* item)
     {
-        auto pos = nana::API::window_position(target);
+        this->item = item;
+        this->pojo = pojo;
+        
+        ui::visible(msg_, false);
+        fill();
+        
+        auto pos = nana::API::window_position(target.parent());
+        pos.y += util::POP_OFFSET + 4;
         ui::SubForm::popTo(pos);
+        
         focus();
     }
 };

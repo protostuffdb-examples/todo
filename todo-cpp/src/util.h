@@ -117,6 +117,20 @@ void appendUpdateReqTo(std::string& buf, const char* key, int field, bool newVal
     buf += R"(}]}})";
 }
 
+// {1: "CgAAAAAAAAMZ", 2: {3: [{1: 3, 2: "foo", 3: "bar"}]}}
+void appendUpdateReqTo(std::string& buf, const char* key, int field, std::string& newVal, std::string& oldVal)
+{
+    buf += R"({"1":")";
+    buf.append(key, 12);
+    buf += R"(","2":{"3":[{"1":)";
+    buf += std::to_string(field);
+    buf += R"(,"2":")";
+    appendStrTo(buf, oldVal);
+    buf += R"(","3":")";
+    appendStrTo(buf, newVal);
+    buf += R"("}]}})";
+}
+
 template <typename T>
 struct HasState
 {

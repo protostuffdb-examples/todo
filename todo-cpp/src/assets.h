@@ -6,6 +6,8 @@
 namespace msgs {
 
 const std::string validation_required("All required fields must be provided.");
+const std::string no_changes("No changes were made.");
+const std::string successful("Successful.");
 
 } // msgs
 

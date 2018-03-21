@@ -177,6 +177,7 @@ public:
     {
         this->rq = &rq;
         fnew_.rq = &rq;
+        fupdate_.rq = &rq;
         
         if (filter)
         {
@@ -249,7 +250,7 @@ public:
     }
 };
 
-struct TodoItem : ui::BgPanel, util::HasState<bool>
+struct TodoItem : ui::BgPanel, util::HasState<bool>, util::HasState<int>
 {
 private:
     TodoPager& pager;
@@ -286,7 +287,12 @@ public:
             pager.select(idx);
         };
         
+        auto $show_form = [this]() {
+            pager.fupdate_.popTo(pencil_, pojo, this);
+        };
+        
         place["pencil_"] << pencil_;
+        pencil_.events().click($show_form);
         
         place["title_"] << title_
             .text_align(nana::align::left)
@@ -379,6 +385,18 @@ public:
         completed_.update(pojo->completed);
         
         show();
+    }
+    void update(int field) override
+    {
+        switch (field)
+        {
+            case 3:
+                title_.caption(pojo->title);
+                break;
+            case 4:
+                completed_.update(pojo->completed);
+                break;
+        }
     }
 };
 
