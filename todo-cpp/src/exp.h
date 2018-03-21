@@ -288,8 +288,7 @@ public:
         fnew_.rq = &rq;
         
         auto $add = [this]() {
-            fnew_.popTo(add_, util::POP_OFFSET);
-            fnew_.focus();
+            fnew_.popTo(add_);
         };
         
         if (util::sc->hd)

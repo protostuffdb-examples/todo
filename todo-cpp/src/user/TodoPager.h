@@ -14,8 +14,14 @@ struct TodoItem;
 struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>
 {
     util::RequestQueue* rq{ nullptr };
+    std::vector<util::HasState<bool>*> state_items;
+    
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
+    TodoUpdate fupdate_{ store, "Update Todo" };
 private:
+    //std::forward_list<TodoNew> fnew_;
+    TodoNew fnew_{ store, "New Todo" };
+    
     //ui::w$::Input search_{ *this, nullptr, "Todo", fonts::md(), &colors::primary };
     ui::Icon add_{ *this, icons::plus, true };
 
@@ -30,9 +36,6 @@ private:
     ui::Icon goto_left_{ *this, icons::angle_left, true };
     ui::Icon goto_right_{ *this, icons::angle_right, true };
     ui::Icon goto_last_{ *this, icons::angle_double_right, true };
-    
-    //std::forward_list<TodoNew> fnew_;
-    TodoNew fnew_{ store, "New Todo" };
     
     std::function<void(void* res)> $fetch$${
         std::bind(&TodoPager::fetch$$, this, std::placeholders::_1)
@@ -102,12 +105,25 @@ public:
         place["goto_last_"] << goto_last_;
         goto_last_.events().click(store.$gotoLast);
     }
+    void select(int idx) override
+    {
+        int prevIdx = getSelectedIdx();
+        if (trySelect(idx))
+        {
+            store.select(idx);
+            
+            if (prevIdx != -1)
+                state_items[prevIdx]->update(false);
+            
+            if (idx != -1)
+                state_items[idx]->update(true);
+        }
+    }
 private:
     void fnewFocus()
     {
         //auto& fnew = fnew_.front();
-        fnew_.popTo(add_, util::POP_OFFSET);
-        fnew_.focus();
+        fnew_.popTo(add_);
     }
     void beforePopulate() override
     {
@@ -238,11 +254,12 @@ public:
     }
 };
 
-struct TodoItem : ui::BgPanel
+struct TodoItem : ui::BgPanel, util::HasState<bool>
 {
 private:
     TodoPager& pager;
     const int idx;
+    ui::Icon pencil_{ *this, icons::pencil, true };
     nana::label title_{ *this, "" };
     nana::label ts_{ *this, "" };
     ui::ToggleIcon completed_{ *this, icons::circle, icons::circle_empty };
@@ -257,7 +274,9 @@ private:
     };
 public:
     TodoItem(nana::widget& owner) : ui::BgPanel(owner,
-        "margin=[5,10]"
+        "margin=[5,10,5,5]"
+        "<pencil_ weight=16 margin=[2,0,0,0]>"
+        "<weight=5>"
         "<title_ margin=[2,0,0,0]>"
         "<ts_ weight=150 margin=[2,0,0,0]>"
         "<weight=10>"
@@ -266,22 +285,26 @@ public:
         pager(static_cast<TodoPager&>(owner)),
         idx(pager.size())
     {
-        auto $selected = [this]() {
+        pager.state_items.push_back(this);
+        
+        auto $select = [this]() {
             pager.select(idx);
         };
+        
+        place["pencil_"] << pencil_;
         
         place["title_"] << title_
             .text_align(nana::align::left)
             .transparent(true);
         title_.typeface(fonts::sm());
-        title_.events().click($selected);
+        title_.events().click($select);
         title_.events().key_press(pager.$navigate);
         
         place["ts_"] << ts_
             .text_align(nana::align::right)
             .transparent(true);
         ts_.typeface(fonts::sm());
-        ts_.events().click($selected);
+        ts_.events().click($select);
         ts_.events().key_press(pager.$navigate);
         
         place["completed_"] << completed_;
@@ -305,7 +328,12 @@ public:
         }
         
         place.collocate();
+        ui::visible(pencil_, false);
         //hide();
+    }
+    void update(bool selected) override
+    {
+        ui::visible(pencil_, selected);
     }
 private:
     void toggleCompleted$$(void* res)
