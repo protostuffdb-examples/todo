@@ -36,13 +36,13 @@ private:
         "vert margin=10"
         "<title_>"
         "<weight=10>"
-        "<submit_ weight=30>"
+        "<submit_ weight=32>"
         "<weight=10>"
         "<msg_ weight=40>"
     };
 public:
     TodoNew(TodoStore& store_, const char* title, bool close_on_success = false):
-        ui::SubForm({0, 0, 360, 110}, title),
+        ui::SubForm({0, 0, 360, 112}, title),
         close_on_success(close_on_success),
         store(store_)
     {
@@ -57,7 +57,7 @@ public:
         submit_.enable_focus_color(false);
         submit_.bgcolor(colors::lgray);
         submit_.fgcolor(colors::primary);
-        submit_.typeface(fonts::lg());
+        submit_.typeface(fonts::md());
         submit_.events().click([this] {
             submit();
         });
@@ -143,6 +143,7 @@ private:
 public:
     void popTo(nana::widget& target)
     {
+        ui::visible(msg_, false);
         ui::SubForm::popTo(target, util::POP_OFFSET);
         focus();
     }
@@ -178,13 +179,13 @@ private:
         "vert margin=10"
         "<title_>"
         "<weight=10>"
-        "<submit_ weight=30>"
+        "<submit_ weight=32>"
         "<weight=10>"
         "<msg_ weight=40>"
     };
 public:
     TodoUpdate(TodoStore& store_, const char* title, bool close_on_success = false):
-        ui::SubForm({0, 0, 360, 110}, title),
+        ui::SubForm({0, 0, 360, 112}, title),
         close_on_success(close_on_success),
         store(store_)
     {
@@ -199,7 +200,7 @@ public:
         submit_.enable_focus_color(false);
         submit_.bgcolor(colors::lgray);
         submit_.fgcolor(colors::primary);
-        submit_.typeface(fonts::lg());
+        submit_.typeface(fonts::md());
         submit_.events().click([this] {
             submit();
         });
