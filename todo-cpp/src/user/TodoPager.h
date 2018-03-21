@@ -19,7 +19,6 @@ struct TodoPager : ui::Pager<todo::Todo, todo::user::Todo, TodoItem>
     ui::MsgPanel msg_ { *this, ui::MsgColors::DEFAULT };
     TodoUpdate fupdate_{ store, "Update Todo" };
 private:
-    //std::forward_list<TodoNew> fnew_;
     TodoNew fnew_{ store, "New Todo" };
     
     //ui::w$::Input search_{ *this, nullptr, "Todo", fonts::md(), &colors::primary };
@@ -122,7 +121,6 @@ public:
 private:
     void fnewFocus()
     {
-        //auto& fnew = fnew_.front();
         fnew_.popTo(add_);
     }
     void beforePopulate() override
@@ -186,9 +184,6 @@ public:
         }
         else
         {
-            //fnew_.emplace_front(store, "New Todo");
-            //fnew_.front().rq = &rq;
-            
             place["add_"] << add_;
             add_.events().click($fnewFocus);
         }
