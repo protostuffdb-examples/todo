@@ -33,6 +33,7 @@ const nana::paint::image circle_empty("assets/png/circle-empty.png");
 
 const nana::paint::image cw("assets/png/cw.png");
 const nana::paint::image plus("assets/png/plus.png");
+const nana::paint::image pencil("assets/png/pencil.png");
 
 } // icons
 
