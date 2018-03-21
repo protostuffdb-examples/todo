@@ -334,6 +334,9 @@ public:
         auto pos = nana::API::window_position(target.parent());
         pos.x += 5;
         pos.y += util::POP_OFFSET + 8;
+        if (util::sc->hd)
+            pos.y += 8;
+        
         ui::SubForm::popTo(pos);
         
         focus();
