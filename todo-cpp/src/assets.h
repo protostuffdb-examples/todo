@@ -33,6 +33,9 @@ const nana::paint::image angle_double_right("assets/png/angle-double-right.png")
 const nana::paint::image circle("assets/png/circle.png");
 const nana::paint::image circle_empty("assets/png/circle-empty.png");
 
+const nana::paint::image square_checked("assets/png/square-checked.png");
+const nana::paint::image square_empty("assets/png/square-empty.png");
+
 const nana::paint::image cw("assets/png/cw.png");
 const nana::paint::image plus("assets/png/plus.png");
 const nana::paint::image pencil("assets/png/pencil.png");
