@@ -47,9 +47,11 @@ const int MARGIN = 5,
         WIDTH = 1005,
         #ifdef WIN32
         DEF_HEIGHT = 700,
+        POP_DIFF = 2,
         POP_OFFSET = 67,
         #else
         DEF_HEIGHT = 710, // 768 - 58
+        POP_DIFF = 14,
         POP_OFFSET = 63,
         #endif
         // page
@@ -90,7 +92,7 @@ struct ScreenConfig
         auto projected = y + extra + h + (POP_OFFSET / 2);
         
         if (projected > tip)
-            y -= (h - (extra * 2));
+            y -= (h - POP_DIFF);
         else
             y += (POP_OFFSET + extra);
         

@@ -325,7 +325,7 @@ private:
         title_.$.caption(pojo->title);
     }
 public:
-    void popTo(nana::widget& target, todo::Todo* pojo, coreds::HasState<int>* item)
+    void popTo(nana::widget& target, todo::Todo* pojo, coreds::HasState<int>* item, int x = 0)
     {
         this->item = item;
         this->pojo = pojo;
@@ -333,8 +333,8 @@ public:
         ui::visible(msg_, false);
         fill();
         
-        auto pos = nana::API::window_position(target.parent());
-        pos.x += 5;
+        auto pos = nana::API::window_position(target);
+        pos.x += x;
         pos.y = util::sc->resolvePopupY(pos.y, height);
         
         ui::SubForm::popTo(pos);

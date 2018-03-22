@@ -341,7 +341,7 @@ public:
 private:
     void popForm()
     {
-        pager.fupdate_.popTo(pencil_, pojo, this);
+        pager.fupdate_.popTo(*this, pojo, this, 5);
     }
     void toggleCompleted$$(void* res)
     {
