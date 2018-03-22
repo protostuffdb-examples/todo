@@ -211,6 +211,11 @@ private:
     {
         title_.$.focus();
     }
+    void fill()
+    {
+        title_.$.caption(pojo->title);
+        completed_.value(pojo->completed);
+    }
     bool update(int field)
     {
         switch (field)
@@ -314,11 +319,6 @@ private:
                     close();
                 break;
         }
-    }
-    void fill()
-    {
-        title_.$.caption(pojo->title);
-        completed_.value(pojo->completed);
     }
 public:
     void popTo(nana::widget& target, todo::Todo* pojo, coreds::HasState<int>* item, int x = 0)
