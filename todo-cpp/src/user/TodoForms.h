@@ -96,18 +96,8 @@ private:
             return;
         
         auto title = title_.$.caption();
-        auto title_sz = title.size();
-        util::trim(title);
-        if (title.empty())
-        {
-            title_.$.focus();
-            // clear input if every char was whitespace
-            if (title_sz != 0)
-                title_.$.caption("");
-            
-            msg_.update(msgs::validation_required);
+        if (!validation::valid_string(title_, title, msg_, msgs::validation_required))
             return;
-        }
         
         auto lastSeen = store.front();
         std::string buf;
@@ -282,6 +272,7 @@ private:
         {
             updated_fields.push_back(3);
             mc.add(3, title, pojo->title);
+            //updated = false;
         }
         
         if (pojo->completed != completed_.value())
