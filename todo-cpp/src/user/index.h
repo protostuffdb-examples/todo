@@ -60,10 +60,7 @@ public:
     }
     void update(const std::string& msg) override
     {
-        if (msg.empty())
-            pager_.msg_.hide();
-        else
-            pager_.msg_.update(msg);
+        pager_.msg_.update(msg);
     }
     void init(coreds::Opts opts, std::function<const char*(std::string& buf, coreds::ParamRangeKey& prk)> filter = nullptr)
     {
