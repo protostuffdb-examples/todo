@@ -82,6 +82,20 @@ struct ScreenConfig
     {
         
     }
+    
+    int resolvePopupY(int y, int h)
+    {
+        auto extra = hd ? 16 : 8;
+        auto tip = height - POP_OFFSET;
+        auto projected = y + extra + h + (POP_OFFSET / 2);
+        
+        if (projected > tip)
+            y -= (h - (extra * 2));
+        else
+            y += (POP_OFFSET + extra);
+        
+        return y;
+    }
 };
 
 ScreenConfig* sc{ nullptr };

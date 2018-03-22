@@ -170,6 +170,7 @@ private:
     };
     
     int flex_height{ 0 };
+    int height;
     
     ui::w$::Input title_{ *this, &flex_height, "Title *", fonts::lg(), &colors::border_darken };
     ui::MsgPanel msg_{ *this, ui::MsgColors::DEFAULT };
@@ -189,7 +190,7 @@ public:
         close_on_success(close_on_success),
         store(store_)
     {
-        resizeY(flex_height);
+        height = resizeY(flex_height);
         
         place["title_"] << title_;
         title_.$.events().key_press($key_press);
@@ -334,9 +335,7 @@ public:
         
         auto pos = nana::API::window_position(target.parent());
         pos.x += 5;
-        pos.y += util::POP_OFFSET + 8;
-        if (util::sc->hd)
-            pos.y += 8;
+        pos.y = util::sc->resolvePopupY(pos.y, height);
         
         ui::SubForm::popTo(pos);
         
