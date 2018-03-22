@@ -92,7 +92,7 @@ struct ScreenConfig
         auto projected = y + extra + h + (POP_OFFSET / 2);
         
         if (projected > tip)
-            y -= (h - POP_DIFF);
+            y = std::max(0, y + POP_DIFF - h);
         else
             y += (POP_OFFSET + extra);
         
