@@ -58,7 +58,7 @@ struct TodoItem : nana::listbox::inline_notifier_interface
     };
     nana::label title_;
     nana::label ts_;
-    ui::DeferredToggleIcon completed_{ icons::circle, icons::circle_empty };
+    ui::DeferredToggleIcon completed_{ icons::square_checked, icons::square_empty };
     //nana::textbox txt_;
     //nana::button btn_;
     
