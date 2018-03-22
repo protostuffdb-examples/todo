@@ -317,6 +317,8 @@ public:
         place["completed_"] << completed_;
         completed_.on_.events().click($toggleCompleted);
         completed_.off_.events().click($toggleCompleted);
+        completed_.on_.tooltip(msgs::completed);
+        completed_.off_.tooltip(msgs::mark_completed);
         
         if (idx != 0)
         {
