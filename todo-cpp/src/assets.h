@@ -91,8 +91,9 @@ struct ScreenConfig
         auto tip = height - POP_OFFSET;
         auto projected = y + extra + h + (POP_OFFSET / 2);
         
-        if (projected > tip)
-            y = std::max(0, y + POP_DIFF - h);
+        // pop below item as a fallback
+        if (projected > tip && 0 < (tip = y + POP_DIFF - h))
+            y = tip;
         else
             y += (POP_OFFSET + extra);
         
