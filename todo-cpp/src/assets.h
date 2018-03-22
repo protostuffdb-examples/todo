@@ -1,7 +1,7 @@
 #pragma once
 
-#include <nana/gui/wvl.hpp>
 #include <coreds/nana/ui.h>
+#include <nana/gui/widgets/button.hpp>
 
 namespace msgs {
 
@@ -139,3 +139,15 @@ inline const nana::paint::font& lg() { return util::sc->hd ? ui::fonts::r16 : ui
 inline const nana::paint::font& xl() { return util::sc->hd ? ui::fonts::r18 : ui::fonts::r16; };
 
 } // fonts
+
+namespace styles {
+
+inline void apply_default(nana::button& btn)
+{
+    btn.enable_focus_color(false);
+    btn.bgcolor(colors::lgray);
+    btn.fgcolor(colors::primary);
+    btn.typeface(fonts::md());
+}
+
+} // styles

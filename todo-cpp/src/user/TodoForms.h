@@ -1,11 +1,9 @@
 #pragma once
 
 #include <coreds/nana/pager.h>
-#include <nana/gui/widgets/button.hpp>
-#include <nana/gui/widgets/textbox.hpp>
 
+#include "../assets.h"
 #include "../util.h"
-
 #include "../todo.h"
 
 namespace todo {
@@ -22,6 +20,10 @@ private:
     std::function<void(void* res)> $submit$${
         std::bind(&TodoNew::submit$$, this, std::placeholders::_1)
     };
+    std::function<void()> $submit{
+        std::bind(&TodoNew::submit, this)
+    };
+    
     std::function<void(const nana::arg_keyboard& arg)> $key_press{
         std::bind(&TodoNew::key_press, this, std::placeholders::_1)
     };
@@ -54,13 +56,8 @@ public:
         place["msg_"] << msg_;
         
         place["submit_"] << submit_;
-        submit_.enable_focus_color(false);
-        submit_.bgcolor(colors::lgray);
-        submit_.fgcolor(colors::primary);
-        submit_.typeface(fonts::md());
-        submit_.events().click([this] {
-            submit();
-        });
+        styles::apply_default(submit_);
+        submit_.events().click($submit);
         
         place.collocate();
         ui::visible(msg_, false);
@@ -165,6 +162,10 @@ private:
     std::function<void(void* res)> $submit$${
         std::bind(&TodoUpdate::submit$$, this, std::placeholders::_1)
     };
+    std::function<void()> $submit{
+        std::bind(&TodoUpdate::submit, this)
+    };
+    
     std::function<void(const nana::arg_keyboard& arg)> $key_press{
         std::bind(&TodoUpdate::key_press, this, std::placeholders::_1)
     };
@@ -173,6 +174,7 @@ private:
     int height;
     
     ui::w$::Input title_{ *this, &flex_height, "Title *", fonts::lg(), &colors::border_darken };
+    //ui::w$::Checkbox completed_{ *this, &flex_height, false, "Completed", fonts::lg(), icons::square_checked, icons::square_empty };
     ui::MsgPanel msg_{ *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Update" };
     
@@ -180,6 +182,8 @@ private:
         "vert margin=10"
         "<title_>"
         "<weight=10>"
+        //"<completed_>"
+        //"<weight=10>"
         "<submit_ weight=32>"
         "<weight=10>"
         "<msg_ weight=40>"
@@ -195,16 +199,13 @@ public:
         place["title_"] << title_;
         title_.$.events().key_press($key_press);
         
+        //place["completed_"] << completed_;
+        
         place["msg_"] << msg_;
         
         place["submit_"] << submit_;
-        submit_.enable_focus_color(false);
-        submit_.bgcolor(colors::lgray);
-        submit_.fgcolor(colors::primary);
-        submit_.typeface(fonts::md());
-        submit_.events().click([this] {
-            submit();
-        });
+        styles::apply_default(submit_);
+        submit_.events().click($submit);
         
         place.collocate();
         ui::visible(msg_, false);
