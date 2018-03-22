@@ -155,6 +155,7 @@ struct TodoUpdate : ui::SubForm
 private:
     todo::TodoStore& store;
     std::string errmsg;
+    coreds::MultiCAS mc;
     todo::Todo* pojo{ nullptr };
     coreds::HasState<int>* item{ nullptr };
     std::vector<int> updated_fields;
@@ -174,7 +175,7 @@ private:
     int height;
     
     ui::w$::Input title_{ *this, &flex_height, "Title *", fonts::lg(), &colors::border_darken };
-    //ui::w$::Checkbox completed_{ *this, &flex_height, false, "Completed", fonts::lg(), icons::square_checked, icons::square_empty };
+    ui::w$::Checkbox completed_{ *this, &flex_height, false, "Completed", fonts::lg(), icons::square_checked, icons::square_empty };
     ui::MsgPanel msg_{ *this, ui::MsgColors::DEFAULT };
     nana::button submit_{ *this, "Update" };
     
@@ -182,8 +183,8 @@ private:
         "vert margin=10"
         "<title_>"
         "<weight=10>"
-        //"<completed_>"
-        //"<weight=10>"
+        "<completed_>"
+        "<weight=10>"
         "<submit_ weight=32>"
         "<weight=10>"
         "<msg_ weight=40>"
@@ -199,7 +200,7 @@ public:
         place["title_"] << title_;
         title_.$.events().key_press($key_press);
         
-        //place["completed_"] << completed_;
+        place["completed_"] << completed_;
         
         place["msg_"] << msg_;
         
@@ -220,14 +221,18 @@ private:
     {
         title_.$.focus();
     }
-    void update(int field)
+    bool update(int field)
     {
         switch (field)
         {
             case 3:
                 pojo->title.assign(title_.$.caption());
-                item->update(field);
-                break;
+                return true;
+            case 4:
+                pojo->completed = !pojo->completed;
+                return true;
+            default:
+                return false;
         }
     }
     void submit$$(void* res)
@@ -251,10 +256,14 @@ private:
                 focus();
             
             for (auto field : updated_fields)
-                update(field);
+            {
+                if (update(field))
+                    item->update(field);
+            }
         }
         
         updated_fields.clear();
+        mc.clear();
     }
     void submit()
     {
@@ -262,6 +271,7 @@ private:
             return;
         
         updated_fields.clear();
+        mc.clear();
         
         auto title = title_.$.caption();
         auto title_sz = title.size();
@@ -278,26 +288,37 @@ private:
         }
         else if (title == pojo->title)
         {
-            title_.$.focus();
             // reset input if there was whitespace
             if (title_sz != title.size())
                 title_.$.caption(title);
+        }
+        else
+        {
+            // set input if there was whitespace
+            if (title_sz != title.size())
+                title_.$.caption(title);
             
+            updated_fields.push_back(3);
+            mc.add(3, title, pojo->title);
+        }
+        
+        if (pojo->completed != completed_.value())
+        {
+            updated_fields.push_back(4);
+            mc.add(4, !pojo->completed);
+        }
+        
+        if (mc.empty())
+        {
+            focus();
             msg_.update(msgs::no_changes, ui::Msg::$WARNING);
             return;
         }
-        else if (title_sz != title.size())
-        {
-            // set input without whitespace
-            title_.$.caption(title);
-        }
-        
-        updated_fields.push_back(3);
         
         std::string buf;
         util::appendUpdateReqTo(buf,
                 pojo->key.c_str(),
-                3, title, pojo->title);
+                mc);
         
         rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &errmsg, $submit$$);
         rq->send();
@@ -324,6 +345,7 @@ private:
     void fill()
     {
         title_.$.caption(pojo->title);
+        completed_.value(pojo->completed);
     }
 public:
     void popTo(nana::widget& target, todo::Todo* pojo, coreds::HasState<int>* item, int x = 0)

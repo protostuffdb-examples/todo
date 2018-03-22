@@ -54,6 +54,15 @@ void appendCreateReqTo(std::string& buf, const char* key, const std::string& tit
     buf += R"("})";
 }
 
+void appendUpdateReqTo(std::string& buf, const char* key, coreds::MultiCAS& mc)
+{
+    buf += R"({"1":")";
+    buf.append(key, 12);
+    buf += R"(","2":)";
+    mc.stringifyTo(buf);
+    buf += '}';
+}
+
 // {1: "CgAAAAAAAAMZ", 2: {1: [{1: 4, 2: false, 3: true}]}}
 void appendUpdateReqTo(std::string& buf, const char* key, int field, bool newVal)
 {
