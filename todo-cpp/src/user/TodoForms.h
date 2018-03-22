@@ -3,7 +3,7 @@
 #include <coreds/nana/pager.h>
 
 #include "../assets.h"
-#include "../util.h"
+#include "../validation.h"
 #include "../todo.h"
 
 namespace todo {
@@ -273,31 +273,13 @@ private:
         updated_fields.clear();
         mc.clear();
         
+        bool updated;
+        
         auto title = title_.$.caption();
-        auto title_sz = title.size();
-        util::trim(title);
-        if (title.empty())
-        {
-            title_.$.focus();
-            // clear input if every char was whitespace
-            if (title_sz != 0)
-                title_.$.caption("");
-            
-            msg_.update(msgs::validation_required);
+        if (!validation::update_string(title_, title, pojo->title, &updated, msg_, msgs::validation_required))
             return;
-        }
-        else if (title == pojo->title)
+        if (updated)
         {
-            // reset input if there was whitespace
-            if (title_sz != title.size())
-                title_.$.caption(title);
-        }
-        else
-        {
-            // set input if there was whitespace
-            if (title_sz != title.size())
-                title_.$.caption(title);
-            
             updated_fields.push_back(3);
             mc.add(3, title, pojo->title);
         }

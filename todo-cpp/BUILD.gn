@@ -10,6 +10,7 @@ static_library("app") {
     "src/todo.h",
     "src/exp.h",
     "src/util.h",
+    "src/validation.h",
     "src/ui.h",
     "src/icons.h",
     "src/pager.h",
