@@ -8,6 +8,8 @@
 /todo-cpp/gn-out
 /todo-cpp/.gn
 /todo-ts/opt-nw
+/todo-ts/bin/*.tar.gz
+/todo-ts/bin/*.zip
 node_modules
 dist
 g
