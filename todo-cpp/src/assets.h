@@ -21,6 +21,8 @@ const nana::color lgray(nana::color_rgb(0xF3F3F3));
 const nana::color lgray_darken(nana::color_rgb(0xE9E9E9)); // 4%
 const nana::color border(nana::color_rgb(0xDEDEDE));
 const nana::color border_darken(nana::color_rgb(0xB8B8B8)); // 15%
+const nana::color placeholder(nana::color_rgb(0x787878));
+const nana::color placeholder_darken(nana::color_rgb(0x454545)); // 20%
 
 } // colors
 
@@ -148,6 +150,16 @@ inline void apply_default(nana::button& btn)
     btn.bgcolor(colors::lgray);
     btn.fgcolor(colors::primary);
     btn.typeface(fonts::md());
+}
+
+inline void apply_default(ui::w$::Input& input)
+{
+    input.$.fgcolor(colors::placeholder_darken);
+}
+
+inline void apply_default(ui::w$::Checkbox& cb)
+{
+    cb.$.fgcolor(colors::placeholder);
 }
 
 } // styles

@@ -51,6 +51,7 @@ public:
         resizeY(flex_height);
         
         place["title_"] << title_;
+        styles::apply_default(title_);
         title_.$.events().key_press($key_press);
         
         place["msg_"] << msg_;
@@ -189,9 +190,11 @@ public:
         height = resizeY(flex_height);
         
         place["title_"] << title_;
+        styles::apply_default(title_);
         title_.$.events().key_press($key_press);
         
         place["completed_"] << completed_;
+        styles::apply_default(completed_);
         
         place["msg_"] << msg_;
         
