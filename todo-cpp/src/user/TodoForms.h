@@ -281,7 +281,6 @@ private:
         {
             updated_fields.push_back(3);
             mc.add(3, title, pojo->title);
-            //updated = false;
         }
         
         if (pojo->completed != completed_.value())
