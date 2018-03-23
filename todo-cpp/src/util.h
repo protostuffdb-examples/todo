@@ -70,11 +70,10 @@ void appendUpdateReqTo(std::string& buf, const char* key, int field, bool newVal
     buf.append(key, 12);
     buf += R"(","2":{"1":[{"1":)";
     buf += std::to_string(field);
-    buf += R"(,"2":)";
-    buf += newVal ? "false" : "true";
-    buf += R"(,"3":)";
-    buf += !newVal ? "false" : "true";
-    buf += R"(}]}})";
+    if (newVal)
+        buf += R"(,"2":false,"3":true}]}})";
+    else
+        buf += R"(,"2":true,"3":false}]}})";
 }
 
 // {1: "CgAAAAAAAAMZ", 2: {3: [{1: 3, 2: "foo", 3: "bar"}]}}
