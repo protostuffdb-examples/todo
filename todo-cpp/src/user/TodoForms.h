@@ -81,7 +81,7 @@ private:
         }
         else
         {
-            store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p(), true);
+            store.prependAll(flatbuffers::GetRoot<todo::user::Todo_PList>(res)->p());
             
             if (close_on_success)
                 close();
