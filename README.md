@@ -7,14 +7,14 @@ A full-stack todo app with:
 - c++ (nana) desktop frontend (todo-cpp)
 
 Desktop-client downloads:
- - [linux64@1M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-linux-x64.tar.gz)
- - [win64@1.7M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-win-x64.zip)
+ - [linux64 ~1M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-linux-x64.tar.gz)
+ - [win64 ~1.7M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-win-x64.zip)
 
 By default it connects to https://todo.dyuproject.com (see target/ARGS.txt)
 
 Desktop-standalone (client+server+jre) downloads:
- - [linux64@13.9M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-linux-x64.tar.gz)
- - [win64@18M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-win-x64.zip)
+ - [linux64 ~13.9M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-linux-x64.tar.gz)
+ - [win64 ~18M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-win-x64.zip)
 
 ![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-lubuntu.png)
 ![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-ubuntu.png)
