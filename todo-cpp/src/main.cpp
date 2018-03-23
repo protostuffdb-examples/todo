@@ -2,6 +2,10 @@
 #include <vector>
 #include <fstream>
 
+#ifdef WIN32
+#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
+
 #include "app.h"
 
 static bool isSPCRLF(char c)
