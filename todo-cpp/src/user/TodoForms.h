@@ -356,6 +356,10 @@ public:
         ui::SubForm::popTo(pos);
         focus();
     }
+    todo::Todo* getPojo()
+    {
+        return pojo;
+    }
     coreds::HasState<int>* getItem()
     {
         return item;
