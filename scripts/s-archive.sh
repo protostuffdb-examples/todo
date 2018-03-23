@@ -9,7 +9,8 @@ OUT_DIR=target/bin
 TAR_FILE=$OUT_DIR/todo-server-standalone-linux-x64.tar.gz
 
 TAR_ARGS='target/name.txt target/protostuffdb-rjre target/jre/*/'
-[ "$1" != "" ] && TAR_ARGS=$1
+ZIP_ARGS='target/name.txt target/protostuffdb-sp.exe target/jre/*/'
+WIN_BIN_DIR=target/win
 
 printf todo > target/name.txt
 
@@ -19,12 +20,34 @@ echo '#!/bin/sh' > start.sh && tail --lines=+4 scripts/s-start.sh >> start.sh &&
     tar -cvzf $TAR_FILE start.sh $TAR_ARGS -T scripts/files.txt
 rm start.sh
 
-# desktop files
+# ==================================================
+
+# win desktop files
+cp target/setup.exe .
+cp $WIN_BIN_DIR/todo-pdb.exe target/todo.exe
+# link jre
+cd target && rm -f jre && ln -s jre-win jre && cd ..
+
+ZIP_FILE=$OUT_DIR/todo-desktop-standalone-win-x64.zip
+rm -f $ZIP_FILE
+zip -r $ZIP_FILE setup.exe target/todo.exe assets/* $ZIP_ARGS -@ < target/files.txt
+rm target/todo.exe
+rm target/setup.exe
+
+# ==================================================
+
+# linux desktop files
 head --lines=6 scripts/files.txt > target/files.txt
+cp target/setup .
 cp todo-cpp/gn-out/todo-pdb target/todo
+# link jre
+cd target && rm -f jre && ln -s jre-linux jre && cd ..
 
 TAR_FILE=$OUT_DIR/todo-desktop-standalone-linux-x64.tar.gz
 rm -f $TAR_FILE
-cp target/setup .
 tar -cvzf $TAR_FILE setup target/todo assets/* $TAR_ARGS -T target/files.txt
-rm setup
+rm target/todo
+rm target/setup
+
+
+
