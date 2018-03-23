@@ -18,7 +18,7 @@ echo "========== tar.gz"
 rm -f $TAR_FILE
 echo '#!/bin/sh' > start.sh && tail --lines=+4 scripts/s-start.sh >> start.sh && chmod +x start.sh && \
     tar -cvzf $TAR_FILE start.sh $TAR_ARGS -T scripts/files.txt
-rm start.sh
+rm -f start.sh
 
 # ==================================================
 
@@ -31,8 +31,7 @@ cd target && rm -f jre && ln -s jre-win jre && cd ..
 ZIP_FILE=$OUT_DIR/todo-desktop-standalone-win-x64.zip
 rm -f $ZIP_FILE
 zip -r $ZIP_FILE setup.exe target/todo.exe assets/* $ZIP_ARGS -@ < target/files.txt
-rm target/todo.exe
-rm setup.exe
+rm -f target/todo.exe setup.exe
 
 # ==================================================
 
@@ -46,8 +45,7 @@ cd target && rm -f jre && ln -s jre-linux jre && cd ..
 TAR_FILE=$OUT_DIR/todo-desktop-standalone-linux-x64.tar.gz
 rm -f $TAR_FILE
 tar -cvzf $TAR_FILE setup target/todo assets/* $TAR_ARGS -T target/files.txt
-rm target/todo
-rm setup
+rm -f target/todo setup
 
 
 
