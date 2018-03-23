@@ -6,6 +6,8 @@ A full-stack todo app with:
 - typescript (vuets) web frontend (todo-ts)
 - c++ (nana) desktop frontend (todo-cpp)
 
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screencast.gif)
+
 Desktop-client downloads:
  - [linux64 ~1M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-linux-x64.tar.gz)
  - [win64 ~1.7M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-win-x64.zip)
