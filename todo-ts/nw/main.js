@@ -6,7 +6,7 @@ var fs = require('fs'),
     pdb_started = false,
     pdb,
     wnd,
-    rpc_http_host
+    rpc_host
 
 function println(str) {
     process.stdout.write(str + '\n')
@@ -50,19 +50,17 @@ function startProtostuffdb() {
         child_args = getChildArgs(['127.0.0.1:' + port, path.join(__dirname, 'g/user/UserServices.json')], extra_args, child_cwd),
         target_cwd,
         p
-    
+
     if (!win32) {
         target_cwd = child_cwd
     } else if (isDir(target_cwd = 'C:/opt/jre/bin/server') ||
             isDir(target_cwd = 'C:/Program Files/Java/jdk1.7.0_79/jre/bin/server')) {
-        bin += '.exe'
     } else if (fs.existsSync(p = path.join(child_cwd, 'JDK_DIR.txt'))) {
         if (!isDir(target_cwd = path.join(fs.readFileSync(p, 'utf8').trim(), 'jre/bin/server'))) {
             println('JDK_DIR.txt did not contain a valid jdk path.')
             process.exit(1)
             return
         }
-        bin += '.exe'
     } else if (!isDir('C:/Program Files/Java') ||
             !(p = findSubDir('C:/Program Files/Java', 'jdk1.7')) ||
             !isDir(target_cwd = path.join(p, 'jre/bin/server'))) {
@@ -70,15 +68,13 @@ function startProtostuffdb() {
         println('E.g.\nC:/path/to/jdk1.7.0_79')
         process.exit(1)
         return
-    } else {
-        bin += '.exe'
     }
-    
+
     pdb = spawn(bin, child_args, { cwd: target_cwd })
     pdb.on('error', onChildError)
     pdb.stdout.on('data', onChildOut)
     pdb.on('close', onChildClose)
-    rpc_http_host = 'http://127.0.0.1:' + port
+    rpc_host = 'http://127.0.0.1:' + port
 }
 
 function onChildError(err) {
@@ -123,7 +119,7 @@ function onOpen(w) {
 }
 
 function openWindow() {
-    global.rpc_host = rpc_http_host
+    global.rpc_host = rpc_host
     nw.Window.open('index.html', { show: false, show_in_taskbar: !win32 }, onOpen)
 }
 
