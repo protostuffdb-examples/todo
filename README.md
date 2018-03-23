@@ -1,12 +1,28 @@
 # full-stack todo app
 
-A full-stack todomvc app with:
+A full-stack todo app with:
 - c++ backend (leveldb + uWebSockets) with java (jni) stored procs
 - dart (flutter) mobile frontend (todo-dart)
 - typescript (vuets) web frontend (todo-ts)
 - c++ (nana) desktop frontend (todo-cpp)
 
-It can be seen live [here](https://apps.dyuproject.com/todo/) with equivalent [android](https://play.google.com/store/apps/details?id=com.dyuproject.todo) (flutter) and desktop (c++) apps.
+Desktop-client downloads:
+ - [linux64@1M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-linux-x64.tar.gz)
+ - [win64@1.7M](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-win-x64.zip)
+
+By default it connects to https://todo.dyuproject.com (see target/ARGS.txt)
+
+Desktop-standalone (client+server+jre) downloads:
+ - [linux64@13.9M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-linux-x64.tar.gz)
+ - [win64@18M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-win-x64.zip)
+
+![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-lubuntu.png)
+![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-ubuntu.png)
+![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-win8.png)
+
+The web app is available [here](https://apps.dyuproject.com/todo/)
+
+The mobile app is available [here](https://play.google.com/store/apps/details?id=com.dyuproject.todo)
 
 The web and mobile apps have the same semantics.
 Swipe horizontally to nagivate the pages (paginate).
