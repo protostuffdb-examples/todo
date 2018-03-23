@@ -34,13 +34,11 @@ function findSubDir(baseDir, subDirPrefix) {
 }
 
 function resolveBin(child_cwd) {
-    if (win32) return path.join(child_cwd, 'target/protostuffdb')
+    if (win32) return path.join(child_cwd, 'target/protostuffdb.exe')
     
-    var bin = path.join(child_cwd, 'target/hprotostuffdb-rjre')
-    if (fs.existsSync(bin) || fs.existsSync(bin = path.join(child_cwd, 'target/hprotostuffdb')))
-        return bin
-    
-    return path.join(child_cwd, 'target/protostuffdb')
+    var bin = path.join(child_cwd, 'target/protostuffdb-rjre')
+    return fs.existsSync(bin) && fs.existsSync(path.join(child_cwd, 'target/jre')) ?
+            bin : path.join(child_cwd, 'target/protostuffdb')
 }
 
 function startProtostuffdb() {
