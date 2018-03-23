@@ -23,6 +23,25 @@ struct About : ui::Panel, coreds::HasState<bool>
 {
     util::RequestQueue& rq;
     
+    nana::label content_{ *this,
+        "Keyboard shortcuts:\n\n"
+        "    ctrl + space \t=\t refresh\n\n"
+        "    shift + space \t=\t toggle sort order\n\n"
+        "    ctrl + shift + space \t=\t show/hide update form\n\n"
+        "    esc \t=\t hide form (if showing)\n\n"
+        "    arrow-left \t=\t go to previous page or load more content if at end\n\n"
+        "    arrow-right \t=\t go to next page or load more content if at end\n\n"
+        "    ctrl + arrow-left \t=\t go to first page\n\n"
+        "    ctrl + arrow-right \t=\t go to last page\n\n"
+        "    ctrl + arrow-down \t=\t go to last item in the current page\n\n"
+        "    ctrl + arrow-up \t=\t go to first item in the current page\n\n"
+        "\nCredits:\n\n"
+        "    <color=0x0080FF>leveldb</> - backend storage engine from Google by Jeff Dean and Sanjay Ghemawhat\n\n"
+        "    <color=0x0080FF>uWebSockets</> - backend http/websocket engine by Alex Hultman @alexhultman\n\n"
+        "    <color=0x0080FF>brynet</> - frontend http/websocket engine by @IronsDu\n\n"
+        "    <color=0x0080FF>nana</> - frontend gui tookit by @cnjinhao\n\n"
+    };
+    
     ui::w$::Label text8_{ *this, nullptr, "about | 08 | g | simon", ui::fonts::r8 };
     ui::w$::Label text9_{ *this, nullptr, "about | 09 | g | says",  ui::fonts::r9 };
     ui::w$::Label text10_{ *this, nullptr, "about | 10 | g | the",  ui::fonts::r10 };
@@ -38,32 +57,39 @@ struct About : ui::Panel, coreds::HasState<bool>
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
             std::vector<coreds::HasState<bool>*>& container,
-            const char* field, bool active = false) : ui::Panel(owner, 
-        "vert"
-        "<text8_ weight=16>"
-        "<weight=5>"
-        "<text9_ weight=18>"
-        "<weight=5>"
-        "<text10_ weight=22>"
-        "<weight=5>"
-        "<text11_ weight=24>"
-        "<weight=5>"
-        "<text12_ weight=27>"
-        "<weight=5>"
-        "<text14_ weight=32>"
-        "<weight=5>"
-        "<text16_ weight=36>"
-        "<weight=5>"
-        "<text18_ weight=41>"
-        "<weight=5>"
-        "<text20_ weight=46>"
-        "<weight=5>"
-        "<text22_ weight=51>"
-        "<weight=5>"
-        "<text24_ weight=56>"
+            const char* field, bool active = false) : ui::Panel(owner,
+        "<content_>|40%"
+        "<vert"
+          "<text8_ weight=16>"
+          "<weight=5>"
+          "<text9_ weight=18>"
+          "<weight=5>"
+          "<text10_ weight=22>"
+          "<weight=5>"
+          "<text11_ weight=24>"
+          "<weight=5>"
+          "<text12_ weight=27>"
+          "<weight=5>"
+          "<text14_ weight=32>"
+          "<weight=5>"
+          "<text16_ weight=36>"
+          "<weight=5>"
+          "<text18_ weight=41>"
+          "<weight=5>"
+          "<text20_ weight=46>"
+          "<weight=5>"
+          "<text22_ weight=51>"
+          "<weight=5>"
+          "<text24_ weight=56>"
+          "<weight=15>"
+        ">"
+        
     ), rq(rq)
     {
         container.push_back(this);
+        
+        place["content_"] << content_.format(true);
+        styles::apply_default(content_);
         
         place["text8_"] << text8_;
         text8_.bg(colors::primary).fgcolor(nana::colors::white);
