@@ -220,14 +220,14 @@ private:
         title_.$.caption(pojo->title);
         completed_.value(pojo->completed);
     }
-    bool update(int field)
+    bool assign(int field)
     {
         switch (field)
         {
-            case 3:
+            case todo::Todo::FN_TITLE:
                 pojo->title.assign(title_.$.caption());
                 return true;
-            case 4:
+            case todo::Todo::FN_COMPLETED:
                 pojo->completed = !pojo->completed;
                 return true;
             default:
@@ -256,7 +256,7 @@ private:
             
             for (auto field : updated_fields)
             {
-                if (update(field))
+                if (assign(field))
                     item->update(field);
             }
         }
@@ -273,20 +273,23 @@ private:
         mc.clear();
         
         bool updated;
+        int field;
         
         auto title = title_.$.caption();
         if (!validation::update_string(title_, title, pojo->title, &updated, msg_, msgs::validation_required))
             return;
         if (updated)
         {
-            updated_fields.push_back(3);
-            mc.add(3, title, pojo->title);
+            field = todo::Todo::FN_TITLE;
+            updated_fields.push_back(field);
+            mc.add(field, title, pojo->title);
         }
         
         if (pojo->completed != completed_.value())
         {
-            updated_fields.push_back(4);
-            mc.add(4, !pojo->completed);
+            field = todo::Todo::FN_COMPLETED;
+            updated_fields.push_back(field);
+            mc.add(field, !pojo->completed);
         }
         
         if (mc.empty())
