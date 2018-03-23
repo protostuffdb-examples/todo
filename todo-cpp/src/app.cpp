@@ -196,7 +196,6 @@ struct App : rpc::Base
     App(const rpc::Config config, const char* title) : rpc::Base(config)
     {
         fm.caption(title ? title : "Todo App");
-        styles::apply_default(footer_);
         
         rq.send = [this]() {
             if (session != nullptr)
@@ -354,6 +353,7 @@ public:
         place["content_"] << content_;
         
         place["footer_"] << footer_.text_align(nana::align::center).format(true);
+        styles::apply_default(footer_);
         
         place.collocate();
         fm.show();
