@@ -31,7 +31,8 @@ cd target && rm -f jre && ln -s jre-win jre && cd ..
 ZIP_FILE=$OUT_DIR/todo-desktop-standalone-win-x64.zip
 rm -f $ZIP_FILE
 zip -r $ZIP_FILE setup.exe target/todo.exe assets/* $ZIP_ARGS -@ < target/files.txt
-rm -f target/todo.exe setup.exe
+rm -f target/todo.exe
+rm -f setup.exe
 
 # ==================================================
 
@@ -45,7 +46,8 @@ cd target && rm -f jre && ln -s jre-linux jre && cd ..
 TAR_FILE=$OUT_DIR/todo-desktop-standalone-linux-x64.tar.gz
 rm -f $TAR_FILE
 tar -cvzf $TAR_FILE setup target/todo assets/* $TAR_ARGS -T target/files.txt
-rm -f target/todo setup
+rm -f target/todo
+rm -f setup
 
 
 

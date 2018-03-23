@@ -32,7 +32,8 @@ cp $WIN_BIN_DIR/todo.exe target/todo.exe
 ZIP_FILE=$OUT_DIR/todo-desktop-client-win-x64.zip
 rm -f $ZIP_FILE
 zip -r $ZIP_FILE setup.exe target/todo.exe target/name.txt target/ARGS.txt assets/*
-rm -f target/todo.exe setup.exe
+rm -f target/todo.exe
+rm -f setup.exe
 
 # ==================================================
 
@@ -43,5 +44,6 @@ cp todo-cpp/gn-out/todo target/todo
 TAR_FILE=$OUT_DIR/todo-desktop-client-linux-x64.tar.gz
 rm -f $TAR_FILE
 tar -cvzf $TAR_FILE setup target/todo target/name.txt target/ARGS.txt assets/*
-rm -f target/todo setup
+rm -f target/todo
+rm -f setup
 
