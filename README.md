@@ -16,9 +16,9 @@ Desktop-standalone (client+server+jre) downloads:
  - [linux64 ~13.9M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-linux-x64.tar.gz)
  - [win64 ~18M](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-win-x64.zip)
 
-![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-lubuntu.png)
-![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-ubuntu.png)
-![screenshot](https://github.com/dyu/bookmarks/raw/master/screenie-win8.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-lubuntu.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-ubuntu.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win8.png)
 
 The web app is available [here](https://apps.dyuproject.com/todo/)
 
