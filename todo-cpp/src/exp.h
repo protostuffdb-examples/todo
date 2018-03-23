@@ -222,7 +222,7 @@ private:
         std::bind(&Home::onLabelEvent, this, std::placeholders::_1, std::placeholders::_2)
     };
     
-    nana::textbox search_{ *this };
+    //nana::textbox search_{ *this };
     
     ui::Icon add_{ *this, icons::plus, true };
     
@@ -265,7 +265,7 @@ public:
             const char* field, bool active = false) : ui::Panel(owner,
         "vert margin=[5,0]"
         "<horizontal weight=25"
-          "<search_ weight=200 margin=[0,15,0,1]>"
+          //"<search_ weight=200 margin=[0,15,0,1]>"
           "<msg_panel_>"
           "<weight=10>"
           "<add_ weight=20>"
@@ -298,10 +298,10 @@ public:
             page_info_.typeface(ui::fonts::r11);
         }
         
-        place["search_"] << search_
-            .tip_string("Todo").borderless(true);
-        search_.typeface(fonts::md());
-        nana::API::effects_edge_nimbus(search_, nana::effects::edge_nimbus::none);
+        //place["search_"] << search_
+        //    .tip_string("Todo").borderless(true);
+        //search_.typeface(fonts::md());
+        //nana::API::effects_edge_nimbus(search_, nana::effects::edge_nimbus::none);
         
         // =====================================
         // msg
@@ -556,7 +556,11 @@ public:
     void init(coreds::Opts o)
     {
         opts = o;
+        #ifdef WIN32
+        opts.pageSize += util::sc->hd ? 15 : 5;
+        #else
         opts.pageSize += util::sc->hd ? 20 : 5;
+        #endif
         
         if (todo_items.empty())
             todo_items.reserve(opts.pageSize);
