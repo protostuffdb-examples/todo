@@ -8,6 +8,9 @@ namespace todo {
 
 struct Todo// : brynet::NonCopyable
 {
+    static const int FN_TITLE = 3,
+            FN_COMPLETED = 4;
+    
     std::string key;
     uint64_t ts;
     

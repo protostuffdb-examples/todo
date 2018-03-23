@@ -366,7 +366,7 @@ private:
             return;
         
         std::string buf;
-        util::appendUpdateReqTo(buf, pojo->key.c_str(), 4, !pojo->completed);
+        util::appendUpdateReqTo(buf, pojo->key.c_str(), todo::Todo::FN_COMPLETED, !pojo->completed);
         
         pager.rq->queue.emplace("/todo/user/Todo/update", buf, nullptr, &pager.store.errmsg, $toggleCompleted$$);
         pager.rq->send();
@@ -417,10 +417,10 @@ public:
             case 2:
                 updateTimeago(coreds::util::now());
                 break;
-            case 3:
+            case todo::Todo::FN_TITLE:
                 title_.caption(pojo->title);
                 break;
-            case 4:
+            case todo::Todo::FN_COMPLETED:
                 completed_.update(pojo->completed);
                 break;
         }
