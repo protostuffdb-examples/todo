@@ -36,7 +36,7 @@ struct About : ui::Panel, coreds::HasState<bool>
         "    <green>ctrl + arrow-down</> \t=\t go to last item in the current page\n\n"
         "    <green>ctrl + arrow-up</> \t=\t go to first item in the current page\n\n"
         "Credits:\n"
-        "    <color=0x0080FF>leveldb</> - backend storage engine from Google by Jeff Dean and Sanjay Ghemawhat\n\n"
+        "    <color=0x0080FF>leveldb</> - backend storage engine from Google by Jeff Dean and Sanjay Ghemawat\n\n"
         "    <color=0x0080FF>uWebSockets</> - backend http/websocket engine by Alex Hultman @alexhultman\n\n"
         "    <color=0x0080FF>flatbuffers</> - serialization with json support by Wouter van Oortmerssen @aardappel\n\n"
         "    <color=0x0080FF>brynet</> - frontend http/websocket engine by @IronsDu\n\n"
