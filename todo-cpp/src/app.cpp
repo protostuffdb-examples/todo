@@ -28,7 +28,7 @@ struct About : ui::Panel, coreds::HasState<bool>
         "    <green>ctrl + space</> \t=\t refresh\n\n"
         "    <green>shift + space</> \t=\t toggle sort order\n\n"
         "    <green>ctrl + shift + space</> \t=\t show/hide update form\n\n"
-        "    <green>esc</> \t=\t hide msg/form (if shown)\n\n"
+        "    <green>esc</> \t=\t hide form or the msg inside it (if shown)\n\n"
         "    <green>arrow-left</> \t=\t go to previous page or load more content if at end\n\n"
         "    <green>arrow-right</> \t=\t go to next page or load more content if at end\n\n"
         "    <green>ctrl + arrow-left</> \t=\t go to first page\n\n"
