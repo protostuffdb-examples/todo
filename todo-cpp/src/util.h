@@ -6,8 +6,8 @@ namespace util {
 
 inline void trim(std::string& str)
 {
-    str.erase(0, str.find_first_not_of(' '));       //prefixing spaces
-    str.erase(str.find_last_not_of(' ')+1);         //surfixing spaces
+    str.erase(0, str.find_first_not_of(' ')); // space prefix
+    str.erase(str.find_last_not_of(' ') + 1); // space suffix
 }
 
 struct Request
