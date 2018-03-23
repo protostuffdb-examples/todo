@@ -63,7 +63,7 @@ void appendUpdateReqTo(std::string& buf, const char* key, coreds::MultiCAS& mc)
     buf += '}';
 }
 
-// {1: "CgAAAAAAAAMZ", 2: {1: [{1: 4, 2: false, 3: true}]}}
+// for toggles
 void appendUpdateReqTo(std::string& buf, const char* key, int field, bool newVal)
 {
     buf += R"({"1":")";
@@ -76,7 +76,7 @@ void appendUpdateReqTo(std::string& buf, const char* key, int field, bool newVal
         buf += R"(,"2":true,"3":false}]}})";
 }
 
-// {1: "CgAAAAAAAAMZ", 2: {3: [{1: 3, 2: "foo", 3: "bar"}]}}
+// for inline edits
 void appendUpdateReqTo(std::string& buf, const char* key, int field, std::string& newVal, std::string& oldVal)
 {
     buf += R"({"1":")";
