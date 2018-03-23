@@ -32,7 +32,7 @@ ZIP_FILE=$OUT_DIR/todo-desktop-standalone-win-x64.zip
 rm -f $ZIP_FILE
 zip -r $ZIP_FILE setup.exe target/todo.exe assets/* $ZIP_ARGS -@ < target/files.txt
 rm target/todo.exe
-rm target/setup.exe
+rm setup.exe
 
 # ==================================================
 
@@ -47,7 +47,7 @@ TAR_FILE=$OUT_DIR/todo-desktop-standalone-linux-x64.tar.gz
 rm -f $TAR_FILE
 tar -cvzf $TAR_FILE setup target/todo assets/* $TAR_ARGS -T target/files.txt
 rm target/todo
-rm target/setup
+rm setup
 
 
 
