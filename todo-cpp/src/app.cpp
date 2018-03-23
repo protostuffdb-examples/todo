@@ -24,7 +24,7 @@ struct About : ui::Panel, coreds::HasState<bool>
     util::RequestQueue& rq;
     
     nana::label content_{ *this,
-        "Keyboard shortcuts:\n\n"
+        "Keyboard shortcuts:\n"
         "    <green>ctrl + space</> \t=\t refresh\n\n"
         "    <green>shift + space</> \t=\t toggle sort order\n\n"
         "    <green>ctrl + shift + space</> \t=\t show/hide update form\n\n"
@@ -35,32 +35,32 @@ struct About : ui::Panel, coreds::HasState<bool>
         "    <green>ctrl + arrow-right</> \t=\t go to last page\n\n"
         "    <green>ctrl + arrow-down</> \t=\t go to last item in the current page\n\n"
         "    <green>ctrl + arrow-up</> \t=\t go to first item in the current page\n\n"
-        "Credits:\n\n"
+        "Credits:\n"
         "    <color=0x0080FF>leveldb</> - backend storage engine from Google by Jeff Dean and Sanjay Ghemawhat\n\n"
         "    <color=0x0080FF>uWebSockets</> - backend http/websocket engine by Alex Hultman @alexhultman\n\n"
         "    <color=0x0080FF>flatbuffers</> - serialization with json support by Wouter van Oortmerssen @aardappel\n\n"
         "    <color=0x0080FF>brynet</> - frontend http/websocket engine by @IronsDu\n\n"
         "    <color=0x0080FF>nana</> - frontend gui tookit by @cnjinhao\n\n"
-        "    <color=0x0080FF>fontawesome</> <image=\"assets/png/ok-circle.png\"></> - icons by Dave Gandy\n\n"
+        "    <color=0x0080FF>fontawesome</> <image=\"assets/png/ok-circle.png\"></> - icons by Dave Gandy"
     };
     
-    ui::w$::Label text8_{ *this, nullptr, "about | 08 | g | simon", ui::fonts::r8 };
-    ui::w$::Label text9_{ *this, nullptr, "about | 09 | g | says",  ui::fonts::r9 };
-    ui::w$::Label text10_{ *this, nullptr, "about | 10 | g | the",  ui::fonts::r10 };
-    ui::w$::Label text11_{ *this, nullptr, "about | 11 | g | quick",  ui::fonts::r11 };
-    ui::w$::Label text12_{ *this, nullptr, "about | 12 | g | brown",  ui::fonts::r12 };
-    ui::w$::Label text14_{ *this, nullptr, "about | 14 | g | fox",  ui::fonts::r14 };
-    ui::w$::Label text16_{ *this, nullptr, "about | 16 | g | jumps",  ui::fonts::r16 };
-    ui::w$::Label text18_{ *this, nullptr, "about | 18 | g | over",  ui::fonts::r18 };
-    ui::w$::Label text20_{ *this, nullptr, "about | 20 | g | the",  ui::fonts::r20 };
-    ui::w$::Label text22_{ *this, nullptr, "about | 22 | g | lazy",  ui::fonts::r22 };
-    ui::w$::Label text24_{ *this, nullptr, "about | 24 | g | dog",  ui::fonts::r24 };
+    ui::w$::Label text8_{ *this, nullptr, "08 |g| simon", ui::fonts::r8 };
+    ui::w$::Label text9_{ *this, nullptr, "09 |g| says",  ui::fonts::r9 };
+    ui::w$::Label text10_{ *this, nullptr, "10 |g| the",  ui::fonts::r10 };
+    ui::w$::Label text11_{ *this, nullptr, "11 |g| quick",  ui::fonts::r11 };
+    ui::w$::Label text12_{ *this, nullptr, "12 |g| brown",  ui::fonts::r12 };
+    ui::w$::Label text14_{ *this, nullptr, "14 |g| fox",  ui::fonts::r14 };
+    ui::w$::Label text16_{ *this, nullptr, "16 |g| jumps",  ui::fonts::r16 };
+    ui::w$::Label text18_{ *this, nullptr, "18 |g| over",  ui::fonts::r18 };
+    ui::w$::Label text20_{ *this, nullptr, "20 |g| the",  ui::fonts::r20 };
+    ui::w$::Label text22_{ *this, nullptr, "22 |g| lazy",  ui::fonts::r22 };
+    ui::w$::Label text24_{ *this, nullptr, "24 |g| dog",  ui::fonts::r24 };
     
     About(ui::Panel& owner, 
             util::RequestQueue& rq,
             std::vector<coreds::HasState<bool>*>& container,
             const char* field, bool active = false) : ui::Panel(owner,
-        "<content_>|40%"
+        "<content_>|20%"
         "<vert"
           "<text8_ weight=16>"
           "<weight=5>"
