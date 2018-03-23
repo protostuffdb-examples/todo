@@ -145,10 +145,11 @@ struct TodoUpdate : ui::SubForm
 private:
     todo::TodoStore& store;
     std::string errmsg;
+    std::vector<int> updated_fields;
     coreds::MultiCAS mc;
     todo::Todo* pojo{ nullptr };
     coreds::HasState<int>* item{ nullptr };
-    std::vector<int> updated_fields;
+    nana::point prev_pos;
     
     std::function<void(void* res)> $submit$${
         std::bind(&TodoUpdate::submit$$, this, std::placeholders::_1)
@@ -318,23 +319,41 @@ private:
                 else
                     close();
                 break;
+            case nana::keyboard::space:
+                if (arg.ctrl && arg.shift)
+                    close();
+                break;
         }
     }
 public:
     void popTo(nana::widget& target, todo::Todo* pojo, coreds::HasState<int>* item, int x = 0)
     {
-        this->item = item;
-        this->pojo = pojo;
-        
         ui::visible(msg_, false);
-        fill();
         
-        auto pos = nana::API::window_position(target);
+        if (pojo != this->pojo)
+        {
+            this->pojo = pojo;
+            fill();
+        }
+        
+        nana::point pos;
+        if (item != this->item)
+        {
+            // toggle
+            this->item = item;
+            
+            pos = nana::API::window_position(target);
+            pos.y = util::sc->resolvePopupY(pos.y, height);
+            prev_pos = pos;
+        }
+        else
+        {
+            pos = prev_pos;
+        }
+        
         pos.x += x;
-        pos.y = util::sc->resolvePopupY(pos.y, height);
         
         ui::SubForm::popTo(pos);
-        
         focus();
     }
     coreds::HasState<int>* getItem()
