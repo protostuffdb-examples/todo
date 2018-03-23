@@ -33,9 +33,6 @@ Long-press the item to update.
 ## Server runtime dependencies
 - jdk7
 
-## Desktop runtime dependencies
-- jdk7
-
 ## Desktop dev requirements (c++)
 - [ninja](https://ninja-build.org/)
 - [gn](https://refi64.com/gn-builds/)
