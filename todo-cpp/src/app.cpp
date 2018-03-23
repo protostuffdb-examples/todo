@@ -265,6 +265,8 @@ private:
             nana::internal_scope_guard lock;
             link_array[current_selected]->bg(colors::lgray_darken);
             content_array[current_selected]->update(true);
+            
+            //link_array[current_selected]->focus();
         }
         
         if (isConnected())
@@ -324,6 +326,16 @@ public:
             if (nana::label::command::click == cmd)
                 links$$(target);
         };
+        auto key_press = [this](const nana::arg_keyboard& arg) {
+            // look for 1-9
+            int key = arg.key - 48;
+            if (key > 0 && key < 10 &&
+                    // convert to zero-based index
+                    --key < link_array.size() && key != current_selected)
+            {
+                links$$("content_" + std::to_string(key));
+            }
+        };
         
         for (auto text : LINKS)
         {
@@ -339,6 +351,7 @@ public:
                 .caption(text);
             
             front.bg(nana::colors::white).fgcolor(colors::primary);
+            front.$.events().key_press(key_press);
             
             place["header_"] << front;
         }
