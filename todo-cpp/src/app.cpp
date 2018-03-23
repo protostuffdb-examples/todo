@@ -228,6 +228,17 @@ private:
         content_.place.field_display(target.c_str(), true);
         content_.place.collocate();
     }
+    void key_press(const nana::arg_keyboard& arg)
+    {
+        // look for 1-9
+        int key = arg.key - 48;
+        if (key > 0 && key < 10 &&
+                // convert to zero-based index
+                --key < link_array.size() && key != current_selected)
+        {
+            links$$("content_" + std::to_string(key));
+        }
+    }
     
     void onHttpData(const brynet::net::HTTPParser& httpParser,
             const brynet::net::HttpSession::PTR& session) override
@@ -302,7 +313,6 @@ private:
             post(session, req.uri, req.body);
         }
     }
-    
 public:
     void show(coreds::Opts opts)
     {
@@ -322,20 +332,19 @@ public:
         exp_.init(opts);
         
         // header
-        auto listener = [this](nana::label::command cmd, const std::string& target) {
+        auto $listener = [this](nana::label::command cmd, const std::string& target) {
             if (nana::label::command::click == cmd)
                 links$$(target);
         };
-        auto key_press = [this](const nana::arg_keyboard& arg) {
-            // look for 1-9
-            int key = arg.key - 48;
-            if (key > 0 && key < 10 &&
-                    // convert to zero-based index
-                    --key < link_array.size() && key != current_selected)
-            {
-                links$$("content_" + std::to_string(key));
-            }
+        auto $key_press = [this](const nana::arg_keyboard& arg) {
+            key_press(arg);
         };
+        
+        /*fm.events().key_press([this](const nana::arg_keyboard& arg){
+            if (arg.ctrl || arg.shift)
+                key_press(arg);
+        });*/
+        fm.events().key_press($key_press);
         
         for (auto text : LINKS)
         {
@@ -347,11 +356,11 @@ public:
             front.$
                 .text_align(nana::align::center)
                 .format(true)
-                .add_format_listener(listener)
+                .add_format_listener($listener)
                 .caption(text);
             
             front.bg(nana::colors::white).fgcolor(colors::primary);
-            front.$.events().key_press(key_press);
+            front.$.events().key_press($key_press);
             
             place["header_"] << front;
         }
