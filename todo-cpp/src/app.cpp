@@ -28,7 +28,7 @@ struct About : ui::Panel, coreds::HasState<bool>
         "    ctrl + space \t=\t refresh\n\n"
         "    shift + space \t=\t toggle sort order\n\n"
         "    ctrl + shift + space \t=\t show/hide update form\n\n"
-        "    esc \t=\t hide form (if showing)\n\n"
+        "    esc \t=\t hide msg/form (if shown)\n\n"
         "    arrow-left \t=\t go to previous page or load more content if at end\n\n"
         "    arrow-right \t=\t go to next page or load more content if at end\n\n"
         "    ctrl + arrow-left \t=\t go to first page\n\n"
@@ -38,6 +38,7 @@ struct About : ui::Panel, coreds::HasState<bool>
         "\nCredits:\n\n"
         "    <color=0x0080FF>leveldb</> - backend storage engine from Google by Jeff Dean and Sanjay Ghemawhat\n\n"
         "    <color=0x0080FF>uWebSockets</> - backend http/websocket engine by Alex Hultman @alexhultman\n\n"
+        "    <color=0x0080FF>flatbuffers</> - serialization with json support by Wouter van Oortmerssen @aardappel\n\n"
         "    <color=0x0080FF>brynet</> - frontend http/websocket engine by @IronsDu\n\n"
         "    <color=0x0080FF>nana</> - frontend gui tookit by @cnjinhao\n\n"
     };
