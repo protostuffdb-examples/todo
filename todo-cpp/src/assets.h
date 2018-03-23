@@ -17,6 +17,7 @@ const std::string mark_completed("Mark Completed?");
 namespace colors {
 
 const nana::color primary(nana::color_rgb(0x0080FF));
+const nana::color text(nana::color_rgb(0x333333));
 const nana::color lgray(nana::color_rgb(0xF3F3F3));
 const nana::color lgray_darken(nana::color_rgb(0xE9E9E9)); // 4%
 const nana::color border(nana::color_rgb(0xDEDEDE));
@@ -143,6 +144,12 @@ inline const nana::paint::font& xl() { return util::sc->hd ? ui::fonts::r18 : ui
 } // fonts
 
 namespace styles {
+
+inline void apply_default(nana::label& l)
+{
+    l.fgcolor(colors::text);
+    l.typeface(fonts::sm());
+}
 
 inline void apply_default(nana::button& btn)
 {

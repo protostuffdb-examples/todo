@@ -303,14 +303,14 @@ public:
         place["title_"] << title_
             .text_align(nana::align::left)
             .transparent(true);
-        title_.typeface(fonts::sm());
+        styles::apply_default(title_);
         title_.events().click($select);
         title_.events().key_press(pager.$navigate);
         
         place["ts_"] << ts_
             .text_align(nana::align::right)
             .transparent(true);
-        ts_.typeface(fonts::sm());
+        styles::apply_default(ts_);
         ts_.events().click($select);
         ts_.events().key_press(pager.$navigate);
         

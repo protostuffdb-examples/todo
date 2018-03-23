@@ -90,6 +90,7 @@ private:
         title_.create(pnl_);
         title_.transparent(true)
             .events().click($selected);
+        title_.fgcolor(colors::text);
         pnl_.place["title_"] << title_;
         
         // ts
@@ -97,6 +98,7 @@ private:
         ts_.transparent(true)
             .text_align(nana::align::right)
             .events().click($selected);
+        ts_.fgcolor(colors::text);
         pnl_.place["ts_"] << ts_;
         
         completed_.create(pnl_);
