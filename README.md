@@ -5,8 +5,8 @@ A full-stack todo app with:
 - dart (flutter) mobile frontend (todo-dart) available [here](https://play.google.com/store/apps/details?id=com.dyuproject.todo)
 - typescript (vuets) web frontend (todo-ts) available [here](https://apps.dyuproject.com/todo/)
 - c++ (nana) desktop frontend (todo-cpp)
- - [linux64 ~980kb](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-linux-x64.tar.gz)
- - [win64 ~1.59mb](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-win-x64.zip)
+  - [linux64 ~980kb](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-linux-x64.tar.gz)
+  - [win64 ~1.59mb](https://unpkg.com/pdb-todo@0.5.1/bin/todo-desktop-client-win-x64.zip)
 
 The frontends above connect to the same [rpc endpoint](https://todo.dyuproject.com)
 
