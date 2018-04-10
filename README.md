@@ -15,15 +15,14 @@ Swipe horizontally to nagivate the pages (paginate).
 Long-press the item to update.
 
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screencast.gif)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win10.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-lubuntu.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-ubuntu.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win8.png)
 
 Desktop-standalone (client+server+jre) downloads:
  - [linux64 ~13.22mb](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-linux-x64.tar.gz)
  - [win64 ~17.12mb](https://unpkg.com/pdb-todo@0.5.0/bin/todo-desktop-standalone-win-x64.zip)
-
-![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-lubuntu.png)
-![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-ubuntu.png)
-![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win8.png)
-![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win10.png)
 
 ## Server runtime dependencies
 - jdk7
