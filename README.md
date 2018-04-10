@@ -10,6 +10,10 @@ A full-stack todo app with:
 
 The frontends above connect to the same [rpc endpoint](https://todo.dyuproject.com)
 
+The web and mobile apps have the same semantics.
+Swipe horizontally to nagivate the pages (paginate).
+Long-press the item to update.
+
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screencast.gif)
 
 Desktop-standalone (client+server+jre) downloads:
@@ -20,10 +24,6 @@ Desktop-standalone (client+server+jre) downloads:
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-ubuntu.png)
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win8.png)
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win10.png)
-
-The web and mobile apps have the same semantics.
-Swipe horizontally to nagivate the pages (paginate).
-Long-press the item to update.
 
 ## Server runtime dependencies
 - jdk7
