@@ -21,6 +21,7 @@ Desktop-standalone (client+server+jre) downloads:
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-lubuntu.png)
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-ubuntu.png)
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win8.png)
+![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win10.png)
 
 The web app is available [here](https://apps.dyuproject.com/todo/)
 
