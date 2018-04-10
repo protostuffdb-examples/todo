@@ -10,9 +10,11 @@ A full-stack todo app with:
 
 The frontends above connect to the same [rpc endpoint](https://todo.dyuproject.com)
 
-The web and mobile apps have the same semantics.
+The web and mobile apps have the same swipe/mouse semantics.
 Swipe horizontally to nagivate the pages (paginate).
 Long-press the item to update.
+
+The web and desktop apps have the same keyboard shortcuts.
 
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screencast.gif)
 ![screenshot](https://github.com/protostuffdb-examples/todo/raw/master/screenie-win10.png)
