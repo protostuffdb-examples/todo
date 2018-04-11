@@ -2,6 +2,7 @@ name: todo
 description: todo
 
 dependencies:
+  http: ^0.11.3
   dobx: ^0.7.0
   dobx_gen: ^0.2.0
   dobx_ds: ^0.4.2
