@@ -15,6 +15,7 @@ dist
 g
 target
 build
+ios
 .settings
 .classpath
 .project
