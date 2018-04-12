@@ -4,7 +4,7 @@ description: todo
 dependencies:
   dobx: ^0.7.0
   dobx_gen: ^0.2.0
-  dobx_ds: ^0.5.0
+  dobx_ds: ^0.5.1
 
 dev_dependencies:
   build_runner: ^0.3.0+1
