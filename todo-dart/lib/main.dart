@@ -12,6 +12,7 @@
 // limitations under the License.
 // ========================================================================
 
+import 'dart:io' show Platform;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ import './ui.dart' as ui;
 import './todo_item.dart';
 
 void main() {
-  rpc.setPrefix('https://todo.dyuproject.com');
+  rpc.setPrefix(Platform.environment['todo.rpc_host'] ?? 'https://todo.dyuproject.com');
   runApp(new AppWidget());
 }
 
