@@ -91,3 +91,63 @@ nw .
 node chrome-app.js
 ```
 
+## Memory usage
+
+### nana (8mb)
+```
+ps_mem.py -p 14073
+ Private  +   Shared  =  RAM used	Program
+
+  7.5 MiB + 544.0 KiB =   8.0 MiB	todo
+---------------------------------
+                          8.0 MiB
+=================================
+```
+
+### nana + jvm (38mb)
+```
+ps_mem.py -p 13930
+ Private  +   Shared  =  RAM used	Program
+
+  7.1 MiB + 362.5 KiB =   7.4 MiB	todo-pdb
+---------------------------------
+                          7.4 MiB
+=================================
+
+ps_mem.py -p 13934
+ Private  +   Shared  =  RAM used	Program
+
+ 30.2 MiB + 387.0 KiB =  30.6 MiB	protostuffdb-rjre
+---------------------------------
+                         30.6 MiB
+=================================
+```
+
+### nwjs + jvm (107.5mb)
+```
+ps_mem.py -p 13497
+ Private  +   Shared  =  RAM used	Program
+
+ 37.0 MiB +   8.3 MiB =  45.3 MiB	nw
+---------------------------------
+                         45.3 MiB
+=================================
+
+ps_mem.py -p 13499
+ Private  +   Shared  =  RAM used	Program
+
+392.0 KiB +   7.6 MiB =   8.0 MiB	nw
+---------------------------------
+                          8.0 MiB
+=================================
+
+ps_mem.py -p 13532
+ Private  +   Shared  =  RAM used	Program
+
+ 48.1 MiB +   6.1 MiB =  54.2 MiB	nw
+---------------------------------
+                         54.2 MiB
+=================================
+```
+
+
