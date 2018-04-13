@@ -151,8 +151,9 @@ ps_mem.py -p 13532
 ```
 
 ### flutter-desktop (106.7mb)
-engine version: ed303c628fe4b322529f8cf01ecb38135a2bab73 (2018-04-10)
-build type: host_release (optimized)
+- engine version: ed303c628fe4b322529f8cf01ecb38135a2bab73 (2018-04-10)
+- build type: host_release (optimized)
+
 ```
 ps_mem.py -p 12136
  Private  +   Shared  =  RAM used	Program
