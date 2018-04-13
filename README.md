@@ -91,7 +91,7 @@ nw .
 node chrome-app.js
 ```
 
-## Memory usage
+## Memory usage on ubuntu 14.04 x64
 
 ### nana (8mb)
 ```
@@ -150,4 +150,16 @@ ps_mem.py -p 13532
 =================================
 ```
 
+### flutter-desktop (106.7mb)
+engine version: ed303c628fe4b322529f8cf01ecb38135a2bab73 (2018-04-10)
+```
+ps_mem.py -p 12136
+ Private  +   Shared  =  RAM used	Program
 
+105.3 MiB +   1.4 MiB = 106.7 MiB	run
+---------------------------------
+                        106.7 MiB
+=================================
+```
+
+The [most basic example app](https://github.com/dyu/flutter-desktop-embedding/tree/gn/example_flutter) from flutter consumes [100mb](https://github.com/dyu/flutter-desktop-embedding/blob/gn/README-gn.md#memory-usage-of-the-app-example_flutter) 
