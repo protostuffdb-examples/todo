@@ -18,7 +18,7 @@ GIT_CLONE='git clone --depth 1 --single-branch -b'
 
 [ -e gn-deps ] || $GIT_CLONE master https://github.com/dyu/gn-deps.git
 
-./gn-deps/fetch.sh libuv
+./gn-deps/fetch.sh libuv libpng
 
 mkdir -p deps && cd deps
 
