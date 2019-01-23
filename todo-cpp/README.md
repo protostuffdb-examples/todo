@@ -4,6 +4,11 @@
 ./deps.sh
 ```
 
+#On linux:
+```sh
+sudo apt-get install libasound-dev libx11-dev libxft-dev
+```
+
 ## Build via GN
 1. `git clone --depth 1 --single-branch -b cpp14 https://github.com/dyu/gn-build`
 
