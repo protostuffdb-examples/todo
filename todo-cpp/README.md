@@ -5,9 +5,9 @@
 ```
 
 ## Build via GN
-1. `git clone --depth 1 --single-branch -b cpp14 https://github.com/dyu/gn-build`
+1. `git clone --depth 1 --single-branch -b build https://github.com/dyu/gn-build.git build`
 
-2. `echo 'buildconfig = "//gn-build/config/BUILDCONFIG.gn"' > .gn`
+2. `echo 'buildconfig = "//build/config/BUILDCONFIG.gn"' > .gn`
    On windows, exclude the single quote.
 
 3. On linux:
