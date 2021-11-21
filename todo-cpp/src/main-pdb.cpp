@@ -101,7 +101,6 @@ private:
 const char PDB_TRY_BIN[] = "protostuffdb-rjre";
 #else
 const char PDB_TRY_BIN[] = "protostuffdb-sp.exe";
-const char EXEC_CWD[] = "C:\\opt\\jre\\bin\\server";
 #endif
 
 static const char FMT_STR[] = "%.*s";
@@ -143,53 +142,23 @@ int main(int argc, char* argv[])
     pdb_bin += SEPARATOR;
     pdb_bin += PDB_TRY_BIN;
     
-    #ifndef WIN32
-    bool relative_jre = true;
-    #endif
-    
     if (!exists(pdb_bin.c_str()))
     {
-        #ifndef WIN32
-        // remove -rjre prefix
-        pdb_bin.erase(pdb_bin.size() - 5, 5);
-        if (!exists(pdb_bin.c_str()))
-        {
-            fprintf(stderr, "target/%s not found.\n", PDB_TRY_BIN);
-            return 1;
-        }
-        
-        relative_jre = false;
-        target_dir.clear(); // cwd
-        #else
         fprintf(stderr, "target/%s not found.\n", PDB_TRY_BIN);
         return 1;
-        #endif
     }
     
+    target_dir += SEPARATOR;
+    target_dir += "jre";
+    if (!exists(target_dir.c_str()))
+    {
+        fprintf(stderr, "target/jre not found.\n");
+        return 1;
+    }
     #ifndef WIN32
-    if (relative_jre)
+    target_dir.clear();
     #else
-    if (!exists(EXEC_CWD))
-    #endif
-    {
-        target_dir += SEPARATOR;
-        target_dir += "jre";
-        if (!exists(target_dir.c_str()))
-        {
-            fprintf(stderr, "target/jre not found.\n");
-            return 1;
-        }
-        #ifndef WIN32
-        target_dir.clear();
-        #else
-        target_dir += "\\bin\\server";
-        #endif
-    }
-    #ifdef WIN32
-    else
-    {
-        target_dir.assign(EXEC_CWD);
-    }
+    target_dir += "\\bin\\server";
     #endif
     
     // ==================================================
