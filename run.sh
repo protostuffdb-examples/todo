@@ -1,22 +1,24 @@
 #!/bin/sh
 
+BASE_DIR=$PWD
+UNAME=`uname`
+SUFFIX=""
+[ "$UNAME" != "Linux" ] && [ "$UNAME" != "Darwin" ] && SUFFIX='.exe'
+
 if [ -e target/protostuffdb-rjre ]; then
-    BIN=./target/protostuffdb-rjre
-elif [ -e target/protostuffdb ]; then
-    BIN=./target/protostuffdb
-elif [ -e /opt/protostuffdb/bin/protostuffdb ]; then
-    BIN=/opt/protostuffdb/bin/protostuffdb
+    BIN=$BASE_DIR/target/protostuffdb-rjre
+elif [ -e "target/protostuffdb$SUFFIX" ]; then
+    BIN=$BASE_DIR/target/protostuffdb$SUFFIX
 else
-    echo 'The target/protostuffdb binary must exist' && exit 1
+    echo "The target/protostuffdb$SUFFIX binary must exist" && exit 1
 fi
 
 DATA_DIR=target/data/main
 JAR=todo-all/target/todo-all-jarjar.jar
 ARGS=$(cat ARGS.txt)
 PORT=$(cat PORT.txt)
-UNAME=`uname`
 BIND_IP='*'
-[ "$UNAME" = "Darwin" ] && BIND_IP='127.0.0.1'
+[ "$UNAME" != "Linux" ] && BIND_IP='127.0.0.1'
 
 jarjar() {
   cd todo-all
@@ -53,5 +55,11 @@ esac
 
 mkdir -p $DATA_DIR
 
+if [ "$UNAME" = "Linux" ] || [ "$UNAME" = "Darwin" ]; then
 $BIN $BIND_IP:$PORT todo-ts/g/user/UserServices.json $ARGS -Djava.class.path=$JAR todo.all.Main
-
+elif [ -e target/jre/bin/server ]; then
+cd target/jre/bin/server
+$BIN $BIND_IP:$PORT $BASE_DIR/todo-ts/g/user/UserServices.json $ARGS -Djava.class.path=$BASE_DIR/$JAR todo.all.Main $BASE_DIR
+else
+echo 'Missing windows jre: target/jre'
+fi
