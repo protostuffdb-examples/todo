@@ -14,6 +14,9 @@ DATA_DIR=target/data/main
 JAR=todo-all/target/todo-all-jarjar.jar
 ARGS=$(cat ARGS.txt)
 PORT=$(cat PORT.txt)
+UNAME=`uname`
+BIND_IP='*'
+[ "$UNAME" = "Darwin" ] && BIND_IP='127.0.0.1'
 
 jarjar() {
   cd todo-all
@@ -50,5 +53,5 @@ esac
 
 mkdir -p $DATA_DIR
 
-$BIN $PORT todo-ts/g/user/UserServices.json $ARGS -Djava.class.path=$JAR todo.all.Main
+$BIN $BIND_IP:$PORT todo-ts/g/user/UserServices.json $ARGS -Djava.class.path=$JAR todo.all.Main
 
