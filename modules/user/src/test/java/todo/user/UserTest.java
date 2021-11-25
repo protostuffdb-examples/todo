@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import com.dyuproject.protostuffdb.AbstractStoreTest;
 
+import org.junit.Test;
+
 /**
  * User test.
  */
@@ -43,6 +45,7 @@ public class UserTest extends AbstractStoreTest
         return message;
     }
 
+    @Test
     public void testTodo() throws IOException
     {
         newTodo("hello");
