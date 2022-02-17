@@ -5338,10 +5338,10 @@ vue@2.1.10:
   resolved "https://registry.npmjs.org/vue/-/vue-2.1.10.tgz"
   integrity sha1-ySNcpIx5JRN75YB4MqxOOsGAQns=
 
-vuets@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.npmjs.org/vuets/-/vuets-0.10.0.tgz"
-  integrity sha1-H+J/Ih1F4XtBnG8Bo9e9zEntyDU=
+vuets@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vuets/-/vuets-1.0.0.tgz#c530c23751ceebaa5d3f49fa2f85800bb08951c3"
+  integrity sha512-KlaGwzgMb//1taJVj5DAkmOsu2aCb62aq1rk/QpkjRKn7T19FKLsBq+Tf/nl4Ker4vyMeTUVA3lHKZ+JuiXx+Q==
 
 watchpack@^1.2.0:
   version "1.3.1"
