@@ -8,7 +8,6 @@ const $ = user.Todo;
 export async function createTodo() {
     const title = 'hello';
     const req = user.Todo.$new(title);
-    console.log(JSON.stringify(req));
     const res = await user.Todo.ForUser.create(req);
     const list = res['1']!;
     assert.ok(list.length);
