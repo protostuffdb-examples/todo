@@ -13,7 +13,10 @@ export async function createTodo() {
     assert.ok(list.length);
     const latestTodo = list[0];
     assert.equal(latestTodo[$.$.title], title);
-    console.log('###========== CREATE ' + JSON.stringify(req) + '\n' + JSON.stringify(res));
+    console.log(
+        '\n### ==================== CREATE',
+        `${JSON.stringify(req)}\n${JSON.stringify(res)}`,
+    )
 }
 
 export async function getFirstTodo() {
@@ -21,7 +24,10 @@ export async function getFirstTodo() {
     const res = await user.Todo.ForUser.list(req);
     const list = res['1']!;
     assert.ok(list.length);
-    console.log('###========== GET ' + JSON.stringify(req) + '\n' + JSON.stringify(res));
+    console.log(
+        '\n### ==================== GET',
+        `${JSON.stringify(req)}\n${JSON.stringify(res)}`,
+    )
 }
 
 export async function listTodos(){
@@ -30,5 +36,9 @@ export async function listTodos(){
     const res = await user.Todo.ForUser.list(req);
     const list = res['1']!;
     assert.ok(list.length);
-    console.log('###========== LIST(' + limit +', ' + list.length + ') ' + JSON.stringify(req) + '\n' + JSON.stringify(res));
+    console.log(
+        '\n### ==================== LIST',
+        `${JSON.stringify(req)}\n${JSON.stringify(res)}`,
+        `\n### LIMIT: ${limit}, COUNT: ${list.length}`,
+    )
 }
