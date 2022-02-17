@@ -23,5 +23,8 @@ WRK_ARGS=$@
 
 printf "wrk.method = 'POST'\nwrk.body = '{\"1\": false, \"2\": 0, \"3\": \"$KEY\"}'" > target/get.lua
 
-./target/bin/wrk -s target/get.lua $WRK_ARGS http://127.0.0.1:$PORT/todo/user/Todo/list
+WRK=./target/bin/wrk
+command -v wrk >/dev/null 2>&1 && WRK=wrk
+
+$WRK -s target/get.lua $WRK_ARGS http://127.0.0.1:$PORT/todo/user/Todo/list
 

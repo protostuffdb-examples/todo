@@ -17,5 +17,8 @@ cd $SCRIPT_DIR
 WRK_ARGS=$@
 [ $# -gt 0 ] || WRK_ARGS='-t2 -c40 -d10s'
 
-./target/bin/wrk -s wrk/create.lua $WRK_ARGS http://127.0.0.1:$PORT/todo/user/Todo/create
+WRK=./target/bin/wrk
+command -v wrk >/dev/null 2>&1 && WRK=wrk
+
+$WRK -s wrk/create.lua $WRK_ARGS http://127.0.0.1:$PORT/todo/user/Todo/create
 
