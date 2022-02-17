@@ -11,10 +11,11 @@ const TITLE = Array(TITLE_LEN).join("a")
 const OVERFLOW_LIMIT = 1 + Math.floor(MAX_RESPONSE_LEN / TITLE_LEN)
 
 test('limit', async () => {
-    const todo = await createTodo(undefined, TITLE)
+    let todo
     let json: string
     let count = 0
     do {
+        todo = await createTodo(undefined, TITLE)
         json = JSON.stringify(todo)
         count += json.length
     } while (count < MAX_RESPONSE_LEN)
