@@ -81,6 +81,14 @@ nw .
 node chrome-app.js
 ```
 
+## Scripts
+```sh
+# create todo
+./scripts/crud.sh create foo
+# list todo
+./scripts/crud.sh list
+```
+
 ## Api e2e test
 On a terminal tab:
 ```sh
