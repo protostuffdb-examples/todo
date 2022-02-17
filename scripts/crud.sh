@@ -17,11 +17,12 @@ fi
 cd $SCRIPT_DIR
 
 PORT=$(cat ../PORT.txt)
+RPC_HOST="http://127.0.0.1:$PORT"
 
 list() {
     LIMIT=$1
     [ -z "$LIMIT" ] && LIMIT=50
-    curl -X POST "http://127.0.0.1:$PORT/todo/user/Todo/list" \
+    curl -X POST "$RPC_HOST/todo/user/Todo/list" \
     -H 'Content-Type: application/json' \
     -d "{\"1\":true,\"2\":$LIMIT}"
 }
@@ -29,7 +30,7 @@ list() {
 create() {
     TITLE=$1
     [ -z "$TITLE" ] && TITLE=hello
-    curl -X POST http://127.0.0.1:5000/todo/user/Todo/create \
+    curl -X POST "$RPC_HOST/todo/user/Todo/create" \
     -H 'Content-Type: application/json' \
     -d "{\"3\":\"$TITLE\"}"
 }
