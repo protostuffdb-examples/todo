@@ -51,7 +51,7 @@ mvn install
 ## Web dev setup
 ```sh
 cd todo-ts
-yarn global install node-sass clean-css-cli
+yarn global add node-sass clean-css-cli
 yarn install
 
 # build css
