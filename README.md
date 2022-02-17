@@ -81,3 +81,12 @@ nw .
 node chrome-app.js
 ```
 
+## Api e2e test
+On a terminal tab:
+```sh
+./run.sh
+
+# on another terminal
+# required: node >= 17.5.0
+./todo-ts/test-e2e.sh
+```
