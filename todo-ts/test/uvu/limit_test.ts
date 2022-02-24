@@ -3,12 +3,14 @@ import * as assert from 'uvu/assert'
 
 import { createTodo, listTodo } from '../'
 
-const MAX_RESPONSE_LEN = 65535
+const ESTIMATED_TARGET_RESPONSE_LEN = 65535
 
 const TITLE_LEN = 1024
-const TITLE = Array(TITLE_LEN).join("a")
+const TITLE = Array(TITLE_LEN).join('a')
+const WRAPPER_LEN = '{"1":"CgAAAAAAAAAF","2":1000000000001,"3":"","4":false}]}'.length
+const JSON_LEN = TITLE_LEN + WRAPPER_LEN
 
-const OVERFLOW_LIMIT = 1 + Math.floor(MAX_RESPONSE_LEN / TITLE_LEN)
+const OVERFLOW_LIMIT = 1 + Math.floor(ESTIMATED_TARGET_RESPONSE_LEN / JSON_LEN)
 
 test('limit', async () => {
     let todo
@@ -18,7 +20,7 @@ test('limit', async () => {
         todo = await createTodo(undefined, TITLE)
         json = JSON.stringify(todo)
         count += json.length
-    } while (count < MAX_RESPONSE_LEN)
+    } while (count < ESTIMATED_TARGET_RESPONSE_LEN)
     
     const todos = await listTodo(undefined, OVERFLOW_LIMIT)
     console.log(
