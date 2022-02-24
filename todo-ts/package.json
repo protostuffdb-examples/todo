@@ -18,7 +18,8 @@
     "app.b": "TARGET=app rollup -c --environment production",
     "ns.d": "node-sass app.scss dist/app.css -w",
     "ns.b": "node-sass app.scss dist/app.css && npm run cleancss",
-    "cleancss": "cleancss -O2 removeDuplicateRules:on dist/app.css > dist/app.min.css && mv dist/app.min.css dist/app.css"
+    "cleancss": "cleancss -O2 removeDuplicateRules:on dist/app.css > dist/app.min.css && mv dist/app.min.css dist/app.css",
+    "e2e": "uvu -r tsm -r esm test/uvu"
   },
   "dependencies": {
     "coreds": "1.4.0",

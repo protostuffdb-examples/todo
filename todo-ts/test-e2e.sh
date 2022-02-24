@@ -20,5 +20,4 @@ cd $SCRIPT_DIR
 #[ -z "$1" ] || ARGS=$@
 
 PORT=$(cat ../PORT.txt)
-RPC_HOST="http://127.0.0.1:$PORT" node --experimental-fetch \
-./node_modules/.bin/uvu -r tsm -r esm test/uvu $@
+RPC_HOST="http://127.0.0.1:$PORT" NODE_OPTIONS='--experimental-fetch' npm run e2e -- $@
