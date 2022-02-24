@@ -89,12 +89,12 @@ node chrome-app.js
 ./scripts/crud.sh list
 ```
 
-## Api e2e test
+## Run e2e tests (CRUD api)
 On a terminal tab:
 ```sh
 ./run.sh
 
 # on another terminal
 # required: node >= 17.5.0
-./todo-ts/test-e2e.sh
+./todo-ts/e2e.sh
 ```
