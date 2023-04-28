@@ -23,7 +23,7 @@ GIT_CLONE='git clone --depth 1 --single-branch -b'
 mkdir -p deps && cd deps
 
 [ -e coreds ] || $GIT_CLONE master https://github.com/fbsgen/coreds.git
-[ -e flatbuffers ] || $GIT_CLONE gn https://github.com/fbsgen/flatbuffers.git
+[ -e flatbuffers ] || $GIT_CLONE build https://github.com/fbsgen/flatbuffers.git
 [ -e brynet ] || $GIT_CLONE gn https://github.com/dyu/brynet.git
 [ -e fmt ] || $GIT_CLONE gn https://github.com/dyu/fmt.git
 
