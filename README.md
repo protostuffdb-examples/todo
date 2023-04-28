@@ -95,6 +95,7 @@ On a terminal tab:
 ./run.sh
 
 # on another terminal
-# required: node >= 17.5.0
+bun test e2e.test.ts
+# or with node node >= 17.5.0
 ./todo-ts/e2e.sh
 ```
