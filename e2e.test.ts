@@ -56,7 +56,7 @@ test("new todo", async () => {
 test("get latest todo", async () => {
     let todos = await listTodo(undefined, 1)
     expect(todos.length).toBe(1)
-    expect(todos[0][$.title], newTitle)
+    expect(todos[0][$.title]).toBe(newTitle)
     console.log(todos)
 });
 
